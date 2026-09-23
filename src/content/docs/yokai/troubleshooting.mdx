@@ -1,48 +1,32 @@
 ---
-title: Troubleshooting
-navLabel: Troubleshooting
-description: "Symptom → cause → fix for setup, runs, gate, sandbox, and recovery."
+title: Run troubleshooting
+navLabel: Run troubleshooting
+description: "Diagnose gate, sandbox, Build, and recovery failures."
 section: reference
 kind: reference
-order: 60
+order: 50
 ---
 
-Start with `koi doctor` (add `--probe`) from the repo root. The working folder is `.koi/run` by default. Sandbox checks run only when `.koi/sandbox.yml` has `enabled: true` and you are not inside an inner run.
-
-First install: [Quickstart](/docs/start-here/quickstart). Overview: [Sandboxing](/docs/sandbox/overview).
-
-## Setup and preflight
-
-| Symptom | Cause | Fix |
-|---------|-------|-----|
-| `spawning claude adapter…` / `cursor-agent…` / OpenCode ACP… / `codex-acp` | agent or Node not on PATH | install agent; Node for Claude and Codex; re-run doctor |
-| halts immediately, agent error | agent not configured | log agent in; OpenCode: `/connect`; `koi doctor --probe` |
-| `doctor` working folder ✗ | no `.koi/run/` or wrong directory | repo root; `koi init` then `/junji begin` |
-| `not a git repo` | cwd not inside git | `git init` + commit |
-| unsupported agent in config | not claude/cursor/opencode/codex | `koi init --agent …` |
-| `config.yml has no tiers: block` | pre-tier config | re-run `koi init` (no legacy synthesize) |
-| `tiers.medium must list at least one candidate` | empty band | add a candidate or re-run `koi init` |
+Start with `koi doctor --probe` at the repo root. Setup problems: [koi troubleshooting](/koi/docs/troubleshooting).
 
 ## Gate and contract
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| every phase **gate red** | empty/missing `.koi/sensors/` or failing script | missing folder → `koi setup`; add missing sensors; run each with `bash` and fix the reported failure; [sensors](/docs/sensors) |
+| every phase **gate red** | empty/missing `.koi/sensors/` or failing script | missing folder → `koi setup`; add missing sensors; run each with `bash` and fix the reported failure; [sensors](/yokai/docs/sensors) |
 | **gate red after Seal** though Build looked green | supervisor re-ran sensors; Seal changed product, or a sensor flaked | HALT names the sensor; BACKLOG is unmarked so relaunch retries the same phase; investigate the reported failure and fix its cause |
 | `marked done but produced no commit` | agent edited, no commit | repair (default) commits if gate green; else fix METHOD |
-| dirty tree, gate green | bookkeeping miss | [repair](/docs/yokai/recovery) (default); `recovery: false` halts immediately |
+| dirty tree, gate green | bookkeeping miss | [repair](/yokai/docs/recovery) (default); `recovery: false` halts immediately |
 | `made no progress in 2 runs` | stall | with recovery on, Diagnose cycle; `recovery: false` Halt; or `/junji refine` |
 | halt at [gated] | `--guarded` | review phase; relaunch bare `yokai` |
-
 ## Build and feedback
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| halt before Seal, `FEEDBACK.md` present | Build did not converge | [recovery](/docs/yokai/recovery) Diagnose cycle (default); `recovery: false` Halt; read `.koi/run/FEEDBACK.md` / `saves/` |
+| halt before Seal, `FEEDBACK.md` present | Build did not converge | [recovery](/yokai/docs/recovery) Diagnose cycle (default); `recovery: false` Halt; read `.koi/run/FEEDBACK.md` / `saves/` |
 | Diagnose keeps granting Build | sensors still red | read `.koi/run/saves/`; fix plan or gate; set `--max-cost` |
-| judge blocking | advisory finding + gate context | fix findings; see [Build](/docs/yokai/build) |
+| judge blocking | advisory finding + gate context | fix findings; see [Build](/yokai/docs/build) |
 | judge never runs on red tests | intentional: the judge skips when authoritative sensors are red | fix the failure reported by the sensors first; judge runs only on a green gate |
-
 ## Looks stuck / high CPU / timeouts
 
 | Symptom | Cause | Fix |
@@ -52,20 +36,18 @@ First install: [Quickstart](/docs/start-here/quickstart). Overview: [Sandboxing]
 | `HALT: agent turn … timed out` / stream `agent turn timed out` | turn exceeded `agent_timeout_secs` (default 30m) | raise timeout or fix hung agent; orphaned adapters should be reaped |
 | yokai ~100%+ CPU while waiting | older build kept 30 FPS pulse | upgrade; quiet waits drop to ~5 FPS and clear pulse |
 | `effort … exposes no … selection` | stale Claude `effort:` on a Cursor candidate | omit `effort` on that candidate; set Cursor knobs via `speed` or run-global `session_options` |
-
 ## Sandbox: backend and build
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
-| `docker.sock` / docker API error on Apple backend | Ran `docker build` without a daemon | Use `container build -f .koi/Dockerfile.sandbox -t <tag> .` ([Launch](/docs/sandbox/launch)) |
+| `docker.sock` / docker API error on Apple backend | Ran `docker build` without a daemon | Use `container build -f .koi/Dockerfile.sandbox -t <tag> .` ([Launch](/yokai/docs/sandbox/launch)) |
 | `failed to connect to the docker API` on docker backend | Docker Desktop not running | Start Docker Desktop; `docker version`; retry `docker build` |
 | `sbx` not found or not working | Docker Sandboxes CLI missing | Install Docker Sandboxes; `sbx login`; or `yokai --host` / `enabled: false` |
 | `container` not found | Apple Container not installed | Install on macOS 26 + Apple silicon; `container system start` |
 | `container system` doctor ⚠ | Service not running | `container system start` before `yokai` |
-| wrong tools in-VM after Dockerfile edit | Named sandbox not recreated | [Recreate](/docs/sandbox/launch#recreate-both-backends) |
+| wrong tools in-VM after Dockerfile edit | Named sandbox not recreated | [Recreate](/yokai/docs/sandbox/launch#recreate-both-backends) |
 | `image:` mismatch | Tag in yml ≠ built tag | Rebuild; align `.koi/sandbox.yml` `image:` with the build `-t` |
 | Gatekeeper dialog for `mkfs.ext4` during `./install.sh` or first `sbx create` | Docker Sandboxes bundled formatter. Artifact builds no longer spawn `sbx` when Docker is installed but stopped; first `sbx create` still runs the helper | Start Docker Desktop and re-run `./install.sh`; or click Open once. After the daemon is up, `KOI_LINUX_BUILD_BACKEND=docker`. Do not `xattr -d` unless you already trust that `sbx` install. |
-
 ## Sandbox: image, agent, and harness
 
 | Symptom | Likely cause | Fix |
@@ -73,53 +55,48 @@ First install: [Quickstart](/docs/start-here/quickstart). Overview: [Sandboxing]
 | `opencode not found` (or other agent) in-VM | Stock `image:` without agent CLI | Build `.koi/Dockerfile.sandbox`; set `image:`; recreate |
 | `chmod … /usr/local/bin/yokai: Operation not permitted` | Apple image ends as non-root USER | Leave final USER **root** (Apple) or writable harness dir; rebuild; recreate |
 | `chmod` / harness copy fails on docker | Final USER cannot write `/home/agent/.local/bin` | Use template `agent` user or writable install dir |
-| gate red for missing toolchain in VM | Compiler/runtime not in image | Add `RUN` lines for what [sensors](/docs/sensors) need |
+| gate red for missing toolchain in VM | Compiler/runtime not in image | Add `RUN` lines for what [sensors](/yokai/docs/sensors) need |
 | Dockerfile missing (doctor ⚠) | Never set up with sandbox or file deleted | `koi setup` (sandbox on); or copy [`docs/examples/sandbox.Dockerfile`](https://github.com/getkoi/koi/blob/main/docs/examples/sandbox.Dockerfile) |
 | `Linux yokai missing` / build failed | No docker/sbx/container for artifact build | Run `./install.sh` from a koi clone; or `bash scripts/build-linux-artifacts.sh`; set `KOI_LINUX_BUILD_BACKEND` |
 | inner run re-launches sandbox | should not: check env | inner sets `YOKAI_SANDBOX_INNER=1`; use `yokai --host` to debug on host |
-
 ## Sandbox: auth, doctor, Apple sizing
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
 | auth fails inside yokai (Apple) | Agent not logged in **in-VM** | `container exec -it yokai-<repo> opencode` → `/connect`; recreate wipes auth |
 | doctor ✓ auth hint but run halts (Apple) | Host hint ≠ in-VM credentials | Login inside named container; ignore host-only OpenCode state |
-| `sbx` auth / secret errors (docker) | Not logged in or missing secret | `sbx login`; `sbx secret set -g …` per [Docker credentials guide](https://docs.docker.com/ai/sandboxes/security/credentials/) |
+| `sbx` auth / secret errors (docker) | Not logged in or missing secret | `sbx login`; `sbx secret set -g …` per [Docker credentials guide](https://koi/docs.docker.com/ai/sandboxes/security/credentials/) |
 | sandbox `{name}` not created yet (probe ⚠) | Never ran `yokai` after enabling | Run `yokai` once to create from `image:`; retry `koi doctor --probe` |
-| agent adapter ✗ on `--probe` | Agent binary not on PATH in VM | Bake agent in Dockerfile or one-time [sandbox-setup.sh](/docs/sandbox/host-and-escape); recreate |
+| agent adapter ✗ on `--probe` | Agent binary not on PATH in VM | Bake agent in Dockerfile or one-time [sandbox-setup.sh](/yokai/docs/sandbox/host-and-escape); recreate |
 | host auth probe ✗, sandbox ✓ | Host agent login missing | Log agent in on host **and** in-VM for Apple opencode |
-| OOM / thrash / slow reclaim | VM too small (1 GiB CLI default on old containers) | Set `memory` / `cpus` in [sandbox.yml](/docs/sandbox/sandbox-yml); recreate |
+| OOM / thrash / slow reclaim | VM too small (1 GiB CLI default on old containers) | Set `memory` / `cpus` in [sandbox.yml](/yokai/docs/sandbox/sandbox-yml); recreate |
 | undersized warning on reconnect | Existing VM below configured limits | Recreate (re-auth in-VM) |
 | limits unchanged after editing yml | Limits fixed at `container run` | Recreate. The launcher does not auto-resize. |
 
-Doctor has two modes. Host structural checks run with `koi doctor`. In-VM adapter checks run with `koi doctor --probe`. See [Host & escape](/docs/sandbox/host-and-escape).
+Doctor has two modes. Host structural checks run with `koi doctor`. In-VM adapter checks run with `koi doctor --probe`. See [Host & escape](/yokai/docs/sandbox/host-and-escape).
 
-Default Apple size on create is **8g / 4 cpus** ([ADR-0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md)). Recreate commands: [Launch](/docs/sandbox/launch#recreate-both-backends).
-
+Default Apple size on create is **8g / 4 cpus** ([ADR-0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md)). Recreate commands: [Launch](/yokai/docs/sandbox/launch#recreate-both-backends).
 ## Working folder accidents
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `BACKLOG.md` missing mid-run | agent ran `/junji consolidate` in one turn | restore `.koi/run/` from git; METHOD forbids consolidate unattended |
 | auth OK on host, fail in VM | credentials in-VM for sandbox | log agent inside container once (e.g. opencode `/connect`) |
-
 ## Budget and recovery
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `cost ceiling reached` / `token ceiling reached` | `--max-cost` / `--max-tokens` | raise or omit flag |
 | repair skipped | `recovery: false` | set `recovery: true` or commit manually |
-
 ## Escalation checklist
 
 1. `koi doctor --probe` from repo root
 2. Run every `.koi/sensors/*.sh` by hand
 3. Read last `.koi/run/ledger.jsonl` line and `.koi/run/RECOVERY.md` / `saves/` if present
 4. For Build stalls: `.koi/run/FEEDBACK.md`
-5. [Run](/docs/yokai/run) flags and [Recovery](/docs/yokai/recovery) tuning
-
+5. [Run](/yokai/docs/run) flags and [Recovery](/yokai/docs/recovery) tuning
 ## Related
 
-- [CLI](/docs/reference/cli)
-- [Launch a sandbox](/docs/sandbox/launch)
-- [Cheatsheet](/docs/reference/cheatsheet)
+- [CLI](/yokai/docs/cli)
+- [Launch a sandbox](/yokai/docs/sandbox/launch)
+- [Cheatsheet](/yokai/docs/cheatsheet)

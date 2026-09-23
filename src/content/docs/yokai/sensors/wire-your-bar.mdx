@@ -19,7 +19,7 @@ Use this page when you are setting up or updating **`.koi/sensors/`**. Sensors a
 
 1. **List concerns**: one atomic check each (never a monolithic `gate.sh`).
 2. **Prefix order**: `NN-name.sh` when fmt must precede test, or audits after build artifacts exist.
-3. **Copy recipes** from [/recipes](/recipes). Tune thresholds via env vars or project config, not by weakening scripts.
+3. **Copy recipes** from [/yokai/recipes](/yokai/recipes). Tune thresholds via env vars or project config, not by weakening scripts.
 4. **Write** under `.koi/sensors/` only after agreement (yokai skill: do not overwrite existing scripts without an explicit ask).
 5. **Mirror** the same list into `CONTEXT.md › Verification bar`.
 6. **Smoke-run** each script from repo root: `bash .koi/sensors/<name>.sh`.
@@ -39,7 +39,7 @@ Use this page when you are setting up or updating **`.koi/sensors/`**. Sensors a
 
 ```bash
 mkdir -p .koi/sensors
-# copy a script from /recipes into .koi/sensors/NN-name.sh
+# copy a script from /yokai/recipes into .koi/sensors/NN-name.sh
 bash .koi/sensors/NN-name.sh
 ```
 

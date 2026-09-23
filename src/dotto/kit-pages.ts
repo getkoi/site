@@ -107,7 +107,7 @@ import { CloseIcon } from "@/icons/docs/pixels";
 MDX anchors use this export so prose does not hydrate StyleX onto every link.`,
     usage: `import { Link } from "@/dotto/components";
 
-<Link href="/docs">guide</Link>
+<Link href="/koi/docs">guide</Link>
 <Link href="https://github.com/getkoi/koi">GitHub</Link>`,
   },
   card: {
@@ -126,7 +126,7 @@ If the whole card is a target, use ClickableCard or SelectableCard.`,
 Do not nest another button or link inside it.`,
     usage: `import { ClickableCard } from "@/dotto/components";
 
-<ClickableCard label="Open docs" href="/docs" padding={3} maxWidth={360}>
+<ClickableCard label="Open docs" href="/koi/docs" padding={3} maxWidth={360}>
   Clickable card. Goes to docs.
 </ClickableCard>`,
   },
@@ -198,7 +198,7 @@ Badge is status. Citation is a pointer.`,
     usage: `import { Citation } from "@/dotto/components";
 
 Drive the phase list through yokai
-<Citation number={1} source={{ title: "yokai run", url: "/docs/yokai/run" }} />.
+<Citation number={1} source={{ title: "yokai run", url: "/yokai/docs/run" }} />.
 <Citation number={2} variant="number" source={{ title: "junji" }} />`,
   },
   code: {

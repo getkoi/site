@@ -2,7 +2,7 @@
 title: Build loop
 navLabel: Build
 description: "Follow implementation, sensor checks, review, and corrections inside a phase."
-section: yokai
+section: guide
 kind: explanation
 order: 35
 ---
@@ -19,9 +19,9 @@ Glossary: [crates/yokai/CONTEXT.md](https://github.com/getkoi/koi/blob/main/crat
 
 One **iteration** is an agent turn (implement or correct) plus a **sensing** pass.
 By default each turn starts fresh from the tree, spec, and `FEEDBACK.md`.
-With [token savings](/docs/reference/configuration#token-savings), planning, coding and sealing
+With [token savings](/yokai/docs/configuration#token-savings), planning, coding and sealing
 share a session, corrections return to it, and repeated reviews share a separate session.
-See the [context-window diagrams](/docs/reference/configuration#context-windows-with-and-without-token-savings)
+See the [context-window diagrams](/yokai/docs/configuration#context-windows-with-and-without-token-savings)
 for the session lifecycle in both modes.
 
 ```mermaid
@@ -117,9 +117,9 @@ CLI: `yokai --max-iters 3`.
 
 ## Swarm (optional)
 
-Use [swarms](/docs/yokai/swarms) to split work among parallel workers and merge their output. Both the run setting and a `[swarm]` phase tag must enable them. Plain phases use one coder.
+Use [swarms](/yokai/docs/swarms) to split work among parallel workers and merge their output. Both the run setting and a `[swarm]` phase tag must enable them. Plain phases use one coder.
 
-The swarm guide covers setup, worker limits, review, failures, and interrupted work. For fresh and reused conversations, read [Sessions](/docs/yokai/sessions).
+The swarm guide covers setup, worker limits, review, failures, and interrupted work. For fresh and reused conversations, read [Sessions](/yokai/docs/sessions).
 
 ## Vocabulary
 
@@ -146,7 +146,7 @@ The swarm guide covers setup, worker limits, review, failures, and interrupted w
 
 ## Next
 
-- [Run](/docs/yokai/run): flags, halt conditions
-- [Recovery](/docs/yokai/recovery): when Build does not converge
-- [junji guide › next](/docs/junji/guide): human `next` protocol
-- [Sensors](/docs/sensors): authoring `.koi/sensors/*.sh`
+- [Run](/yokai/docs/run): flags, halt conditions
+- [Recovery](/yokai/docs/recovery): when Build does not converge
+- [junji guide › next](/junji/docs/guide): human `next` protocol
+- [Sensors](/yokai/docs/sensors): authoring `.koi/sensors/*.sh`

@@ -11,7 +11,7 @@
     "build": "bun run theme:build && next build",
     "start": "next start",
     "check": "next typegen && tsc --noEmit",
-    "test": "bun test src/data src/dotto",
+    "test": "bun test src/data src/dotto src/docs",
     "validate:recipes": "bun ./scripts/validate-sensor-recipes.ts"
   },
   "dependencies": {

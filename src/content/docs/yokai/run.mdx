@@ -2,7 +2,7 @@
 title: Run yokai
 navLabel: Run
 description: "Start or continue a run, choose limits, and check the result."
-section: yokai
+section: guide
 kind: how-to
 order: 30
 ---
@@ -12,7 +12,7 @@ Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **
 
 ## Prerequisites
 
-- [Quickstart](/docs/start-here/quickstart) complete, `koi doctor --probe` green
+- [Quickstart](/koi/docs/quickstart) complete, `koi doctor --probe` green
 - `[todo]` (or in-flight) phases in `.koi/run/BACKLOG.md`
 - gate scripts under `.koi/sensors/` (project home)
 
@@ -36,15 +36,15 @@ Defaults: `--working-folder .koi/run`, `--repo .`.
 
 ## Continue a run or choose a session mode
 
-Relaunch `yokai` from the same repo to continue interrupted work. Yokai reads the phase state and saved session records. See [Sessions](/docs/yokai/sessions) for what resumes after an interruption.
+Relaunch `yokai` from the same repo to continue interrupted work. Yokai reads the phase state and saved session records. See [Sessions](/yokai/docs/sessions) for what resumes after an interruption.
 
 To reuse context within each phase, enable `token_savings: true` in `config.yml`
 or launch with `yokai --token-savings`. Planning, implementation and Seal share a
 session; reviews share another. Review is required and swarms are disabled.
-See [token savings configuration](/docs/reference/configuration#token-savings) for
+See [token savings configuration](/yokai/docs/configuration#token-savings) for
 recovery, replacement sessions, and delegation restrictions.
 
-For parallel workers, follow [Swarms](/docs/yokai/swarms).
+For parallel workers, follow [Swarms](/yokai/docs/swarms).
 
 ### Agent, model, effort (pin)
 
@@ -82,7 +82,7 @@ yokai --max-iters 3
 ```
 
 Overrides `.koi/run/config.yml` `build.max_iters`. Each phase runs Plan → Build → Seal (see
-[Build](/docs/yokai/build)). Non-convergence enters [recovery](/docs/yokai/recovery) by default
+[Build](/yokai/docs/build)). Non-convergence enters [recovery](/yokai/docs/recovery) by default
 (Diagnose → grant Build) and leaves `.koi/run/FEEDBACK.md`. `recovery: false` Halts immediately.
 
 ### Run-wide cost ceiling
@@ -105,7 +105,7 @@ yokai --theme hiru
 ```
 
 Hours: `yoru` | `hiru`. `yoi` and `asa` alias to `yoru`. `terminal` (default) inherits the emulator palette (not an hour).
-See [TUI](/docs/yokai/tui).
+See [TUI](/yokai/docs/tui).
 
 ## What "done" means
 
@@ -116,7 +116,7 @@ After each phase the supervisor checks the **contract**:
 3. gate green (every `.koi/sensors/*.sh` exit 0)
 4. clean working tree
 
-Failure ⇒ [recovery](/docs/yokai/recovery) by default (Diagnose cycle). `recovery: false` Halts immediately.
+Failure ⇒ [recovery](/yokai/docs/recovery) by default (Diagnose cycle). `recovery: false` Halts immediately.
 
 **Stall:** two consecutive runs fail to advance the same phase. With recovery on, that miss enters the cycle; with recovery off, Halt.
 
@@ -133,7 +133,7 @@ yokai --host    # escape hatch: run on host despite enabled sandbox
 Gate tools and the **agent CLI** must be in the **sandbox image** (`.koi/Dockerfile.sandbox`), not
 just on the host. Stock bases like `node:22-bookworm` without the agent fail inner preflight.
 
-Walkthrough: [Launch a sandbox](/docs/sandbox/launch). Overview: [sandbox](/docs/sandbox/overview).
+Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch). Overview: [sandbox](/yokai/docs/sandbox).
 
 Durable declaration (project home):
 
@@ -167,7 +167,7 @@ Phase fields include: `phase`, `agent`, `model`, `session_id`, `tokens`, `cost_u
 `advanced`, `commit_made`, `head_before`, `head_after`, `ended_at_unix`. Old lines without `kind`
 parse as phase rows.
 
-Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/docs/yokai/tui)).
+Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/yokai/docs/tui)).
 
 `/junji consolidate` removes `.koi/run/`. Copy the ledger first if you want it outside git.
 
@@ -189,10 +189,10 @@ Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/docs/yokai/tui)).
 | every candidate skipped | wait `retry_after_secs` (default 3600) or fix auth/quota |
 | sandbox agent not found | build `.koi/Dockerfile.sandbox`; recreate VM |
 
-More: [Troubleshooting](/docs/reference/troubleshooting).
+More: [Troubleshooting](/yokai/docs/troubleshooting).
 
 ## Next
 
-- [TUI](/docs/yokai/tui): observe a live run
-- [Recovery](/docs/yokai/recovery): repair, Diagnose, Fix
-- [Reference: yokai flags](/docs/reference/cli): full flag list
+- [TUI](/yokai/docs/tui): observe a live run
+- [Recovery](/yokai/docs/recovery): repair, Diagnose, Fix
+- [Reference: yokai flags](/yokai/docs/cli): full flag list

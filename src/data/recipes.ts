@@ -1,4 +1,4 @@
-/** Copy-ready recipe registry for the /recipes surface. */
+/** Copy-ready recipe registry for the /yokai/recipes surface. */
 
 export interface RecipeFile {
   /** Path inside the kind's recipe root (src/data/sensor-recipes or src/data/sandbox-recipes). */

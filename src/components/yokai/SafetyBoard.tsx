@@ -90,7 +90,7 @@ export default function SafetyBoard() {
 
       <p className="safety-board__docs reveal">
         Running many independent phases?{" "}
-        <AppLink href="/docs/yokai/build#swarm-optional">Swarm mode is in the docs</AppLink>,
+        <AppLink href="/yokai/docs/build#swarm-optional">Swarm mode is in the docs</AppLink>,
         after the single-run model is clear.
       </p>
     </section>

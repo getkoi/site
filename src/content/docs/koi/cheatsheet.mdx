@@ -1,0 +1,56 @@
+---
+title: Setup cheatsheet
+navLabel: Setup cheatsheet
+description: "Install and initialize a project for a first run."
+section: reference
+kind: reference
+order: 10
+---
+
+For driver and sandbox commands, see the [yokai cheatsheet](/yokai/docs/cheatsheet).
+
+## Install (once)
+
+```bash
+# from a koi checkout
+./install.sh
+# ensures koi + yokai on PATH (~/.cargo/bin)
+```
+
+```bash
+# OpenCode on the host
+npm install -g opencode-ai@latest
+opencode    # then /connect
+```
+
+```bash
+# Claude (default agent) — log in before yokai
+claude auth login
+claude auth status
+```
+
+```bash
+# Codex — API key, or ChatGPT login via the Codex CLI
+export CODEX_API_KEY=…   # or OPENAI_API_KEY; NO_BROWSER=1 in sandbox
+npx -y @agentclientprotocol/codex-acp --version
+```
+## Project setup + init (host-first)
+
+```bash
+cd /path/to/repo
+koi setup               # once per repo — .koi/sensors/ + .koi/sandbox.yml
+# sandbox: No
+koi init                # per effort — .koi/run/ config
+# agent: opencode
+```
+
+```bash
+koi setup --sandbox off --yes                # non-interactive project home
+koi init --yes                               # non-interactive defaults
+koi init --agent cursor --permission approve-all
+```
+
+```bash
+# in the coding agent
+/junji begin
+```

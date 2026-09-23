@@ -1,23 +1,13 @@
 ---
 title: Configuration
 navLabel: Configuration
-description: "Look up driver settings, sandbox configuration, and files saved during a run."
+description: "Driver settings, sessions, model tiers, and runtime artifacts."
 section: reference
 kind: reference
-order: 20
+order: 30
 ---
 
-Precedence for driver settings: **CLI flag → committed YAML → built-in default**. Per-run launch choices (`--once`, `--guarded`, `--host`, `--headless`, `--max-cost`, `--max-tokens`, `--theme`) are never written to YAML.
-
-Overview: [Start here](/docs/start-here) (canonical `.koi/` layout). Sandbox: [Sandbox overview](/docs/sandbox/overview). Commands: [cheatsheet](/docs/reference/cheatsheet).
-
-## Project home vs working folder
-
-**Project home** is `.koi/` at the repo root. It is durable and survives `/junji consolidate`.
-
-**Working folder** is `.koi/run/`. It holds volatile junji and driver scaffolding, and `consolidate` removes only this subtree (`git rm -r .koi/run/`).
-
-The full tree lives on [Start here](/docs/start-here#two-folders). Framework ADR: [0004: project home vs run](https://github.com/getkoi/koi/blob/main/docs/adr/0004-project-home-and-run-working-folder.md). Use `--working-folder` to point at the volatile folder (default `.koi/run`).
+Precedence: CLI flag → committed YAML → built-in default. Project layout: [Project home](/koi/docs/project-home). Sandbox declaration: [sandbox.yml](/yokai/docs/sandbox/sandbox-yml). Sensor scripts: [Sensors](/yokai/docs/sensors).
 
 ## `.koi/run/config.yml`
 
@@ -41,7 +31,7 @@ Top-level `agent` / `model` / `effort` still deserialize on old files, then Halt
 
 ### Token savings
 
-Read [Sessions](/docs/yokai/sessions) for the lifecycle and interruption scenarios. Use the settings below to configure that behavior.
+Read [Sessions](/yokai/docs/sessions) for the lifecycle and interruption scenarios. Use the settings below to configure that behavior.
 
 Enable `token_savings: true`, select it in `koi init`, or pass `yokai --token-savings`
 for one launch. Each phase shares one session for planning, implementation and sealing,
@@ -137,7 +127,7 @@ phase plan skips the Plan turn in either mode.
 These windows are separate: reviewing does not append the judge's conversation
 to the coder's window. The driver passes findings through feedback. Within each
 session, prompts, replies and tool results consume context; compaction can reduce
-occupancy. The [TUI bars](/docs/yokai/tui#context-gauge) show the latest known
+occupancy. The [TUI bars](/yokai/docs/tui#context-gauge) show the latest known
 occupancy for that session, not the sum of its turn snapshots or lifetime token
 spend. All rows with the same session ID therefore share the latest reading.
 
@@ -231,7 +221,6 @@ this run may honor `[swarm]` phases, plus the worker cap; `--yes` leaves it omit
 
 Fan-out runs only when `enabled` is true **and** the live BACKLOG heading is `[swarm]`. `[plain]`
 (or a missing tag) stays a single coder. One work item skips the fan-out. There is no `--swarm` flag.
-
 ## `.koi/run/config.yml` `build:`
 
 Plan → Build → Seal tuning for every phase. Written by `koi init`; overridable per run with `yokai --max-iters`.
@@ -258,51 +247,6 @@ build:
 #   guides:
 #     - docs/style.md
 ```
-
-## `.koi/sandbox.yml`
-
-Durable sandbox declaration at **project home**, not under `run/`. Written by `koi setup`; read by `yokai` and `koi doctor`. Flat keys (no nested `sandbox:` block in `config.yml`).
-
-| Field | Default when omitted |
-|-------|----------------------|
-| `enabled` | `false` |
-| `backend` | `docker` (`docker` \| `apple`) |
-| `name` | `yokai-<repo-basename>` |
-| `image` | required when `enabled: true` |
-| `memory` | `8g` (Apple only) |
-| `cpus` | `4` (Apple only) |
-
-When `enabled: true`, bare `yokai` is a thin launcher into a Linux VM built from `.koi/Dockerfile.sandbox`. Use `yokai --host` to force the local supervisor.
-
-Example (host-first):
-
-```yaml
-# .koi/sandbox.yml
-enabled: false
-```
-
-Example (sandbox on):
-
-```yaml
-# .koi/sandbox.yml
-enabled: true
-backend: docker          # or apple
-image: koi-myproj-sandbox
-# name: yokai-myproj
-# memory: 8g              # apple only
-# cpus: 4                # apple only
-```
-
-Walkthroughs: [Launch a sandbox](/docs/sandbox/launch).
-
-## `.koi/sensors/`
-
-The verification bar lives in durable **project home**, not the working folder. `koi setup` creates the folder with a README pointer only; the scripts come from the yokai skill or `/junji plan`. One atomic concern per `*.sh`; exit 0 means pass. The **gate** is green when every script passes (sorted by filename, fail-fast).
-
-Empty or missing folder means the gate fails closed. Recipes: [/recipes](/recipes). Semantics: [sensors](/docs/sensors).
-
-Framework ADR: [0005: atomic sensors folder](https://github.com/getkoi/koi/blob/main/docs/adr/0005-atomic-sensors-folder.md).
-
 ## Runtime artifacts (working folder)
 
 Auto-created files under `.koi/run/`. Removed with `consolidate` unless copied elsewhere first.
@@ -319,14 +263,3 @@ Auto-created files under `.koi/run/`. Removed with `consolidate` unless copied e
 **`FEEDBACK.md` location:** under `.koi/run/FEEDBACK.md` during a phase (not repo root). Diagnose reads that path. On convergence, yokai removes it before Seal. On non-convergence it stays for the human or Diagnose.
 
 Copy `ledger.jsonl` and `sessions.jsonl` before `consolidate` if you want the audit trail outside git history.
-
-## Optional project-home hooks
-
-| Path | When |
-|------|------|
-| `.koi/Dockerfile.sandbox` | Scaffolded write-if-absent when `koi setup` enables sandbox |
-| `.koi/sandbox-setup.sh` | Runs once per named sandbox for extras the image does not cover |
-
-## Reconfigure
-
-Re-running `koi init` loads existing `config.yml` as wizard defaults and rewrites only volatile driver config. It never overwrites a filled `CONTEXT.md`, live `BACKLOG.md`, or sensor scripts. To change the durable declaration (`sandbox.yml`, Dockerfile scaffold), re-run `koi setup`.

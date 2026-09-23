@@ -1,0 +1,22 @@
+---
+title: Setup troubleshooting
+navLabel: Setup troubleshooting
+description: "Diagnose installation, agent login, and project initialization."
+section: reference
+kind: reference
+order: 50
+---
+
+Start with `koi doctor --probe` at the repo root. For phase, sensor, and sandbox failures, use [yokai troubleshooting](/yokai/docs/troubleshooting).
+
+## Setup and preflight
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| `spawning claude adapter…` / `cursor-agent…` / OpenCode ACP… / `codex-acp` | agent or Node not on PATH | install agent; Node for Claude and Codex; re-run doctor |
+| halts immediately, agent error | agent not configured | log agent in; OpenCode: `/connect`; `koi doctor --probe` |
+| `doctor` working folder ✗ | no `.koi/run/` or wrong directory | repo root; `koi init` then `/junji begin` |
+| `not a git repo` | cwd not inside git | `git init` + commit |
+| unsupported agent in config | not claude/cursor/opencode/codex | `koi init --agent …` |
+| `config.yml has no tiers: block` | pre-tier config | re-run `koi init` (no legacy synthesize) |
+| `tiers.medium must list at least one candidate` | empty band | add a candidate or re-run `koi init` |

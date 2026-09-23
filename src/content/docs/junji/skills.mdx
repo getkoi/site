@@ -1,99 +1,26 @@
 ---
-title: Agent skills
-navLabel: Skills
-description: "Install the Junji and Yokai skills and choose the right one for the task."
-section: junji
-kind: reference
+title: junji skill
+navLabel: Skill
+description: "Install the method skill and understand what its verbs own."
+section: guide
+kind: explanation
 order: 30
 ---
 
-## Install
-
-Both skills ship from the koi repo, installed with one command:
+Install the project-agnostic skill from the koi repository:
 
 ```bash
 npx skills add getkoi/koi
 ```
 
-Both are project-agnostic: project state lives under `.koi/`, never inside the skill markdown.
+Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/junji/SKILL.md). Invoke `/junji <verb>` in your coding agent; the [guide](/junji/docs/guide) walks through each verb. The skill saves the plan and progress under `.koi/run/` and executes one phase at a time with `next`.
 
-| | **junji** | **yokai** (skill) |
-|---|-----------|-------------------|
-| Role | The **method** | **Project-home helper** — sensors + sandbox recipe |
-| Invoked as | `/junji <verb>` | On demand — "wire my sensors", sandbox Dockerfile |
-| Runs phases | Yes — via `next` | **Never** |
-| Writes | `.koi/run/` scaffolding and method files; product code through `next` | `.koi/sensors/*.sh`, mirrors bar to CONTEXT |
-| Reads driver config | **No** — never touches `config.yml`, ledger, `FEEDBACK.md` | No |
+## Dispatch
 
-The yokai CLI (driver) is a separate Rust binary, not this skill. See [yokai](/docs/yokai). Verb walkthrough: [Guide](/docs/junji/guide).
+- No `.koi/run/BACKLOG.md` → `begin`.
+- “Do the next task” → `next`.
+- Otherwise, consult `BACKLOG.md` › Next action.
 
-## junji skill
+The skill loads its per-verb instructions only as needed. It owns the method files and can wire the initial verification bar during `plan`. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
 
-Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/junji/SKILL.md)
-
-Progressive disclosure: thin `SKILL.md` plus per-verb files under `verbs/`; the agent loads only the verb it runs.
-
-Dispatch (no verb):
-
-- No `.koi/run/BACKLOG.md` → `begin`
-- User says "do the next task" → `next`
-- Else → read `BACKLOG.md` › Next action and run (or confirm) that verb
-
-Rules (skill-owned): one phase per `next`; paths under `.koi/run/` only (sensors at `.koi/sensors/`); gate is sacred; honor `CONTEXT.md` › Standing overrides verbatim.
-
-Driver reference (not a verb): [`references/autonomous-driver.md`](https://github.com/getkoi/koi/blob/main/skills/junji/references/autonomous-driver.md). Glossary: [`skills/junji/CONTEXT.md`](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md).
-
-## yokai skill
-
-Path: [`skills/yokai/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md)
-
-Not a junji verb. Invoke it when you need a verification bar or sandbox image recipe aligned with the driver.
-
-### Sensor workflow
-
-1. Survey repo: real fmt/lint/test/build commands for this stack
-2. Propose atomic scripts (one concern each; `NN-` prefix when order matters)
-3. Write `.koi/sensors/*.sh` only after agreement. Never overwrite existing scripts without an explicit ask.
-4. Mirror scripts into `.koi/run/CONTEXT.md` › Verification bar (lockstep)
-5. Smoke-run each script from repo root and report red/green by name. Never weaken a red sensor.
-
-Copy-ready scripts: [recipes](/recipes). Gate semantics: [Sensors](/docs/sensors). How-to: [wire your bar](/docs/sensors/how-to/wire-your-bar).
-
-### Sandbox Dockerfile
-
-Authors `.koi/Dockerfile.sandbox` to match launcher constraints:
-
-| Backend | Harness install dir | Default USER |
-|---------|---------------------|--------------|
-| `apple` | `/usr/local/bin` | **root** |
-| `docker` | `/home/agent/.local/bin` | **`agent`** |
-
-After image changes, recreate the named sandbox before `yokai`. Details: [sandbox.yml and image](/docs/sandbox/sandbox-yml), [ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md).
-
-## What neither skill does
-
-| Concern | Owner |
-|---------|--------|
-| Unattended phase loop | **yokai** CLI — [Run](/docs/yokai/run) |
-| Plan → Build → Seal | **yokai** — [Build](/docs/yokai/build) |
-| Recovery turns | **yokai** — [Recovery](/docs/yokai/recovery) |
-| `config.yml`, ledger | **koi init** + driver — [Quickstart](/docs/start-here/quickstart) · [CLI](/docs/reference/cli) |
-| `sandbox.yml`, sensors folder scaffold | **koi setup** — [Quickstart](/docs/start-here/quickstart) |
-
-## File ownership summary
-
-```
-.koi/
-  sensors/                  koi setup (folder + README pointer)
-  sensors/*.sh              junji plan (once) · yokai skill · human
-  sandbox.yml               koi setup
-  Dockerfile.sandbox        koi setup (scaffold) · yokai skill · human
-  run/
-    config.yml              koi init (driver-owned; includes build:)
-    PLAN, CONTEXT, …        junji verbs
-    FEEDBACK.md             yokai (Build only; deleted before Seal)
-    RECOVERY.md             yokai driver (append-only)
-    ledger.jsonl            yokai driver
-```
-
-`consolidate` removes only `.koi/run/`. Sensors and sandbox config survive.
+For later sensor changes and sandbox image recipes, use the [yokai helper skill](/yokai/docs/skill). To run prepared phases unattended, use the [yokai driver](/yokai/docs/run).

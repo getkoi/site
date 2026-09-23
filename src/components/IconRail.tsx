@@ -5,10 +5,8 @@ import { Github } from "pixelarticons/react/Github.js";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import {
-  BookMark,
   ChevronLeftIcon,
   ChevronRightIcon,
-  RobotMark,
 } from "../icons/docs/pixels";
 import { surfaceFromPath, type Surface } from "../lib/surface";
 import { applyHour, readHour, toggleHour } from "../dotto/hour";
@@ -27,11 +25,11 @@ function RailTip({ label, children }: { label: string; children: ReactNode }) {
 }
 
 type RailItem = {
-  id: Surface | "llms";
+  id: Surface;
   href: string;
   name: string;
   ariaLabel: string;
-  kind: "img" | "book" | "robot";
+  kind: "img";
   src?: string;
 };
 
@@ -46,34 +44,13 @@ const ITEMS: RailItem[] = [
     src: "/yoru-sentinel.svg",
   },
   { id: "yokai", href: "/yokai", name: "yokai", ariaLabel: "yokai", kind: "img", src: "/yoru-kitsune.svg" },
-  { id: "docs", href: "/docs", name: "docs", ariaLabel: "documentation", kind: "book" },
-  {
-    id: "recipes",
-    href: "/recipes",
-    name: "recipes",
-    ariaLabel: "recipes",
-    kind: "img",
-    src: "/niguiri.svg",
-  },
-  { id: "llms", href: "/llms.txt", name: "llms.txt", ariaLabel: "llms.txt", kind: "robot" },
 ];
 
 function itemCurrent(item: RailItem, surface: Surface, pathname: string) {
-  if (item.id === "llms") {
-    return pathname === "/llms.txt" || pathname.endsWith("/llms.txt");
-  }
-  if (pathname === "/llms.txt" || pathname.endsWith("/llms.txt")) return false;
-  if (item.id === "koi") return pathname === "/" || pathname === "";
   return surface === item.id;
 }
 
 function RailIcon({ item }: { item: RailItem }) {
-  if (item.kind === "book") {
-    return <BookMark className="icon-rail__img h-7 w-7 shrink-0" />;
-  }
-  if (item.kind === "robot") {
-    return <RobotMark className="icon-rail__img h-7 w-7 shrink-0" />;
-  }
   return (
     <img
       className="icon-rail__img"
@@ -180,7 +157,7 @@ function RailLink({
       className="icon-rail__link"
       href={item.href}
       aria-current={current ? "page" : undefined}
-      data-surface={item.id === "llms" ? undefined : item.id}
+      data-surface={item.id}
       aria-label={collapsed ? item.ariaLabel : undefined}
     >
       {inner}

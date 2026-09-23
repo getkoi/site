@@ -228,7 +228,7 @@ export default function Workbench() {
                   declared image locally.
                 </p>
               </div>
-              <AppLink className="recipes-configurator__docs" href="/docs/sandbox/overview">
+              <AppLink className="recipes-configurator__docs" href="/yokai/docs/sandbox">
                 Read sandbox boundaries <span aria-hidden="true">↗</span>
               </AppLink>
             </aside>

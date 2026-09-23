@@ -1,4 +1,4 @@
-import { docHref, sectionLabel, sortDocs } from "@/docs/registry";
+import { docHref, docTool, sectionLabel, sortDocs } from "@/docs/registry";
 import { loadDocs } from "@/lib/content";
 import { SITE_ORIGIN } from "@/lib/site";
 
@@ -10,12 +10,13 @@ export function GET() {
   const parts: string[] = [
     "# koi — full documentation",
     "",
-    `> Complete prose dump of ${SITE_ORIGIN}/docs. Index: ${SITE_ORIGIN}/llms.txt. Recipes: ${SITE_ORIGIN}/recipes`,
+    `> Documentation for koi, junji, and yokai. Index: ${SITE_ORIGIN}/llms.txt. Recipes: ${SITE_ORIGIN}/yokai/recipes`,
     "",
   ];
 
   for (const entry of all) {
-    parts.push(`# ${sectionLabel(entry.data.section)} / ${entry.data.title}`);
+    const tool = docTool(entry.id);
+    parts.push(`# ${tool === "junji" ? "junji" : `${tool} / ${sectionLabel(tool, entry.data.section)}`} / ${entry.data.title}`);
     parts.push("");
     parts.push(`Source: ${SITE_ORIGIN}${docHref(entry.id)}`);
     parts.push("");

@@ -68,7 +68,7 @@ export function DottoEntryBody({ id }: { id: string }) {
       return (
         <NativeFrame>
           <Text>
-            Inline <Link href="/docs">guide</Link>
+            Inline <Link href="/koi/docs">guide</Link>
             {" · "}
             <Link href="https://github.com/getkoi/koi">GitHub</Link>
           </Text>

@@ -116,7 +116,7 @@ export default function FirstRun() {
             </span>
           </div>
           <Button
-            href="/docs/start-here/quickstart"
+            href="/koi/docs/quickstart"
             label="Open the full quickstart"
             variant="notch"
             size="md"
@@ -133,7 +133,7 @@ export default function FirstRun() {
         <p>
           <strong>Under the floor:</strong> tori is the shared ACP connector port used
           by yokai. It is an implementation detail, documented in the
-          <AppLink href="/docs/reference/glossaries">glossary map</AppLink>.
+          <AppLink href="/koi/docs/glossary">glossary map</AppLink>.
         </p>
       </div>
     </section>

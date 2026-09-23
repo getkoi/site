@@ -2,7 +2,7 @@
 title: Understand sessions
 navLabel: Sessions
 description: Follow a phase across fresh sessions, reused context, and interrupted turns.
-section: yokai
+section: guide
 kind: explanation
 order: 37
 ---
@@ -33,7 +33,7 @@ This is the default for plain phases. You do not need to enable it.
 
 ## Reuse context with token savings
 
-Run `yokai --token-savings` to reuse conversations within each phase. For a persistent setting, use [token savings configuration](/docs/reference/configuration#token-savings).
+Run `yokai --token-savings` to reuse conversations within each phase. For a persistent setting, use [token savings configuration](/yokai/docs/configuration#token-savings).
 
 ```mermaid
 flowchart TD
@@ -49,7 +49,7 @@ flowchart TD
 
 Review is required in this mode. Swarms are disabled, and prompts prohibit delegation. Two conversations per phase is the normal pattern, not a hard limit: failed reattachment or explicit context exhaustion can require a replacement session.
 
-Use [swarms](/docs/yokai/swarms) when you want parallel workers. Use token savings when you want to retain context between turns instead.
+Use [swarms](/yokai/docs/swarms) when you want parallel workers. Use token savings when you want to retain context between turns instead.
 
 ## Continue after an interruption
 
@@ -57,10 +57,10 @@ Relaunch Yokai against the same working folder. A phase marked `[building]` resu
 
 An interrupted turn may reattach to its live session even when token savings is off. Reattaching an unfinished turn and reusing a conversation across completed turns are separate behaviors.
 
-Swarm continuation also checks saved work items and worker records. See [continue a swarm](/docs/yokai/swarms#continue-an-interrupted-swarm).
+Swarm continuation also checks saved work items and worker records. See [continue a swarm](/yokai/docs/swarms#continue-an-interrupted-swarm).
 
 ## Inspect what happened
 
-Use the [TUI sessions view](/docs/yokai/tui) or inspect `.koi/run/sessions.jsonl`. The file records turns. Several rows can share a session ID, so its row count is not a count of unique conversations.
+Use the [TUI sessions view](/yokai/docs/tui) or inspect `.koi/run/sessions.jsonl`. The file records turns. Several rows can share a session ID, so its row count is not a count of unique conversations.
 
-For exact session settings and the existing context-window diagrams, see [configuration](/docs/reference/configuration#context-windows-with-and-without-token-savings). If the run cannot advance, see [recovery](/docs/yokai/recovery).
+For exact session settings and the existing context-window diagrams, see [configuration](/yokai/docs/configuration#context-windows-with-and-without-token-savings). If the run cannot advance, see [recovery](/yokai/docs/recovery).

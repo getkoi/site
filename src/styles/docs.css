@@ -38,6 +38,15 @@
 }
 
 /* Optional detail stays in the document for search, links and machine feeds. */
+.docs-page [data-slot="toc"] {
+  top: 76px;
+  max-height: calc(100dvh - 136px);
+}
+
+.docs-page [data-slot="prose"] :is(h2, h3, h4) {
+  scroll-margin-top: 88px;
+}
+
 .docs-page [data-slot="prose"] details {
   margin-block: 1.5rem;
   padding: 1rem 1.25rem;

@@ -1,0 +1,25 @@
+---
+title: yokai helper skill
+navLabel: Helper skill
+description: "Wire atomic sensors and a sandbox image recipe for the driver."
+section: sensors
+kind: how-to
+order: 15
+---
+
+Install the skill with `npx skills add getkoi/koi`. Its source is [`skills/yokai/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md). Ask your coding agent to wire sensors or prepare a sandbox image. This helper does not run phases; the [yokai driver](/yokai/docs/run) does that.
+
+## Sensor workflow
+
+1. Survey the repository for real formatting, lint, test, and build commands.
+2. Propose one atomic script per concern, with a filename prefix when order matters.
+3. Write `.koi/sensors/*.sh` after agreement, preserving existing scripts.
+4. Mirror the verification bar into `.koi/run/CONTEXT.md` and smoke-run each script from the repo root.
+
+Never weaken a failing sensor just to turn the gate green. See [sensor semantics](/yokai/docs/sensors), [wire your bar](/yokai/docs/sensors/wire-your-bar), and [copy-ready recipes](/yokai/recipes).
+
+## Sandbox image
+
+The skill can prepare `.koi/Dockerfile.sandbox` for the selected backend. Apple installs the harness under `/usr/local/bin` and ends as root; Docker uses a writable harness path under `/home/agent/.local/bin` with the `agent` user. After changing the image, rebuild and recreate the named sandbox. See [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml).
+
+The [koi CLI](/koi/docs/cli) scaffolds the folder and declaration; the helper authors the project's actual checks and image recipe.

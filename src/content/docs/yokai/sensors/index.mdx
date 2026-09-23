@@ -17,9 +17,9 @@ Add one shell script per check under `.koi/sensors/`. Each script passes when it
 └── 40-coverage.sh
 ```
 
-`koi setup` scaffolds the folder with a README pointer only. It never adds an executable sensor. Write the scripts with the [yokai skill](/docs/junji/skills) or `/junji plan`. Copy-ready scripts live at [/recipes](/recipes).
+`koi setup` scaffolds the folder with a README pointer only. It never adds an executable sensor. Write the scripts with the [yokai skill](/junji/docs/skills) or `/junji plan`. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
 
-Layout and terms: [Start here](/docs/start-here).
+Layout and terms: [Start here](/koi/docs).
 
 ## Runtime contract
 
@@ -41,11 +41,11 @@ bash .koi/sensors/30-cargo-test.sh
 
 ## Sacred rule
 
-Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/docs/junji/skills) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
+Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/junji/docs/skills) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
 
 ## Where to go next
 
 | Doc | Use when |
 |-----|----------|
-| [Recipes](/recipes) | Copy a script for your stack |
-| [Wire your bar](/docs/sensors/how-to/wire-your-bar) | Survey, filename order, smoke-run, CONTEXT lockstep |
+| [Recipes](/yokai/recipes) | Copy a script for your stack |
+| [Wire your bar](/yokai/docs/sensors/wire-your-bar) | Survey, filename order, smoke-run, CONTEXT lockstep |

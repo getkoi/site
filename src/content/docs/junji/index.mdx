@@ -1,0 +1,42 @@
+---
+title: junji
+navLabel: junji
+description: "Plan a long effort, save progress on disk, and finish one phase at a time."
+section: overview
+kind: hub
+order: 10
+---
+
+Use junji (順次) to plan work that spans several agent sessions. The method skill saves the plan, backlog, and decisions under `.koi/run/`, so another session can continue. Run `/junji next` to complete one phase in your agent, or let [Yokai](/yokai/docs) run the prepared phases unattended. Project state lives under `.koi/`; the skill works across projects.
+
+Install:
+
+```bash
+npx skills add getkoi/koi
+```
+
+Invoke with `/junji` and an optional verb. Say "do the next task" when the backlog points at `next`.
+
+**junji is not yokai.** The method skill plans one phase and can execute it through `next` in a single agent session. The [yokai driver](/yokai/docs) loops phases unattended and verifies the contract after each one. Both read the same `.koi/run/` files. Folder layout and terms: [Start here](/koi/docs).
+
+## When to use junji
+
+Use junji when the work spans many sessions, each slice should be independently verifiable with an objective gate, and you want plans and position to survive `/compact` or a fresh process.
+
+It works best when fmt, lint, typecheck, and tests can exit 0. Skip it for one-off edits.
+
+## Pipeline
+
+Ten verbs: begin → plan → refine → next ↺ → (iterate → next ↺)* → consolidate, with optional research, design, grill, and brief. Only `next` writes product code. Check **Next action:** at the top of `.koi/run/BACKLOG.md`. Verb-by-verb steps: [Guide](/junji/docs/guide).
+
+## Where to go next
+
+| Doc | Use when |
+|-----|----------|
+| [Guide](/junji/docs/guide) | Walking the ten verbs |
+| [Skills](/junji/docs/skills) | Installing junji vs the yokai helper skill |
+| [Quickstart](/koi/docs/quickstart) | First install and `yokai` |
+| [Sensors](/yokai/docs/sensors) | Gate aggregation |
+| [yokai](/yokai/docs) | Unattended phase loop |
+
+The skill spec is [skills/junji/SKILL.md](https://github.com/getkoi/koi/blob/main/skills/junji/SKILL.md). The glossary is [skills/junji/CONTEXT.md](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md).

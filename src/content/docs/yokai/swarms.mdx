@@ -2,16 +2,16 @@
 title: Run a phase with swarms
 navLabel: Swarms
 description: Enable parallel workers, understand merging, and continue interrupted work.
-section: yokai
+section: guide
 kind: how-to
 order: 40
 ---
 
-Use swarms to run independent work items in parallel within one phase. Yokai splits the work, runs workers, and merges their output. Parallel work can shorten a run, but splitting and merging add token use. Start with a [plain run](/docs/start-here/quickstart) before enabling them.
+Use swarms to run independent work items in parallel within one phase. Yokai splits the work, runs workers, and merges their output. Parallel work can shorten a run, but splitting and merging add token use. Start with a [plain run](/koi/docs/quickstart) before enabling them.
 
 ## Enable swarms
 
-Use `koi init` to allow swarms and choose a worker cap, or edit the `swarm` settings in [configuration](/docs/reference/configuration). Swarms are off when omitted. The default worker cap is 8.
+Use `koi init` to allow swarms and choose a worker cap, or edit the `swarm` settings in [configuration](/yokai/docs/configuration). Swarms are off when omitted. The default worker cap is 8.
 
 Both conditions must hold: `swarm.enabled` is true and the current phase has a `[swarm]` tag. Junji `refine` writes a `[plain]` or `[swarm]` strategy on each phase heading.
 
@@ -38,7 +38,7 @@ Each later Build iteration splits again. Implementation splits focus on work rem
 
 ## Handle limits and failures
 
-The worker cap limits both item count and concurrency. An oversized or unreadable item list from a new split, or a worker error, returns a non-converged result. Yokai does not partially merge successful workers after a worker failure. [Recovery](/docs/yokai/recovery) governs what happens next.
+The worker cap limits both item count and concurrency. An oversized or unreadable item list from a new split, or a worker error, returns a non-converged result. Yokai does not partially merge successful workers after a worker failure. [Recovery](/yokai/docs/recovery) governs what happens next.
 
 Cost and token ceilings still stop the run. Nested swarms are forbidden.
 
@@ -61,6 +61,6 @@ Scratch is excluded from the dirty-tree check. Each unfinished worker has a `liv
 
 ## Next
 
-- [Sessions](/docs/yokai/sessions): fresh conversations, reused context, and reattachment.
-- [Build loop](/docs/yokai/build): sensors, review findings, and convergence.
-- [TUI](/docs/yokai/tui): watch workers and inspect their turns.
+- [Sessions](/yokai/docs/sessions): fresh conversations, reused context, and reattachment.
+- [Build loop](/yokai/docs/build): sensors, review findings, and convergence.
+- [TUI](/yokai/docs/tui): watch workers and inspect their turns.

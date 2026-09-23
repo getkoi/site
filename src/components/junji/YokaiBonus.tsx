@@ -41,7 +41,7 @@ export default function YokaiBonus() {
           </div>
           <div className="bonus-card__actions">
             <Button href="/yokai" label="Meet yokai" variant="notch" size="md" />
-            <AppLink href="/docs/yokai/build">Read the driver contract</AppLink>
+            <AppLink href="/yokai/docs/build">Read the driver contract</AppLink>
           </div>
         </article>
       </div>

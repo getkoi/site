@@ -1,60 +1,13 @@
 ---
-title: Cheatsheet
-navLabel: Cheatsheet
-description: "Copy-paste commands: install, setup, init, doctor, yokai, sandbox recreate."
+title: Run cheatsheet
+navLabel: Run cheatsheet
+description: "Run phases, verify sensors, and launch a sandbox."
 section: reference
 kind: reference
 order: 10
 ---
 
-This page lists common commands. For the concepts behind them, see the [Sandbox overview](/docs/sandbox/overview). For more detail, see [yokai run](/docs/yokai/run), [configuration](/docs/reference/configuration), and [CLI reference](/docs/reference/cli).
-
-## Install (once)
-
-```bash
-# from a koi checkout
-./install.sh
-# ensures koi + yokai on PATH (~/.cargo/bin)
-```
-
-```bash
-# OpenCode on the host
-npm install -g opencode-ai@latest
-opencode    # then /connect
-```
-
-```bash
-# Claude (default agent) — log in before yokai
-claude auth login
-claude auth status
-```
-
-```bash
-# Codex — API key, or ChatGPT login via the Codex CLI
-export CODEX_API_KEY=…   # or OPENAI_API_KEY; NO_BROWSER=1 in sandbox
-npx -y @agentclientprotocol/codex-acp --version
-```
-
-## Project setup + init (host-first)
-
-```bash
-cd /path/to/repo
-koi setup               # once per repo — .koi/sensors/ + .koi/sandbox.yml
-# sandbox: No
-koi init                # per effort — .koi/run/ config
-# agent: opencode
-```
-
-```bash
-koi setup --sandbox off --yes                # non-interactive project home
-koi init --yes                               # non-interactive defaults
-koi init --agent cursor --permission approve-all
-```
-
-```bash
-# in the coding agent
-/junji begin
-```
+First set up the repository using the [koi cheatsheet](/koi/docs/cheatsheet).
 
 ## Doctor & run
 
@@ -77,17 +30,15 @@ yokai --theme hiru   # yoru | hiru | terminal  (yoi and asa alias to yoru)
 cargo run -p koi -- doctor --probe
 cargo run -p yokai --
 ```
-
 ## Sensors
 
 Verification bar scripts are in `.koi/sensors/` and are not duplicated here.
-See [sensors](/docs/sensors) and [recipes](/recipes).
+See [sensors](/yokai/docs/sensors) and [recipes](/yokai/recipes).
 
 ```bash
 # smoke one script (driver runs all via bash, sorted by filename)
 bash .koi/sensors/30-cargo-test.sh
 ```
-
 ## Sandbox: Apple
 
 ```bash
@@ -108,8 +59,7 @@ container stop yokai-<repo> && container rm yokai-<repo>
 yokai
 ```
 
-Walkthrough: [Launch a sandbox](/docs/sandbox/launch#apple-container).
-
+Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch#apple-container).
 ## Sandbox: Docker sbx
 
 ```bash
@@ -130,11 +80,4 @@ sbx rm yokai-<repo>       # exact flag/name: see sbx --help
 yokai
 ```
 
-Walkthrough: [Launch a sandbox](/docs/sandbox/launch#docker-sandboxes).
-
-## Consolidate
-
-```bash
-# in the coding agent (removes only .koi/run/ — sensors + sandbox.yml stay)
-/junji consolidate
-```
+Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch#docker-sandboxes).

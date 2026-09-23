@@ -203,7 +203,7 @@ export default function VerbDeck() {
 
         <p className="deck-story__guide reveal">
           The cards are the map, not a replacement for the rules.
-          <AppLink href="/docs/junji/guide">Read the complete junji guide →</AppLink>
+          <AppLink href="/junji/docs/guide">Read the complete junji guide →</AppLink>
         </p>
       </div>
     </section>

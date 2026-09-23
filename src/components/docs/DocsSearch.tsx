@@ -49,7 +49,7 @@ function DocsSearchField() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/docs/search.json")
+    fetch("/search.json")
       .then((response) => {
         if (!response.ok) throw new Error(`docs search failed: ${response.status}`);
         return response.json() as Promise<DocsSearchEntry[]>;

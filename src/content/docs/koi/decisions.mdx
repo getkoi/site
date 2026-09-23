@@ -1,0 +1,37 @@
+---
+title: Shared decisions
+navLabel: Shared decisions
+description: "Framework and site architecture decision records."
+section: reference
+kind: reference
+order: 60
+---
+
+Tool-specific decisions: [junji's source records](https://github.com/getkoi/koi/tree/main/skills/junji/docs/adr) and [yokai](/yokai/docs/decisions).
+
+## System-wide (framework)
+
+Shared skill + driver on-disk convention under `.koi/`.
+
+| ADR | Title |
+|-----|-------|
+| [0004](https://github.com/getkoi/koi/blob/main/docs/adr/0004-project-home-and-run-working-folder.md) | Project home vs run working folder under `.koi/` |
+| [0005](https://github.com/getkoi/koi/blob/main/docs/adr/0005-atomic-sensors-folder.md) | Atomic sensors folder is the verification bar |
+| [0006](https://github.com/getkoi/koi/blob/main/docs/adr/0006-method-and-backlog-filenames.md) | METHOD.md and BACKLOG.md (was HOW-WE-WORK.md / WORKLOG.md) |
+
+Directory: [`docs/adr/`](https://github.com/getkoi/koi/tree/main/docs/adr).
+## Site (dotto)
+
+Pixel design system and the marketing/koi/docs host.
+
+| ADR | Title |
+|-----|-------|
+| [0001](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0001-dotto-open-box.md) | Open-box CSS kit (superseded by 0003) |
+| [0002](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0002-docs-progressive-disclosure.md) | Native docs `<details>` for optional detail |
+| [0003](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0003-astryx-theme.md) | Dotto is an in-repo Astryx theme |
+| [0004](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0004-next-bun-host.md) | Next.js App Router + Bun host |
+
+Directory: [`site/src/dotto/docs/adr/`](https://github.com/getkoi/koi/tree/main/site/src/dotto/docs/adr).
+## Numbering note
+
+Driver ADRs reuse numbers 0004 and 0005 in a different directory from framework ADRs. Dotto ADRs live under `site/src/dotto/docs/adr/`. Always use the full path.

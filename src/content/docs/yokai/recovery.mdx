@@ -2,12 +2,12 @@
 title: Recovery
 navLabel: Recovery
 description: "Understand automatic retries, repair bookkeeping, and find recovery records."
-section: yokai
+section: guide
 kind: explanation
 order: 50
 ---
 
-Yokai retries failed work automatically. Leave recovery enabled to let it diagnose a failed Build or repair unfinished bookkeeping. Watch the recovery activity in the [TUI](/docs/yokai/tui); use [troubleshooting](/docs/reference/troubleshooting) if the run stops.
+Yokai retries failed work automatically. Leave recovery enabled to let it diagnose a failed Build or repair unfinished bookkeeping. Watch the recovery activity in the [TUI](/yokai/docs/tui); use [troubleshooting](/yokai/docs/troubleshooting) if the run stops.
 
 Repair handles bookkeeping when the gate is already green. Diagnose reads the failure and chooses another Build attempt, Repair, or Fix. Fix changes run files and sensors; Build changes product code. Recovery keeps the same verification requirements.
 
@@ -78,7 +78,7 @@ Repair that does not resolve the failure leads to Diagnose. Re-entry checks the 
 
 ## Related
 
-- [Run](/docs/yokai/run): `--max-cost`, halt conditions
-- [Build loop](/docs/yokai/build): iterations, judge, `FEEDBACK.md`
-- [Troubleshooting](/docs/reference/troubleshooting): recovery symptom rows
+- [Run](/yokai/docs/run): `--max-cost`, halt conditions
+- [Build loop](/yokai/docs/build): iterations, judge, `FEEDBACK.md`
+- [Troubleshooting](/yokai/docs/troubleshooting): recovery symptom rows
 - Driver ADR: [0044](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0044-recovery-continue-and-saves.md) (amends [0010](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0010-recovery-last-look-before-halt.md))

@@ -70,12 +70,12 @@ yokai --once`}
           </div>
           <div className="first-run__actions">
             <Button
-              href="/docs/start-here/quickstart"
+              href="/koi/docs/quickstart"
               label="Open the full quickstart"
               variant="notch"
               size="md"
             />
-            <AppLink href="/docs/yokai/run">
+            <AppLink href="/yokai/docs/run">
               Read the run reference <span aria-hidden="true">→</span>
             </AppLink>
           </div>

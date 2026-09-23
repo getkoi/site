@@ -9,7 +9,7 @@ export default function NotFound() {
       <p>
         <AppLink href="/">Home</AppLink>
         {" · "}
-        <AppLink href="/docs">Docs</AppLink>
+        <AppLink href="/koi/docs">Docs</AppLink>
       </p>
     </div>
   );

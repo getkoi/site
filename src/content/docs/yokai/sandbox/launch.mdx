@@ -7,9 +7,9 @@ kind: how-to
 order: 40
 ---
 
-Run yokai inside a named Linux VM. Concepts: [Sandboxing overview](/docs/sandbox/overview). Declaration and Dockerfile rules: [sandbox.yml and image](/docs/sandbox/sandbox-yml). Copy-ready pairs: [/recipes](/recipes#sandboxes).
+Run yokai inside a named Linux VM. Concepts: [Sandboxing overview](/yokai/docs/sandbox). Declaration and Dockerfile rules: [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml). Copy-ready pairs: [/yokai/recipes](/yokai/recipes#sandboxes).
 
-Host-first (sandbox off) is [Quickstart](/docs/start-here/quickstart). This page assumes you already have `koi` and `yokai` on PATH.
+Host-first (sandbox off) is [Quickstart](/koi/docs/quickstart). This page assumes you already have `koi` and `yokai` on PATH.
 
 Pick a backend, then follow that section. Recreate steps are at the end (both backends).
 
@@ -74,7 +74,7 @@ If yokai reconnects to an undersized existing VM, it prints a warning and recrea
 
 Requires Docker Desktop and the **`sbx`** CLI. The repository still owns the OCI image through `.koi/Dockerfile.sandbox`.
 
-Credentials usually stay on the host through `sbx secret` or the sandbox proxy when configured. See Docker's [credentials guide](https://docs.docker.com/ai/sandboxes/security/credentials/).
+Credentials usually stay on the host through `sbx secret` or the sandbox proxy when configured. See Docker's [credentials guide](https://koi/docs.docker.com/ai/sandboxes/security/credentials/).
 
 ### Prerequisites
 
@@ -134,10 +134,10 @@ yokai
 yokai --host          # supervisor on the host despite sandbox.yml
 ```
 
-Optional `.koi/sandbox-setup.sh` runs once per sandbox for extras. Bake the agent in the Dockerfile; the hook is not the primary install path. Detail: [Host & escape](/docs/sandbox/host-and-escape).
+Optional `.koi/sandbox-setup.sh` runs once per sandbox for extras. Bake the agent in the Dockerfile; the hook is not the primary install path. Detail: [Host & escape](/yokai/docs/sandbox/host-and-escape).
 
 ## Next
 
-- [sandbox.yml and image](/docs/sandbox/sandbox-yml)
-- [Cheatsheet](/docs/reference/cheatsheet)
-- [Troubleshooting](/docs/reference/troubleshooting)
+- [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml)
+- [Cheatsheet](/yokai/docs/cheatsheet)
+- [Troubleshooting](/yokai/docs/troubleshooting)

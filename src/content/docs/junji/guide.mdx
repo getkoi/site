@@ -2,7 +2,7 @@
 title: junji guide
 navLabel: Guide
 description: "Walk the ten verbs — begin through consolidate, including iterate and brief — with prerequisites, steps, and verification."
-section: junji
+section: guide
 kind: how-to
 order: 20
 ---
@@ -195,7 +195,7 @@ Interactive `next` preserves these tags and does not switch the agent or model.
 7 commit     one conventional commit; honor standing overrides (e.g. never push)
 ```
 
-Invoke: `/junji next` or "do the next task". The **yokai driver** splits this into Plan → Build → Seal. See [Build](/docs/yokai/build).
+Invoke: `/junji next` or "do the next task". The **yokai driver** splits this into Plan → Build → Seal. See [Build](/yokai/docs/build).
 
 **Verification:** Phase `[done]`, gate green, one new commit, clean tree (driver contract).
 
@@ -285,7 +285,7 @@ Yokai checks the results against your sensors and git history. Define a verifica
 
 | Question | Answer |
 |----------|--------|
-| Where do I start? | [Quickstart](/docs/start-here/quickstart): `koi setup`, `koi init`, `/junji begin` |
+| Where do I start? | [Quickstart](/koi/docs/quickstart): `koi setup`, `koi init`, `/junji begin` |
 | What are we doing? | `/junji plan` |
 | Turn plan into tasks? | `/junji refine` |
 | Do one slice? | `/junji next` or `yokai` |
@@ -296,7 +296,7 @@ Yokai checks the results against your sensors and git history. Define a verifica
 
 ## Next
 
-- [Skills reference](/docs/junji/skills): junji vs yokai skill, sensor wiring
-- [Sensors](/docs/sensors): gate semantics
-- [yokai run](/docs/yokai/run): driver flags and contract details
+- [Skills reference](/junji/docs/skills): junji vs yokai skill, sensor wiring
+- [Sensors](/yokai/docs/sensors): gate semantics
+- [yokai run](/yokai/docs/run): driver flags and contract details
 - Verb specs: [skills/junji/verbs/](https://github.com/getkoi/koi/tree/main/skills/junji/verbs)

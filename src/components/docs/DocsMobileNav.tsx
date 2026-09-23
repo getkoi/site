@@ -8,7 +8,7 @@ import DocsSearch from "./DocsSearch";
 import { DocsNavTree } from "./DocsNavTree";
 import type { DocsNavData } from "./nav-types";
 
-function DocsMobileNavSheet({ current, currentLabel, sections }: DocsNavData) {
+function DocsMobileNavSheet({ current, currentLabel, sections, overviewHref, ariaLabel, flat }: DocsNavData) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -21,10 +21,10 @@ function DocsMobileNavSheet({ current, currentLabel, sections }: DocsNavData) {
         icon={<MenuIcon className="size-4 shrink-0" />}
         onClick={() => setOpen(true)}
       />
-      <BottomSheet isOpen={open} onOpenChange={setOpen} label="Documentation" height="tall">
+      <BottomSheet isOpen={open} onOpenChange={setOpen} label={ariaLabel ?? "Documentation"} height="tall">
         <div className="flex flex-col gap-4 px-1 pb-6">
-          <DocsSearch />
-          <DocsNavTree current={current} sections={sections} />
+          {flat ? null : <DocsSearch />}
+          <DocsNavTree current={current} sections={sections} overviewHref={overviewHref} ariaLabel={ariaLabel} flat={flat} />
         </div>
       </BottomSheet>
     </>

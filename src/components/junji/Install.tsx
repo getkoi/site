@@ -75,10 +75,10 @@ export default function Install() {
           <div className="install-more">
             <p className="mono">add more when the project needs it</p>
             <nav aria-label="Setup and reference">
-              <AppLink href="/docs/start-here/quickstart">Follow the quickstart</AppLink>
-              <AppLink href="/docs/junji/guide">Read the full Junji guide</AppLink>
-              <AppLink href="/docs/sensors">Wire project sensors</AppLink>
-              <AppLink href="/docs/yokai">Install the yokai driver</AppLink>
+              <AppLink href="/koi/docs/quickstart">Follow the quickstart</AppLink>
+              <AppLink href="/junji/docs/guide">Read the full Junji guide</AppLink>
+              <AppLink href="/yokai/docs/sensors">Wire project sensors</AppLink>
+              <AppLink href="/yokai/docs">Install the yokai driver</AppLink>
               <AppLink href="https://github.com/getkoi/koi">Open the repository</AppLink>
             </nav>
           </div>

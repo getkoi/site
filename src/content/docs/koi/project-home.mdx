@@ -1,0 +1,18 @@
+---
+title: Project home
+navLabel: Project home
+description: "Shared project and working folders under .koi/."
+section: reference
+kind: reference
+order: 30
+---
+
+The durable project home belongs to koi. [junji](/junji/docs) writes the working plan; [yokai](/yokai/docs/configuration) uses run settings.
+
+## Project home vs working folder
+
+**Project home** is `.koi/` at the repo root. It is durable and survives `/junji consolidate`.
+
+**Working folder** is `.koi/run/`. It holds volatile junji and driver scaffolding, and `consolidate` removes only this subtree (`git rm -r .koi/run/`).
+
+The full tree lives on [Start here](/koi/docs#two-folders). Framework ADR: [0004: project home vs run](https://github.com/getkoi/koi/blob/main/docs/adr/0004-project-home-and-run-working-folder.md). Use `--working-folder` to point at the volatile folder (default `.koi/run`).

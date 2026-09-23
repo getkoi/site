@@ -2,7 +2,7 @@
 title: Quickstart
 navLabel: Quickstart
 description: "Install the tools, prepare your project, and verify your first phase."
-section: start
+section: guide
 kind: tutorial
 order: 20
 ---
@@ -50,7 +50,7 @@ There is no driver login. Credentials live in the agent. Claude example:
 claude auth login
 ```
 
-This walkthrough uses Claude. If you choose another agent, follow its login steps in the [CLI reference](/docs/reference/cli#agent-login).
+This walkthrough uses Claude. If you choose another agent, follow its login steps in the [yokai CLI reference](/yokai/docs/cli#agent-login).
 
 ### 3. Set up the project home
 
@@ -60,7 +60,7 @@ In **your project repo** (where `.koi/` will live), once per repo:
 koi setup --yes --sandbox off
 ```
 
-That writes `.koi/sensors/` (README pointer only) and `.koi/sandbox.yml` with sandbox disabled. Interactive `koi setup` is the same wizard if you prefer TTY prompts. Isolation later: [sandbox](/docs/sandbox/overview).
+That writes `.koi/sensors/` (README pointer only) and `.koi/sandbox.yml` with sandbox disabled. Interactive `koi setup` is the same wizard if you prefer TTY prompts. Isolation later: [sandbox](/yokai/docs/sandbox).
 
 ### 4. Initialize driver config
 
@@ -115,11 +115,11 @@ Structural checks always run. `--probe` adds a live auth round-trip.
 yokai --once
 ```
 
-`--once` runs one phase, then exits. Watch Plan, Build, and Seal in the terminal. If your first phase is tagged `[gated]`, use `yokai --once --guarded` to stop before it; an unguarded run pre-authorizes gated work. After the first verified phase, follow [Run Yokai](/docs/yokai/run) to continue.
+`--once` runs one phase, then exits. Watch Plan, Build, and Seal in the terminal. If your first phase is tagged `[gated]`, use `yokai --once --guarded` to stop before it; an unguarded run pre-authorizes gated work. After the first verified phase, follow [Run Yokai](/yokai/docs/run) to continue.
 
 ## Existing repo
 
-Use the checks your project already runs. Confirm they pass from the repo root, then have `/junji plan` wire them as atomic sensors. If you need to add or update scripts yourself, follow [wire your bar](/docs/sensors/how-to/wire-your-bar).
+Use the checks your project already runs. Confirm they pass from the repo root, then have `/junji plan` wire them as atomic sensors. If you need to add or update scripts yourself, follow [wire your bar](/yokai/docs/sensors/wire-your-bar).
 
 ## Verification
 
@@ -136,12 +136,12 @@ After yokai finishes a phase, the **contract** on disk is:
 - Gate green (every sensor exit 0)
 - Clean tree
 
-Symptom → fix: [troubleshooting](/docs/reference/troubleshooting).
+Setup symptoms: [koi troubleshooting](/koi/docs/troubleshooting). Run failures: [yokai troubleshooting](/yokai/docs/troubleshooting).
 
 ## Next
 
-- [junji guide](/docs/junji/guide): verb-by-verb method
-- [yokai run](/docs/yokai/run): flags, TUI, ledger
-- [Recipes](/recipes): copy-paste sensors
-- [Build](/docs/yokai/build): Plan → Build → Seal
-- [Sandbox launch](/docs/sandbox/launch): isolate later
+- [junji guide](/junji/docs/guide): verb-by-verb method
+- [yokai run](/yokai/docs/run): flags, TUI, ledger
+- [Recipes](/yokai/recipes): copy-paste sensors
+- [Build](/yokai/docs/build): Plan → Build → Seal
+- [Sandbox launch](/yokai/docs/sandbox/launch): isolate later

@@ -70,7 +70,7 @@ export function CardDemo() {
 export function ClickableCardDemo() {
   return (
     <Frame>
-      <ClickableCard label="Open docs" href="/docs" padding={3} maxWidth={360}>
+      <ClickableCard label="Open docs" href="/koi/docs" padding={3} maxWidth={360}>
         Clickable card. Goes to docs.
       </ClickableCard>
     </Frame>
@@ -118,7 +118,7 @@ export function CitationDemo() {
   return (
     <p className="text-fog">
       Drive the phase list through yokai
-      <Citation number={1} source={{ title: "yokai run", url: "/docs/yokai/run" }} /> and keep the
+      <Citation number={1} source={{ title: "yokai run", url: "/yokai/docs/run" }} /> and keep the
       contract on disk
       <Citation number={2} variant="number" source={{ title: "junji" }} />.
     </p>

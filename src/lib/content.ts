@@ -7,7 +7,7 @@ const docsSchema = z.object({
   title: z.string(),
   navLabel: z.string(),
   description: z.string(),
-  section: z.enum(["start", "junji", "yokai", "sensors", "sandbox", "reference"]),
+  section: z.enum(["overview", "guide", "sensors", "sandbox", "reference"]),
   kind: z.enum(["hub", "tutorial", "how-to", "explanation", "reference"]),
   order: z.number(),
 });

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { LinkProvider } from "@astryxdesign/core/Link";
 import { SURFACE_ORDER, stageClassFromPath, surfaceFromPath } from "@/lib/surface";
 import IconRail from "@/components/IconRail";
+import { SiteTopbar } from "@/components/shell/SiteTopbar";
 import { AppLink } from "@/components/AppLink";
 import { DottoTheme } from "@/dotto/DottoTheme";
 import { SiteEffects } from "@/components/shell/SiteEffects";
@@ -37,6 +38,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               id="main"
               tabIndex={-1}
             >
+              <SiteTopbar pathname={pathname} surface={surface} />
               {children}
             </main>
           </div>

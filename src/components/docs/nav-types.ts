@@ -15,4 +15,7 @@ export type DocsNavData = {
   current: string;
   currentLabel: string;
   sections: DocsNavSectionData[];
+  overviewHref?: string;
+  ariaLabel?: string;
+  flat?: boolean;
 };

@@ -11,19 +11,19 @@ export default function SiteFooter() {
           <nav className="flex flex-wrap gap-x-6 gap-y-3.5" aria-label="Footer">
             <AppLink
               className="font-mono text-[0.82rem] text-bone no-underline transition-colors duration-200 hover:text-accent"
-              href="/docs/start-here/quickstart"
+              href="/koi/docs/quickstart"
             >
               install
             </AppLink>
             <AppLink
               className="font-mono text-[0.82rem] text-bone no-underline transition-colors duration-200 hover:text-accent"
-              href="/docs/junji/guide"
+              href="/junji/docs/guide"
             >
               guide
             </AppLink>
             <AppLink
               className="font-mono text-[0.82rem] text-bone no-underline transition-colors duration-200 hover:text-accent"
-              href="/docs/start-here"
+              href="/koi/docs"
             >
               start here
             </AppLink>
@@ -32,6 +32,12 @@ export default function SiteFooter() {
               href="/blog"
             >
               field notes
+            </AppLink>
+            <AppLink className="font-mono text-[0.82rem] text-bone no-underline transition-colors duration-200 hover:text-accent" href="/dotto">
+              dotto (internal)
+            </AppLink>
+            <AppLink className="font-mono text-[0.82rem] text-bone no-underline transition-colors duration-200 hover:text-accent" href="/llms.txt">
+              llms.txt
             </AppLink>
             <AppLink
               className="font-mono text-[0.82rem] text-bone no-underline transition-colors duration-200 hover:text-accent"

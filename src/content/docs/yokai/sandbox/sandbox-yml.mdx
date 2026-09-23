@@ -11,7 +11,7 @@ Durable sandbox settings live in **`.koi/sandbox.yml`** in project home. They do
 
 `.koi/Dockerfile.sandbox` is the path for the coding agent CLI and gate tools in the VM ([ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md), [ADR-0028](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0028-sandbox-dockerfile-scaffold.md)). The repository owns the OCI tag; koi does not publish a stock catalog.
 
-Overview: [Sandboxing](/docs/sandbox/overview). First run: [Launch](/docs/sandbox/launch). Example copy: [`docs/examples/sandbox.Dockerfile`](https://github.com/getkoi/koi/blob/main/docs/examples/sandbox.Dockerfile). Pairs: [/recipes](/recipes#sandboxes).
+Overview: [Sandboxing](/yokai/docs/sandbox). First run: [Launch](/yokai/docs/sandbox/launch). Example copy: [`docs/examples/sandbox.Dockerfile`](https://github.com/getkoi/koi/blob/main/docs/examples/sandbox.Dockerfile). Pairs: [/yokai/recipes](/yokai/recipes#sandboxes).
 
 ## sandbox.yml fields
 
@@ -30,7 +30,7 @@ Point `image` at an OCI image you built from `.koi/Dockerfile.sandbox`. It must 
 
 When `name` is omitted, non-alphanumeric characters in the directory name become `-`. Example: repo `my_proj` → `yokai-my-proj`.
 
-Yokai creates Apple VMs with `8g` of memory and 4 CPUs by default. Apple Container's own default is 1 GiB. Editing these settings does not resize an existing VM; [recreate it](/docs/sandbox/launch#recreate-both-backends) to apply the changes. Yokai warns about undersized VMs but leaves them intact to preserve their login state.
+Yokai creates Apple VMs with `8g` of memory and 4 CPUs by default. Apple Container's own default is 1 GiB. Editing these settings does not resize an existing VM; [recreate it](/yokai/docs/sandbox/launch#recreate-both-backends) to apply the changes. Yokai warns about undersized VMs but leaves them intact to preserve their login state.
 
 Valid `memory` examples: `8g`, `8192m`, `4gb`.
 
@@ -134,6 +134,6 @@ Apple scaffold omits the final `USER agent` line and uses `WORKDIR /workspace`.
 
 ## Related
 
-- [Launch](/docs/sandbox/launch)
-- [CLI flags](/docs/reference/cli): `--host`
-- [Troubleshooting](/docs/reference/troubleshooting)
+- [Launch](/yokai/docs/sandbox/launch)
+- [CLI flags](/yokai/docs/cli): `--host`
+- [Troubleshooting](/yokai/docs/troubleshooting)

@@ -16,9 +16,9 @@ The host uses the declared OCI `image:` and copies Linux `yokai` and `koi` binar
 
 </details>
 
-The repository owns the OCI image (coding agent + gate tools baked in via `.koi/Dockerfile.sandbox`). koi does not ship a framework image catalog. Copy-ready `sandbox.yml` + `Dockerfile.sandbox` pairs live at [/recipes](/recipes#sandboxes).
+The repository owns the OCI image (coding agent + gate tools baked in via `.koi/Dockerfile.sandbox`). koi does not ship a framework image catalog. Copy-ready `sandbox.yml` + `Dockerfile.sandbox` pairs live at [/yokai/recipes](/yokai/recipes#sandboxes).
 
-Sandbox files live in **project home** and survive `/junji consolidate`. Driver prefs stay in `.koi/run/config.yml`. There is no `sandbox:` block there. Layout: [Start here](/docs/start-here).
+Sandbox files live in **project home** and survive `/junji consolidate`. Driver prefs stay in `.koi/run/config.yml`. There is no `sandbox:` block there. Layout: [Start here](/koi/docs).
 
 ```mermaid
 flowchart LR
@@ -44,7 +44,7 @@ flowchart LR
 | **`docker`** (default) | Docker Desktop + `sbx` | `docker build -f .koi/Dockerfile.sandbox …` | Host via `sbx login` / `sbx secret` when configured |
 | **`apple`** | Apple Container (`container` CLI) | `container build -f .koi/Dockerfile.sandbox …` | **In-VM** once (e.g. `opencode` → `/connect`) |
 
-Walkthrough: [Launch a sandbox](/docs/sandbox/launch).
+Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch).
 
 ## What sandboxing does not guarantee
 
@@ -61,11 +61,11 @@ Use sandbox mode for a reproducible Linux gate environment and co-located agent 
 
 | Doc | Topic |
 |-----|--------|
-| [Launch](/docs/sandbox/launch) | Enable, build, first run, recreate (Apple and Docker) |
-| [sandbox.yml and image](/docs/sandbox/sandbox-yml) | Declaration fields, Dockerfile USER rules, agent bake |
-| [Host & escape](/docs/sandbox/host-and-escape) | `--host`, setup marker, mount, artifacts |
-| [Troubleshooting](/docs/reference/troubleshooting) | Symptom → fix |
-| [Quickstart](/docs/start-here/quickstart) | Host-first first run |
-| [Sensors](/docs/sensors) | Gate scripts the inner run needs in the image |
+| [Launch](/yokai/docs/sandbox/launch) | Enable, build, first run, recreate (Apple and Docker) |
+| [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml) | Declaration fields, Dockerfile USER rules, agent bake |
+| [Host & escape](/yokai/docs/sandbox/host-and-escape) | `--host`, setup marker, mount, artifacts |
+| [Troubleshooting](/yokai/docs/troubleshooting) | Symptom → fix |
+| [Quickstart](/koi/docs/quickstart) | Host-first first run |
+| [Sensors](/yokai/docs/sensors) | Gate scripts the inner run needs in the image |
 
-Decision records: [ADRs](/docs/reference/decision-records) (0024, 0026, 0027, 0028, 0032).
+Decision records: [ADRs](/yokai/docs/decisions) (0024, 0026, 0027, 0028, 0032).

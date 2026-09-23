@@ -1,4 +1,4 @@
-import { DOC_SECTIONS, docHref, docsBySection } from "@/docs/registry";
+import { DOC_SECTIONS, DOC_TOOLS, docHref, docsBySection } from "@/docs/registry";
 import { blogHref } from "@/data/blog";
 import { loadDocs, loadPosts } from "@/lib/content";
 import { GH_REPO, SITE_ORIGIN } from "@/lib/site";
@@ -39,7 +39,7 @@ export function GET() {
       "/yokai",
       "Thin driver that verifies phases on disk.",
     ),
-    linkLine("recipes", "/recipes", "Copy-paste sensor scripts and sandbox image pairs."),
+    linkLine("recipes", "/yokai/recipes", "Copy-paste sensor scripts and sandbox image pairs."),
     "",
     "## Field notes",
     "",
@@ -50,18 +50,16 @@ export function GET() {
     ),
     ...posts.map((post) => linkLine(post.data.title, blogHref(post.id), post.data.description)),
     "",
-    ...DOC_SECTIONS.flatMap((section) => {
-      const entries = docsBySection(all, section.id);
-      if (!entries.length) return [];
-      return [
-        `## ${section.label}`,
-        "",
-        ...entries.map((entry) =>
+    ...DOC_TOOLS.flatMap((tool) => [
+      `## ${tool} documentation`,
+      "",
+      ...DOC_SECTIONS[tool].flatMap((section) =>
+        docsBySection(all, tool, section.id).map((entry) =>
           linkLine(entry.data.title, docHref(entry.id), entry.data.description),
         ),
-        "",
-      ];
-    }),
+      ),
+      "",
+    ]),
     "## Optional",
     "",
     `- [Full docs dump](${SITE_ORIGIN}/llms-full.txt): Concatenated documentation bodies for offline / single-fetch context.`,

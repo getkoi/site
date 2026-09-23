@@ -42,7 +42,7 @@ export function DottoHtmlKit() {
         </Heading>
         <Text>
           Compose a page from <Code>Heading</Code>, <Code>Text</Code>,{" "}
-          <Code>List</Code>, and <Link href="/docs">Link</Link>. Press{" "}
+          <Code>List</Code>, and <Link href="/koi/docs">Link</Link>. Press{" "}
           <Kbd>/</Kbd> to search docs.
         </Text>
         <List>

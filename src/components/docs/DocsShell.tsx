@@ -4,13 +4,16 @@ import { DocsToc } from "@/components/docs/DocsToc";
 import SiteFooter from "@/components/SiteFooter";
 import { DocsPageEffects } from "@/components/shell/PageEffects";
 import type { TocItem } from "@/lib/mdx";
+import type { DocTool } from "@/docs/registry";
 import "@/styles/docs.css";
 
 export function DocsShell({
+  tool,
   current = "home",
   toc = [],
   children,
 }: {
+  tool: DocTool;
   current?: string;
   toc?: TocItem[];
   children: ReactNode;
@@ -27,7 +30,7 @@ export function DocsShell({
         data-has-toc={hasToc ? "true" : "false"}
         data-docs-shell=""
       >
-        <DocsNav current={current} />
+        <DocsNav tool={tool} current={current} />
         <div className="relative z-[1] min-w-0">{children}</div>
         {hasToc ? <DocsToc items={toc} /> : null}
       </div>

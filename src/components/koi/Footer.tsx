@@ -10,8 +10,8 @@ export default function Footer() {
       <nav aria-label="Koi footer">
         <AppLink href="/junji">junji</AppLink>
         <AppLink href="/yokai">yokai</AppLink>
-        <AppLink href="/docs/start-here">docs</AppLink>
-        <AppLink href="/recipes">sensors</AppLink>
+        <AppLink href="/koi/docs">docs</AppLink>
+        <AppLink href="/yokai/recipes">sensors</AppLink>
         <AppLink href="https://github.com/getkoi/koi">GitHub ↗</AppLink>
       </nav>
       <p>The filesystem keeps the position. The next window reads it.</p>
