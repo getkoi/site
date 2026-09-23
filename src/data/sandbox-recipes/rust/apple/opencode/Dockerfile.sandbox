@@ -1,0 +1,22 @@
+# .koi/Dockerfile.sandbox — rust stack, apple backend
+#
+#   container build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
+#   # ensure .koi/sandbox.yml: image: koi-myproj-sandbox
+# After rebuilding, recreate the named sandbox (container rm).
+
+FROM rust:1-bookworm
+
+USER root
+RUN apt-get update -qq \
+ && apt-get install -y -qq curl ca-certificates git nodejs npm \
+ && rm -rf /var/lib/apt/lists/*
+
+# Gate toolchain: fmt/clippy + coverage floor (rust image ships rustup).
+RUN rustup component add rustfmt clippy \
+ && cargo install cargo-llvm-cov
+
+# Agent (opencode example — swap for your configured agent):
+RUN npm install -g opencode-ai@latest && command -v opencode
+
+# Apple: keep the final USER root — yokai installs harness ELFs under /usr/local/bin.
+WORKDIR /workspace

@@ -1,0 +1,21 @@
+# .koi/Dockerfile.sandbox — node stack, apple backend
+#
+#   container build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
+#   # ensure .koi/sandbox.yml: image: koi-myproj-sandbox
+# After rebuilding, recreate the named sandbox (container rm).
+
+FROM node:22-bookworm
+
+USER root
+RUN apt-get update -qq \
+ && apt-get install -y -qq curl ca-certificates git \
+ && rm -rf /var/lib/apt/lists/*
+
+# Agent (opencode example — swap for your configured agent):
+RUN npm install -g opencode-ai@latest && command -v opencode
+
+# Gate toolchain: project devDependencies (eslint, tsc, vitest, …) come from
+# `npm ci` during image build or a one-time .koi/sandbox-setup.sh — never in sensors.
+
+# Apple: keep the final USER root — yokai installs harness ELFs under /usr/local/bin.
+WORKDIR /workspace

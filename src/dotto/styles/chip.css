@@ -1,0 +1,76 @@
+@layer components {
+  [data-slot="chip"] {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  [data-slot="chip"] [data-slot="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  [data-slot="chip-label"] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 6px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    background: var(--charcoal);
+    color: var(--bone);
+  }
+
+  [data-slot="chip"]:hover [data-slot="chip-label"] {
+    border-color: var(--accent);
+    color: var(--bone);
+  }
+
+  [data-slot="chip"]:has([data-slot="checkbox"]:checked) [data-slot="chip-label"],
+  [data-slot="chip"]:has([data-checked]) [data-slot="chip-label"] {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  [data-slot="chip"]:has([data-slot="checkbox"]:focus-visible) [data-slot="chip-label"],
+  [data-slot="chip"]:has([data-slot="checkbox"][data-focused]) [data-slot="chip-label"] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  [data-slot="checkbox-control"] {
+    box-sizing: border-box;
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    background: var(--obsidian);
+    color: var(--accent-btn-fg);
+    padding: 0;
+    cursor: pointer;
+  }
+
+  [data-slot="checkbox-indicator"] {
+    display: flex;
+    width: 12px;
+    height: 12px;
+  }
+
+  [data-slot="checkbox-indicator"] svg {
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+
+  [data-slot="checkbox-control"][data-checked] {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+}

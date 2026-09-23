@@ -1,0 +1,146 @@
+/**
+ * Dotto hour aliases + Tailwind @theme.
+ * Binding hexes live in palette.ts / DESIGN.md. Astryx tokens are the source;
+ * these names keep scene CSS and existing utilities working.
+ */
+
+@theme inline {
+  --color-void: var(--void);
+  --color-obsidian: var(--obsidian);
+  --color-charcoal: var(--charcoal);
+  --color-steel: var(--steel);
+  --color-ash: var(--ash);
+  --color-fog: var(--fog);
+  --color-bone: var(--bone);
+  --color-accent: var(--accent);
+  --color-accent-core: var(--accent-core);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-blood: var(--blood);
+  --color-blood-soft: var(--blood-soft);
+  --color-jade: var(--jade);
+  --color-jade-soft: var(--jade-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-blossom: var(--blossom);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-plan: var(--plan);
+  --color-tool: var(--tool);
+  --color-file: var(--file);
+  --color-judge: var(--judge);
+  --color-select: var(--select);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --breakpoint-docs: 960px;
+  --breakpoint-narrow: 560px;
+  --shadow-accent: var(--glow-accent);
+  --shadow-frame: var(--offset-frame);
+  --radius-frame: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+@custom-variant yoru (&:where([data-hour="yoru"] *));
+@custom-variant hiru (&:where([data-hour="hiru"] *));
+@custom-variant dark (&:where([data-hour="yoru"] *));
+
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/Geist-Latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Latin.woff2") format("woff2");
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Pixel Square";
+  src: url("/fonts/GeistPixel-Square.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+html[data-astryx-theme="dotto"] {
+  --void: var(--color-background-body);
+  --obsidian: var(--color-background-surface);
+  --charcoal: var(--color-background-card);
+  --steel: var(--color-border-emphasized);
+  --ash: var(--color-text-disabled);
+  --fog: var(--color-text-secondary);
+  --bone: var(--color-text-primary);
+  --accent: var(--color-accent);
+  --accent-core: var(--astryx-theme-dotto-color-accent-core);
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 38%, transparent);
+  --accent-btn-fg: var(--color-on-accent);
+  --accent-btn-hover: var(--astryx-theme-dotto-color-accent-hover);
+  --blood: var(--color-error);
+  --blood-soft: var(--color-error-muted);
+  --jade: var(--color-success);
+  --jade-soft: var(--color-success-muted);
+  --amber: var(--color-warning);
+  --amber-soft: var(--color-warning-muted);
+  --blossom: var(--astryx-theme-dotto-color-blossom);
+  --blossom-soft: var(--astryx-theme-dotto-color-blossom-soft);
+  --plan: var(--astryx-theme-dotto-color-plan);
+  --tool: var(--astryx-theme-dotto-color-tool);
+  --file: var(--astryx-theme-dotto-color-file);
+  --judge: var(--astryx-theme-dotto-color-judge);
+  --select: var(--astryx-theme-dotto-color-select);
+  --line: color-mix(in srgb, var(--bone) 10%, transparent);
+  --line-2: color-mix(in srgb, var(--bone) 18%, transparent);
+  --btn-line: color-mix(in srgb, var(--bone) 50%, var(--void));
+  --glow-accent: 0 0 0 1px var(--accent-line), 0 0 34px -8px color-mix(in srgb, var(--accent) 55%, transparent);
+  --glow-accent-strong: 0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent),
+    0 0 70px -10px color-mix(in srgb, var(--accent) 75%, transparent);
+  --offset-frame: 2px 2px 0 var(--btn-line);
+  --atmosphere-a: color-mix(in srgb, var(--accent) 14%, transparent);
+  --atmosphere-b: color-mix(in srgb, var(--accent-core) 8%, transparent);
+  --font-display: var(--font-family-heading);
+  --font-sans: var(--font-family-body);
+  --font-mono: var(--font-family-code);
+}
+
+[data-hour="yoru"] {
+  color-scheme: dark;
+}
+
+[data-hour="hiru"] {
+  color-scheme: light;
+  --btn-line: var(--bone);
+  --accent-btn-hover: color-mix(in srgb, var(--accent) 78%, #1a1020);
+  --glow-accent: 0 0 0 1px var(--accent-line), 0 0 28px -8px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+:root {
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-frame: 2px;
+  --notch: 4px;
+  --maxw: 1120px;
+  --pad: clamp(20px, 5vw, 28px);
+
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-instant: 120ms;
+  --dur-feedback: 160ms;
+  --dur-theme: 180ms;
+  --dur-state: 240ms;
+  --dur-scene: 520ms;
+  --dur: var(--dur-scene);
+
+  --z-header: 50;
+  --z-rail: 60;
+}

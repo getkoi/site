@@ -1,0 +1,139 @@
+---
+title: sandbox.yml and image
+navLabel: sandbox.yml
+description: "Durable sandbox declaration, Dockerfile.sandbox USER rules, and agent bake."
+section: sandbox
+kind: reference
+order: 20
+---
+
+Durable sandbox settings live in **`.koi/sandbox.yml`** in project home. They do not live under `.koi/run/`, and they are not a `sandbox:` block in `config.yml`. `koi setup` writes the file; `yokai` and `koi doctor` read it. It survives `/junji consolidate`.
+
+`.koi/Dockerfile.sandbox` is the path for the coding agent CLI and gate tools in the VM ([ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md), [ADR-0028](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0028-sandbox-dockerfile-scaffold.md)). The repository owns the OCI tag; koi does not publish a stock catalog.
+
+Overview: [Sandboxing](/docs/sandbox/overview). First run: [Launch](/docs/sandbox/launch). Example copy: [`docs/examples/sandbox.Dockerfile`](https://github.com/getkoi/koi/blob/main/docs/examples/sandbox.Dockerfile). Pairs: [/recipes](/recipes#sandboxes).
+
+## sandbox.yml fields
+
+| Field | Type | Default when omitted | Notes |
+|-------|------|----------------------|-------|
+| `enabled` | boolean | `false` | When `true`, bare `yokai` uses the sandbox launcher unless `--host` |
+| `backend` | `docker` \| `apple` | `docker` | Host engine for the launcher ([ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md)) |
+| `image` | string | — | **Required when `enabled: true`** — repo-owned OCI tag; fail closed if empty |
+| `name` | string | `yokai-<repo-basename>` | Named sandbox instance passed to `sbx` / `container` |
+| `memory` | string | `8g` | **Apple only** — `container run --memory` ([ADR-0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md)) |
+| `cpus` | integer | `4` | **Apple only** — `container run --cpus`; must be ≥ 1 |
+
+Docker Sandboxes ignore `memory` and `cpus`.
+
+Point `image` at an OCI image you built from `.koi/Dockerfile.sandbox`. It must include the configured agent CLI and gate tools. Do not set `image` to a stock base unless that image already includes your agent. Inner preflight fails with e.g. `opencode not found`.
+
+When `name` is omitted, non-alphanumeric characters in the directory name become `-`. Example: repo `my_proj` → `yokai-my-proj`.
+
+Yokai creates Apple VMs with `8g` of memory and 4 CPUs by default. Apple Container's own default is 1 GiB. Editing these settings does not resize an existing VM; [recreate it](/docs/sandbox/launch#recreate-both-backends) to apply the changes. Yokai warns about undersized VMs but leaves them intact to preserve their login state.
+
+Valid `memory` examples: `8g`, `8192m`, `4gb`.
+
+### Examples
+
+```yaml
+# host-first
+enabled: false
+```
+
+```yaml
+# docker
+enabled: true
+backend: docker
+image: koi-myproj-sandbox
+```
+
+```yaml
+# apple
+enabled: true
+backend: apple
+image: koi-myproj-sandbox
+# memory: 8g
+# cpus: 4
+```
+
+### Validation and doctor
+
+When `enabled: true`:
+
+- Missing or empty `image` → fail closed at launcher start and `koi doctor` ✗.
+- Malformed Apple `memory` or `cpus: 0` → validation error at launcher start.
+- `koi doctor` (host): confirms `image:` string, backend CLI, Linux harness artifact path, optional setup script and Dockerfile presence.
+- `koi doctor --probe`: named sandbox exists and the agent adapter is on PATH **inside** the VM.
+
+Per-run escape: `yokai --host`. That flag is not stored in this file.
+
+## Dockerfile.sandbox
+
+When sandboxing is enabled, `koi setup` creates `.koi/Dockerfile.sandbox` if it is missing. The recipe matches the backend and includes agents named by repeated `--agent` flags and the candidates in `tiers:`. A configuration with several agents includes an install block for each.
+
+Setup preserves existing Dockerfiles. It does not build the image or create `sandbox-setup.sh`.
+
+Suggested local tag: `koi-<repo-basename>-sandbox` (must match `image:`).
+
+| Backend | Build |
+|---------|-------|
+| **docker** | `docker build -f .koi/Dockerfile.sandbox -t <tag> .` |
+| **apple** | `container build -f .koi/Dockerfile.sandbox -t <tag> .` |
+
+Optional `.koi/sandbox-setup.sh` is a once-per-sandbox escape hatch for extras the image does not cover, not how you install the agent.
+
+### Bases, USER, harness paths
+
+| Backend | Scaffold `FROM` | Final USER (scaffold) | Harness ELF install dir |
+|---------|-----------------|----------------------|-------------------------|
+| **docker** | `docker/sandbox-templates:shell-docker` | `agent` | `/home/agent/.local/bin` |
+| **apple** | `node:22-bookworm` (example) | root (no final `USER` switch) | `/usr/local/bin` |
+
+The launcher copies host Linux `yokai` / `koi` into that directory and `chmod +x` as the image’s default USER. That user must be able to write the install directory.
+
+- `USER root` during `RUN` is fine. The constraint is the last `USER`.
+- **Apple:** leave the final USER `root`, or ensure `/usr/local/bin` is writable. A non-root final USER commonly causes `chmod … /usr/local/bin/yokai: Operation not permitted`.
+- **Docker:** the sandbox template expects USER `agent` with a writable home layout.
+- Bake compilers, runtimes, and linters your `.koi/sensors/*.sh` need into the image, not only on the host.
+
+### Agent install (scaffold)
+
+| Agent | Scaffold intent |
+|-------|-----------------|
+| **opencode** | `npm install -g opencode-ai@latest` + `command -v opencode` |
+| **claude** | Ensure `node`, `npm`, `npx` on PATH; optional `claude-code` install commented |
+| **codex** | `npm install -g @agentclientprotocol/codex-acp` + `command -v codex-acp` |
+| **cursor** | Scaffold fails build until you bake `cursor-agent` (no reliable headless Linux install) |
+
+Inner preflight / `koi doctor --probe` runs `command -v` probes in-VM for every distinct agent on
+every candidate. Missing any one fails closed.
+
+When `config.yml` `tiers:` lists more than one Agent (or you pass repeated `koi setup --agent …`), the scaffold emits every matching install block.
+
+### Minimal shape
+
+```dockerfile
+# .koi/Dockerfile.sandbox — edit freely; setup will not overwrite.
+FROM docker/sandbox-templates:shell-docker   # or a stack base for apple
+
+USER root
+RUN apt-get update -qq \
+ && apt-get install -y -qq curl ca-certificates git \
+ && rm -rf /var/lib/apt/lists/*
+
+# Bake ONE agent + gate tools here (setup scaffolds for your agent).
+
+USER agent          # docker backend scaffold
+WORKDIR /home/agent
+```
+
+Apple scaffold omits the final `USER agent` line and uses `WORKDIR /workspace`.
+
+`koi doctor` ✓ if the Dockerfile exists, ⚠ if missing. `--probe` checks the adapter inside the named sandbox, not merely that the file exists on the host.
+
+## Related
+
+- [Launch](/docs/sandbox/launch)
+- [CLI flags](/docs/reference/cli): `--host`
+- [Troubleshooting](/docs/reference/troubleshooting)

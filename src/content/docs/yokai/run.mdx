@@ -1,0 +1,198 @@
+---
+title: Run yokai
+navLabel: Run
+description: "Start or continue a run, choose limits, and check the result."
+section: yokai
+kind: how-to
+order: 30
+---
+
+Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **CLI flag** >
+`.koi/run/config.yml` + `.koi/sandbox.yml` > built-in defaults.
+
+## Prerequisites
+
+- [Quickstart](/docs/start-here/quickstart) complete, `koi doctor --probe` green
+- `[todo]` (or in-flight) phases in `.koi/run/BACKLOG.md`
+- gate scripts under `.koi/sensors/` (project home)
+
+## Outcome
+
+Phases execute unattended until a halt condition or completion. Each verified phase appends one
+**phase** row to `.koi/run/ledger.jsonl`. Session-open skips append a second row kind; cost totals
+ignore those.
+
+## Launch
+
+```bash
+yokai                  # TUI (default); [gated] phases pre-authorized
+yokai --guarded        # halt before each [gated] phase
+yokai --once           # one phase, then exit (CI / external loop)
+yokai --headless       # plain text (also when stdout is not a TTY)
+yokai --host           # local supervisor even when sandbox.enabled
+```
+
+Defaults: `--working-folder .koi/run`, `--repo .`.
+
+## Continue a run or choose a session mode
+
+Relaunch `yokai` from the same repo to continue interrupted work. Yokai reads the phase state and saved session records. See [Sessions](/docs/yokai/sessions) for what resumes after an interruption.
+
+To reuse context within each phase, enable `token_savings: true` in `config.yml`
+or launch with `yokai --token-savings`. Planning, implementation and Seal share a
+session; reviews share another. Review is required and swarms are disabled.
+See [token savings configuration](/docs/reference/configuration#token-savings) for
+recovery, replacement sessions, and delegation restrictions.
+
+For parallel workers, follow [Swarms](/docs/yokai/swarms).
+
+### Agent, model, effort (pin)
+
+```bash
+yokai --agent claude --model opus --effort high
+```
+
+These flags **pin** this launch: yokai composes one candidate and does not walk `tiers:`. Omit them
+to walk the phase's band (role lift, else ultra for repair/fix/triage, else the BACKLOG tag). Unknown
+model or effort ⇒ notice (ADR-0033), not a skip. Session-open failure (`unreachable` / `limited` /
+`unstable`) records a skip row and tries the next candidate for that same turn. Mid-turn death stays
+interrupt / reattach. All candidates skipped → Halt.
+
+The cockpit shows the active Agent · Model, plus a notice when the chosen candidate is not first in
+the list.
+
+### Permissions
+
+Unattended default is `--permission approve-all`. The safety net is gate + git, not prompts.
+
+| Value | Effect |
+|-------|--------|
+| `approve-all` | auto-approve everything (default) |
+| `approve-reads` | approve reads; deny writes |
+| `deny-all` | deny all; dry run |
+
+Headless runs deny anything that would need an interactive prompt. `--policy-file` is not supported.
+
+Set once in `config.yml`; flags override for one run.
+
+### Build budget
+
+```bash
+yokai --max-iters 3
+```
+
+Overrides `.koi/run/config.yml` `build.max_iters`. Each phase runs Plan → Build → Seal (see
+[Build](/docs/yokai/build)). Non-convergence enters [recovery](/docs/yokai/recovery) by default
+(Diagnose → grant Build) and leaves `.koi/run/FEEDBACK.md`. `recovery: false` Halts immediately.
+
+### Run-wide cost ceiling
+
+Launch only, not in `config.yml`:
+
+```bash
+yokai --max-cost 5.00
+yokai --max-tokens 2000000
+```
+
+Before each phase turn the driver sums the ledger and halts pre-turn at the ceiling. Cost is
+preferred; tokens are the fallback when the agent reports no cost. Both unset ⇒ unbounded.
+
+### Theme
+
+```bash
+yokai --theme hiru
+# or: YOKAI_THEME=yoru yokai
+```
+
+Hours: `yoru` | `hiru`. `yoi` and `asa` alias to `yoru`. `terminal` (default) inherits the emulator palette (not an hour).
+See [TUI](/docs/yokai/tui).
+
+## What "done" means
+
+After each phase the supervisor checks the **contract**:
+
+1. phase marked `[done]` in `BACKLOG.md`
+2. new commit (`HEAD` moved)
+3. gate green (every `.koi/sensors/*.sh` exit 0)
+4. clean working tree
+
+Failure ⇒ [recovery](/docs/yokai/recovery) by default (Diagnose cycle). `recovery: false` Halts immediately.
+
+**Stall:** two consecutive runs fail to advance the same phase. With recovery on, that miss enters the cycle; with recovery off, Halt.
+
+## Sandbox mode
+
+When `.koi/sandbox.yml` has `enabled: true`, bare `yokai` is a **thin launcher**: it ensures the
+named VM from your repo **image**, copies Linux harness binaries in, optionally runs
+`.koi/sandbox-setup.sh` once, then execs the inner supervisor (`YOKAI_SANDBOX_INNER=1`).
+
+```bash
+yokai --host    # escape hatch: run on host despite enabled sandbox
+```
+
+Gate tools and the **agent CLI** must be in the **sandbox image** (`.koi/Dockerfile.sandbox`), not
+just on the host. Stock bases like `node:22-bookworm` without the agent fail inner preflight.
+
+Walkthrough: [Launch a sandbox](/docs/sandbox/launch). Overview: [sandbox](/docs/sandbox/overview).
+
+Durable declaration (project home):
+
+```yaml
+# .koi/sandbox.yml
+enabled: true
+backend: docker          # docker | apple
+image: koi-myproj-sandbox
+# name: yokai-myproj     # default yokai-<repo-basename>
+# memory: 8g             # apple only
+# cpus: 4                # apple only
+```
+
+Per-run driver prefs stay in `.koi/run/config.yml`. Do not put a `sandbox:` block there.
+
+After rebuilding the image or changing agent, **recreate** the named sandbox.
+
+## Run ledger
+
+Two JSON line kinds in `.koi/run/ledger.jsonl`. **Phase** rows stay one-per-phase (cost, gate, commit).
+**Skip** rows are the cooldown clock (`kind: skip`, candidate tuple, `unreachable` / `limited` /
+`unstable`, `ended_at_unix`). `jq` totals and the TUI run list ignore skips.
+
+```bash
+jq -r 'select(.kind != "skip") | "\(.phase)  gate=\(.gate_passed)  commit=\(.commit_made)  $\(.cost_usd // 0)"' \
+  .koi/run/ledger.jsonl
+jq -s 'map(select(.kind != "skip") | .cost_usd // 0) | add' .koi/run/ledger.jsonl
+```
+
+Phase fields include: `phase`, `agent`, `model`, `session_id`, `tokens`, `cost_usd`, `gate_passed`,
+`advanced`, `commit_made`, `head_before`, `head_after`, `ended_at_unix`. Old lines without `kind`
+parse as phase rows.
+
+Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/docs/yokai/tui)).
+
+`/junji consolidate` removes `.koi/run/`. Copy the ledger first if you want it outside git.
+
+## Verify a run
+
+- TUI header: cumulative cost, model, phase progress
+- `ledger.jsonl` last line: `gate_passed`, `commit_made`, `advanced`
+- headless exit: `0` on advance/complete, `2` on halt
+
+## Common failures
+
+| Symptom | Fix |
+|---------|-----|
+| preflight ✗ on launch | run `koi doctor --probe` |
+| every phase gate red | fix `.koi/sensors/*.sh`; run each by hand |
+| halt at [gated] | expected with `--guarded`; relaunch bare `yokai` |
+| `cost ceiling reached` | raise or omit `--max-cost` / `--max-tokens` |
+| missing `tiers:` / empty band | re-run `koi init` |
+| every candidate skipped | wait `retry_after_secs` (default 3600) or fix auth/quota |
+| sandbox agent not found | build `.koi/Dockerfile.sandbox`; recreate VM |
+
+More: [Troubleshooting](/docs/reference/troubleshooting).
+
+## Next
+
+- [TUI](/docs/yokai/tui): observe a live run
+- [Recovery](/docs/yokai/recovery): repair, Diagnose, Fix
+- [Reference: yokai flags](/docs/reference/cli): full flag list

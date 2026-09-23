@@ -1,0 +1,7 @@
+# .koi/sandbox.yml — apple backend, node stack
+enabled: true
+backend: apple
+image: koi-myproj-sandbox  # tag built from .koi/Dockerfile.sandbox
+# name: yokai-myproj
+memory: 8g   # apple only — fixed at `container run`; recreate to resize
+cpus: 4      # apple only — must be >= 1

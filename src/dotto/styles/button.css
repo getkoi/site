@@ -1,0 +1,242 @@
+@layer components {
+  [data-slot="button"],
+  [data-slot="icon-button"],
+  [data-slot="copy-button"] {
+    --btn-bg: var(--charcoal);
+    --btn-fg: var(--bone);
+    --button-dither: var(--accent);
+    --button-dither-opacity: 0.14;
+    box-sizing: border-box;
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55em;
+    margin: 0;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--btn-fg);
+    background: var(--btn-bg);
+    border-color: var(--btn-line);
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    transition:
+      transform var(--dur-feedback) var(--ease-out),
+      border-color var(--dur-feedback) ease,
+      background var(--dur-feedback) ease,
+      filter var(--dur-feedback) ease;
+  }
+
+  [data-slot="button"][data-size="sm"],
+  [data-slot="copy-button"] {
+    --notch: 2px;
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+  }
+
+  [data-slot="button"][data-size="md"],
+  [data-slot="button"]:not([data-size]) {
+    min-height: 44px;
+    padding: 14px 22px;
+  }
+
+  [data-slot="button"][data-size="lg"] {
+    min-height: 48px;
+    padding: 16px 26px;
+    font-size: 1rem;
+  }
+
+  [data-slot="icon-button"] {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  [data-slot="icon-button"][data-size="sm"] {
+    --notch: 2px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  [data-slot="button"]:not([data-variant="ghost"]):not([data-variant="outline"]):not([data-disabled]),
+  [data-slot="icon-button"]:not([data-variant="ghost"]):not([data-variant="outline"]):not([data-disabled]) {
+    filter: drop-shadow(2px 2px 0 var(--btn-line));
+  }
+
+  [data-slot="button"]:not([data-surface="notch"]):hover,
+  [data-slot="icon-button"]:not([data-surface="notch"]):hover,
+  [data-slot="copy-button"]:hover {
+    border-color: var(--accent);
+  }
+
+  [data-slot="button"][data-surface="notch"]::before,
+  .astryx-button[data-variant="notch"]::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--button-dither-opacity, 0.14);
+    background-image:
+      radial-gradient(
+        circle at 1px 1px,
+        color-mix(in srgb, var(--button-dither, var(--accent)) 82%, transparent) 0 0.8px,
+        transparent 1px
+      ),
+      radial-gradient(
+        circle at 3px 3px,
+        color-mix(in srgb, var(--button-dither, var(--accent)) 48%, transparent) 0 0.65px,
+        transparent 0.9px
+      );
+    background-size: 4px 4px;
+    -webkit-mask-image: linear-gradient(100deg, transparent 20%, #000 85%);
+    mask-image: linear-gradient(100deg, transparent 20%, #000 85%);
+    transition: opacity var(--dur-feedback) ease;
+  }
+
+  [data-slot="button"][data-surface="notch"]:hover,
+  .astryx-button[data-variant="notch"]:hover {
+    transform: translateY(-2px);
+  }
+
+  [data-slot="button"][data-surface="notch"]:hover::before,
+  [data-slot="button"][data-surface="notch"]:focus-visible::before,
+  .astryx-button[data-variant="notch"]:hover::before,
+  .astryx-button[data-variant="notch"]:focus-visible::before {
+    opacity: 0.35;
+  }
+
+  [data-slot="button"][data-surface="notch"]:hover::before,
+  .astryx-button[data-variant="notch"]:hover::before {
+    animation: button-dither-shift 0.18s steps(3, end) both;
+  }
+
+  [data-slot="button"][data-surface="notch"]:active,
+  .astryx-button[data-variant="notch"]:active {
+    transform: translateY(2px);
+    transition-duration: var(--dur-instant);
+  }
+
+  [data-slot="button"][data-variant="accent"],
+  [data-slot="icon-button"][data-variant="accent"] {
+    --btn-bg: var(--accent);
+    --btn-fg: var(--accent-btn-fg);
+    --button-dither: var(--accent-btn-fg);
+    --button-dither-opacity: 0.2;
+    font-weight: 700;
+  }
+
+  [data-slot="button"][data-variant="accent"]:hover,
+  [data-slot="icon-button"][data-variant="accent"]:hover {
+    background: var(--accent-btn-hover);
+    color: var(--accent-btn-fg);
+  }
+
+  [data-slot="button"][data-variant="ghost"],
+  [data-slot="icon-button"][data-variant="ghost"] {
+    --btn-bg: transparent;
+    filter: none;
+    border-color: var(--btn-line);
+    color: var(--fog);
+  }
+
+  [data-slot="button"][data-variant="ghost"]:hover,
+  [data-slot="icon-button"][data-variant="ghost"]:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /*
+    Copy is a sealed plate, never ghost/transparent. A see-through control
+    reprints the diagram or code underneath the label.
+  */
+  [data-slot="copy-button"] {
+    --btn-bg: var(--charcoal);
+    --btn-fg: var(--fog);
+    filter: none;
+    color: var(--fog);
+    background: var(--charcoal);
+  }
+
+  [data-slot="copy-button"]:hover,
+  [data-slot="copy-button"]:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--steel) 40%, var(--charcoal));
+  }
+
+  [data-slot="copy-button"][data-copied="true"] {
+    color: var(--jade);
+    border-color: var(--jade);
+    background: color-mix(in srgb, var(--jade) 18%, var(--charcoal));
+  }
+
+  [data-slot="button"][data-variant="outline"],
+  [data-slot="icon-button"][data-variant="outline"] {
+    --btn-bg: transparent;
+    filter: none;
+    border-color: var(--btn-line);
+    color: var(--bone);
+  }
+
+  [data-slot="button"][data-variant="outline"]:hover,
+  [data-slot="icon-button"][data-variant="outline"]:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  [data-slot="button"][data-variant="destructive"],
+  [data-slot="icon-button"][data-variant="destructive"] {
+    --btn-bg: color-mix(in srgb, var(--blood) 75%, #000);
+    --btn-fg: #fff;
+  }
+
+  [data-slot="button"][data-disabled],
+  [data-slot="icon-button"][data-disabled],
+  [data-slot="button"]:disabled,
+  [data-slot="icon-button"]:disabled,
+  [data-slot="button"][data-disabled]:hover,
+  [data-slot="icon-button"][data-disabled]:hover,
+  [data-slot="button"]:disabled:hover,
+  [data-slot="icon-button"]:disabled:hover {
+    cursor: not-allowed;
+    color: var(--ash);
+    border-color: var(--btn-line);
+    background: var(--charcoal);
+    filter: none;
+    transform: none;
+  }
+
+  [data-slot="button"]:focus-visible,
+  [data-slot="icon-button"]:focus-visible,
+  [data-slot="copy-button"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  [data-slot="link"] {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  [data-slot="link"]:hover {
+    color: var(--accent-btn-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-slot="button"][data-surface="notch"]:hover::before,
+    .astryx-button[data-variant="notch"]:hover::before {
+      animation: none;
+    }
+  }
+}

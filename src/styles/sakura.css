@@ -1,0 +1,78 @@
+.sakura {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    contain: strict;
+  }
+  /* the near plane rides in front of the content for parallax depth */
+  .sakura.front {
+    z-index: 2;
+  }
+  .defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  .petal {
+    position: absolute;
+    top: 0;
+    left: var(--left);
+    width: var(--size);
+    height: calc(var(--size) * 1.625);
+    opacity: 0;
+    animation: sakura-fall var(--fall) linear var(--delay) infinite;
+  }
+  .blossom {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: sakura-sway var(--swayDur) ease-in-out var(--delay) infinite alternate;
+  }
+  /* the descent: a slow, straight fall down the page */
+  @keyframes sakura-fall {
+    0% {
+      transform: translateY(-14vh);
+      opacity: 0;
+    }
+    6% {
+      opacity: var(--op);
+    }
+    90% {
+      opacity: var(--op);
+    }
+    100% {
+      transform: translateY(112vh);
+      opacity: 0;
+    }
+  }
+  /* the pendulum: swing right → left → right in a shallow arc — the petal lifts at
+     each extreme and dips through the centre, carving a circle like a leaf on the air.
+     per-keyframe easing keeps it fastest at the low centre, slowest at the tilted tops */
+  @keyframes sakura-sway {
+    0% {
+      transform: translate(calc(var(--amp) * -1), calc(var(--lift) * -1)) rotate(var(--r0));
+      animation-timing-function: ease-in;
+    }
+    50% {
+      transform: translate(0px, 0px) rotate(var(--base));
+      animation-timing-function: ease-out;
+    }
+    100% {
+      transform: translate(var(--amp), calc(var(--lift) * -1)) rotate(var(--r1));
+    }
+  }
+  /* Day hour: petals stay as warm craft, dialed back so they don't wash the stone */
+  [data-hour="hiru"] .sakura:not(.front) .petal {
+    filter: saturate(0.85);
+  }
+  [data-hour="hiru"] .sakura.front .petal {
+    opacity: 0.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sakura {
+      display: none;
+    }
+  }

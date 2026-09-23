@@ -1,0 +1,98 @@
+@layer components {
+  /*
+    Shared pixel corner: one L-cut. Boxed chrome also uses 2px --btn-line.
+    --notch is 4px by default; sm chrome sets 2px.
+
+    Never `filter: drop-shadow` on text-bearing or translucent chrome.
+    Clip-path already punches alpha in the L-cut; a see-through fill makes
+    the filter reprint every glyph 2px off. Solid opaque buttons may still
+    take a hard offset because their fill is a sealed plate.
+  */
+  [data-slot="button"],
+  [data-slot="icon-button"],
+  [data-slot="copy-button"],
+  [data-slot="chip-label"],
+  [data-slot="input"],
+  [data-slot="combobox-input"],
+  [data-slot="checkbox-control"],
+  [data-slot="kbd"],
+  [data-slot="badge"],
+  [data-slot="alert"],
+  [data-slot="panel"],
+  .panel,
+  [data-slot="drawer-trigger"],
+  [data-slot="drawer-close"],
+  [data-slot="tooltip-popup"],
+  [data-slot="combobox-popup"],
+  [data-slot="code-block"],
+  [data-slot="nav-link"],
+  [data-slot="collapsible-trigger"],
+  [data-slot="prev-next-link"],
+  [data-slot="prose"] pre,
+  .astryx-button,
+  .astryx-icon-button,
+  .astryx-badge,
+  .astryx-card,
+  .astryx-banner,
+  .astryx-text-input,
+  .astryx-tooltip,
+  .astryx-kbd {
+    border-radius: 0;
+    clip-path: polygon(
+      0 var(--notch),
+      var(--notch) var(--notch),
+      var(--notch) 0,
+      calc(100% - var(--notch)) 0,
+      calc(100% - var(--notch)) var(--notch),
+      100% var(--notch),
+      100% calc(100% - var(--notch)),
+      calc(100% - var(--notch)) calc(100% - var(--notch)),
+      calc(100% - var(--notch)) 100%,
+      var(--notch) 100%,
+      var(--notch) calc(100% - var(--notch)),
+      0 calc(100% - var(--notch))
+    );
+  }
+
+  [data-slot="button"],
+  [data-slot="icon-button"],
+  [data-slot="copy-button"],
+  [data-slot="chip-label"],
+  [data-slot="input"],
+  [data-slot="combobox-input"],
+  [data-slot="checkbox-control"],
+  [data-slot="kbd"],
+  [data-slot="badge"],
+  [data-slot="alert"],
+  [data-slot="panel"],
+  .panel,
+  [data-slot="drawer-trigger"],
+  [data-slot="drawer-close"],
+  [data-slot="tooltip-popup"],
+  [data-slot="combobox-popup"],
+  [data-slot="code-block"],
+  [data-slot="prev-next-link"],
+  [data-slot="prose"] pre,
+  .astryx-button,
+  .astryx-icon-button,
+  .astryx-badge,
+  .astryx-card,
+  .astryx-banner,
+  .astryx-text-input,
+  .astryx-tooltip,
+  .astryx-kbd {
+    border: 2px solid var(--btn-line);
+  }
+
+  [data-slot="chip-label"],
+  [data-slot="checkbox-control"],
+  [data-slot="kbd"],
+  [data-slot="badge"],
+  [data-slot="copy-button"],
+  [data-slot="button"][data-size="sm"],
+  [data-slot="icon-button"][data-size="sm"],
+  .astryx-button[data-size="sm"],
+  .astryx-icon-button[data-size="sm"] {
+    --notch: 2px;
+  }
+}

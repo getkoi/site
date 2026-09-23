@@ -1,0 +1,169 @@
+---
+title: Harvest Engineering
+description: "A crop-cycle rhythm for preparing, planning, driving, validating, and improving long engineering work with koi."
+publishedAt: 2026-09-02
+author: matheusps
+coverImage: /blog/harvest-engineering/01-fertile-soil.webp
+coverAlt: "A gardener works a terraced field at first light while a small shrine and irrigation channels wait above the soil."
+ogImage: /blog/harvest-engineering/harvest-engineering-og.png
+tags:
+  - method
+  - junji
+  - yokai
+---
+
+import HarvestCycle from "../../components/blog/HarvestCycle";
+import HarvestScene from "../../components/blog/HarvestScene";
+
+I use koi work in crop cycles. One crop cycle is one complete junji effort: shape the work, plan it, let yokai drive the phase list, check the result, and consolidate only when I accept what landed.
+
+The field metaphor helps me budget attention around those boundaries. It also leaves room for something engineering plans often miss: the ground needs care between crops.
+
+<HarvestCycle />
+
+The ratio is `0 to 1 / 1 / 2 / 1`. A unit is a relative share of capacity, not an hour, day, sprint, or promise. Soil preparation happens before the ratio when a project needs it. Care happens between crop cycles.
+
+## Prepare fertile soil
+
+<HarvestScene
+  stage="soil"
+  eyebrow="before the cycle"
+  title="Fertile soil"
+  src="/blog/harvest-engineering/01-fertile-soil.webp"
+  alt="A gardener works a terraced field at first light while a small shrine and irrigation channels wait above the soil."
+  caption="A short vision, minimum requirements, and a real verification command are enough for the first small crop."
+/>
+
+When I start with nothing, I do not begin with a large plan. I write a short vision and the minimum requirements for the first useful outcome. The repository must run, and there must be a real command that can prove the next change.
+
+For a new koi project, `koi setup` creates the durable project home:
+
+```bash
+koi setup --yes --sandbox off
+```
+
+That command creates the sensors folder and sandbox declaration, but it does not invent an executable sensor. I still need to wire the project's real checks, or let `/junji plan` do that when the folder has no sensor scripts. The verification bar must be runnable before yokai starts driving code.
+
+This is enough soil for a small first crop. A complete PRD and settled architecture can come later if the work does not need them yet.
+
+## Walk the field, if needed
+
+<HarvestScene
+  stage="discuss"
+  eyebrow="0 to 1 unit"
+  title="Shape the crop"
+  src="/blog/harvest-engineering/02-walk-the-field.webp"
+  alt="A gardener studies a small field map beside a lantern while paper markers show a few possible planting rows."
+  caption="Clarify the outcome and investigate only the unknowns that can change the plan."
+/>
+
+Some crops need a short conversation before planning. I use this pass to settle the desired outcome, constraints, and unknowns. It may call for `/junji research`, a design pass, or a grilling session. If the idea is already clear, I skip it.
+
+The limit matters. This step gets zero to one unit because its job is to make planning cheaper, not to become a second planning phase.
+
+## Plant the seeds
+
+<HarvestScene
+  stage="plant"
+  eyebrow="1 unit"
+  title="Plan and refine"
+  src="/blog/harvest-engineering/03-plant-the-seeds.webp"
+  alt="The armored Sentinel plants glowing seed markers in ordered rows while a gardener checks the sequence against a scroll."
+  caption="Junji turns the source idea into a strategy, a verification bar, and an ordered list of phases."
+/>
+
+Planting is the junji pass. I initialize the effort, let `begin` survey the repository, lock the strategy with `plan`, and cut it into phases with `refine`.
+
+```text
+koi init
+/junji begin
+/junji plan
+/junji refine
+```
+
+These commands do different jobs. `begin` records facts. `plan` decides the approach and makes the verification bar explicit. `refine` orders independently verifiable phases in `BACKLOG.md`. At the end, the field has rows and each row has a finish condition.
+
+I budget one unit here. Reworking markdown is still cheap compared with correcting code after several phases have landed.
+
+## Let the crop grow
+
+<HarvestScene
+  stage="grow"
+  eyebrow="2 units"
+  title="Yokai drives"
+  src="/blog/harvest-engineering/04-let-it-grow.webp"
+  alt="At night, the Kitsune watches luminous crop rows while a separate pavilion holds a gardener writing future plans."
+  caption="Yokai drives one phase at a time. Separate work can continue without touching the active checkout."
+/>
+
+Bare `yokai` drives the runnable phase list until it completes or reaches a reason to halt. For each phase it runs Plan, Build, and Seal, checks the contract on disk, and moves to the next phase only after the current one has a proving commit, a green gate, and a clean tree.
+
+```bash
+yokai
+```
+
+This is the two-unit part. Implementation, correction, sensing, and sealing usually consume the largest share of the crop's total capacity. The ratio says nothing about wall-clock time.
+
+Because yokai is autonomous, I can use spare attention elsewhere. I might revise the longer vision, draft a PRD for a later crop, discuss future work, or start a side quest. That work is optional. It stays in durable documents or an isolated branch or worktree. I do not edit the active `.koi/run/` or the checkout yokai is driving.
+
+## Harvest what actually grew
+
+<HarvestScene
+  stage="harvest"
+  eyebrow="1 unit"
+  title="Validate, then consolidate"
+  src="/blog/harvest-engineering/05-harvest.webp"
+  alt="A gardener inspects bound rice sheaves beside green verification seals before carrying them into a storehouse."
+  caption="A green phase contract proves the engineering bar. Human validation decides whether the crop is accepted."
+/>
+
+A completed backlog is evidence, but I still check the product that came out of it. `/junji brief` can summarize what landed and how to try it. Then I use the software, compare it with the intended outcome, and inspect anything the automated bar cannot judge.
+
+If validation finds a gap, I keep it in the same crop cycle:
+
+```text
+/junji iterate "describe the missing outcome"
+```
+
+`iterate` adds corrective phases after the current backlog is done. Yokai can drive those phases through the same contract. I consolidate only after I accept the result.
+
+```text
+/junji consolidate
+```
+
+Consolidation writes the durable deliverable in the repository's native spec home and removes `.koi/run/`. The project home, including sensors and sandbox settings, remains for the next crop.
+
+## Care for the field
+
+<HarvestScene
+  stage="care"
+  eyebrow="between crops"
+  title="Repair the growing conditions"
+  src="/blog/harvest-engineering/06-care-for-the-field.webp"
+  alt="At sunrise, a gardener repairs an irrigation gate, records notes, and clears stones before the next planting."
+  caption="Keep the observations concrete, then improve the part of the system that caused the friction."
+/>
+
+I leave some space between crops for care. It is outside the four-unit ratio because the amount should follow the friction I observed, not a fixed ceremony.
+
+I write down what slowed the crop, what failed clearly, and what gave false confidence. The useful response may be a better source document, a stronger sensor, a sandbox fix, a change to the team process, or an improvement to koi itself. I do not require a new harvest-log file. The lesson belongs in whichever durable artifact it changes.
+
+This maintenance keeps the repository ready for more crop cycles. Without it, the same setup problems and weak checks return every time.
+
+## A first-crop checklist
+
+Before the cycle:
+
+1. Write a short vision and the minimum requirements for one useful outcome.
+2. Make the repository runnable and identify the real verification commands.
+3. Run `koi setup` once for the repository. Wire the verification bar before execution.
+
+For the crop:
+
+1. Spend zero to one unit shaping the work if important choices are still open.
+2. Spend one unit on `koi init`, `begin`, `plan`, and `refine`.
+3. Let `yokai` spend two units driving and correcting the phase list.
+4. Spend one unit validating the result. Use `iterate` for gaps and `consolidate` after acceptance.
+5. Before the next crop, improve the durable part of the system that caused the most friction.
+
+Start with one small crop. The [quickstart](/docs/start-here/quickstart) covers setup and the first green phase. The [junji guide](/docs/junji/guide) defines every verb, and the [yokai run guide](/docs/yokai/run) explains the driver. Use [sensor guidance](/docs/sensors) and [recipes](/recipes) when the verification bar or sandbox needs work.

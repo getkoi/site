@@ -1,0 +1,143 @@
+---
+title: Launch a sandbox
+navLabel: Launch
+description: "Choose a backend, build the image, log in, and run Yokai inside the VM."
+section: sandbox
+kind: how-to
+order: 40
+---
+
+Run yokai inside a named Linux VM. Concepts: [Sandboxing overview](/docs/sandbox/overview). Declaration and Dockerfile rules: [sandbox.yml and image](/docs/sandbox/sandbox-yml). Copy-ready pairs: [/recipes](/recipes#sandboxes).
+
+Host-first (sandbox off) is [Quickstart](/docs/start-here/quickstart). This page assumes you already have `koi` and `yokai` on PATH.
+
+Pick a backend, then follow that section. Recreate steps are at the end (both backends).
+
+## Apple Container
+
+Requires macOS 26, Apple silicon, and the [`container`](https://github.com/apple/container) CLI.
+
+Bake the agent into the image. For Apple, auth must happen **inside the VM**; the host login is not enough ([ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md)).
+
+### Prerequisites
+
+```bash
+container system start
+container --version
+```
+
+### Enable and build
+
+```bash
+koi setup --sandbox on --backend apple --agent opencode --yes
+container build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
+```
+
+Confirm `image:` in `.koi/sandbox.yml` matches that tag. Do not use `docker build` unless a Docker daemon is actually running.
+
+`--agent` only steers the Dockerfile recipe. The driver agent is set by `koi init`.
+
+Linux harness ELFs (host):
+
+```bash
+./install.sh
+```
+
+On macOS this builds `yokai-linux-<arch>` / `koi-linux-<arch>` under `~/.local/share/koi/bin/` via `scripts/build-linux-artifacts.sh`.
+
+### First run and in-VM auth
+
+```bash
+koi doctor --probe
+yokai
+```
+
+The first create uses default VM size **8g / 4 cpus** unless you override it in `sandbox.yml` ([ADR-0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md)). Default name: `yokai-<repo-basename>`.
+
+```bash
+container exec -it yokai-<repo> opencode
+# /connect — configure provider, then exit
+```
+
+Re-run `yokai` / `koi doctor --probe` after in-VM auth. A green host auth probe does not replace `/connect` inside the container.
+
+Optional sizing:
+
+```yaml
+memory: 8g
+cpus: 4
+```
+
+If yokai reconnects to an undersized existing VM, it prints a warning and recreate commands. It does not auto-delete the container.
+
+## Docker Sandboxes
+
+Requires Docker Desktop and the **`sbx`** CLI. The repository still owns the OCI image through `.koi/Dockerfile.sandbox`.
+
+Credentials usually stay on the host through `sbx secret` or the sandbox proxy when configured. See Docker's [credentials guide](https://docs.docker.com/ai/sandboxes/security/credentials/).
+
+### Prerequisites
+
+```bash
+docker version          # daemon must respond
+sbx login               # once
+```
+
+If you see `failed to connect to the docker API` or `docker.sock: no such file`, start Docker Desktop or use the Apple backend instead.
+
+### Enable and build
+
+```bash
+koi setup --sandbox on --backend docker --agent opencode --yes
+docker build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
+```
+
+Point `image:` at that tag. Bake your agent and gate tools. Stock bases without the agent fail preflight.
+
+Optional provider secrets (see current `sbx` docs):
+
+```bash
+sbx secret set -g openai
+```
+
+Linux harness ELFs: `./install.sh` as above.
+
+### First run
+
+```bash
+koi doctor --probe
+yokai
+```
+
+The launcher creates the named sandbox if it does not exist (`sbx create --name … --template … shell <repo>`). You do not run `sbx create` manually for normal use. Harness binaries land in `/home/agent/.local/bin`.
+
+## Recreate (both backends)
+
+VM filesystem and Apple VM limits are fixed at **create** time. Recreate after a rebuilt image, `image:` tag change, agent or gate-tool change in the Dockerfile, or Apple `memory` / `cpus` change.
+
+```bash
+# docker
+sbx rm yokai-<repo>       # exact flags: see `sbx --help`
+docker build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
+yokai
+
+# apple
+container stop yokai-<repo> && container rm yokai-<repo>
+container build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
+yokai
+# re-run in-VM /connect if the VM was wiped
+```
+
+## Escape hatch
+
+```bash
+yokai --host          # supervisor on the host despite sandbox.yml
+```
+
+Optional `.koi/sandbox-setup.sh` runs once per sandbox for extras. Bake the agent in the Dockerfile; the hook is not the primary install path. Detail: [Host & escape](/docs/sandbox/host-and-escape).
+
+## Next
+
+- [sandbox.yml and image](/docs/sandbox/sandbox-yml)
+- [Cheatsheet](/docs/reference/cheatsheet)
+- [Troubleshooting](/docs/reference/troubleshooting)

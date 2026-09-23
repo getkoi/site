@@ -1,0 +1,23 @@
+# .koi/Dockerfile.sandbox — node stack, docker backend
+#
+#   docker build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
+#   # ensure .koi/sandbox.yml: image: koi-myproj-sandbox
+# After rebuilding, recreate the named sandbox (sbx rm / container rm).
+
+FROM docker/sandbox-templates:shell-docker
+
+USER root
+RUN apt-get update -qq \
+ && apt-get install -y -qq curl ca-certificates git nodejs npm \
+ && rm -rf /var/lib/apt/lists/*
+
+# Agent (claude): node/npx feed the ACP adapter (already in this image);
+# install the full CLI on top.
+RUN command -v node && command -v npm && command -v npx
+RUN npm install -g @anthropic-ai/claude-code && command -v claude
+
+# Gate toolchain: project devDependencies (eslint, tsc, vitest, …) come from
+# `npm ci` during image build or a one-time .koi/sandbox-setup.sh — never in sensors.
+
+USER agent          # docker backend scaffold expects USER agent
+WORKDIR /home/agent

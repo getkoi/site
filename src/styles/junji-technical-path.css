@@ -1,0 +1,229 @@
+.technical-path {
+    padding-bottom: clamp(76px, 10vw, 132px);
+    scroll-margin-top: 24px;
+  }
+
+  .technical-path__intro {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.22fr);
+    gap: clamp(28px, 6vw, 82px);
+    align-items: end;
+  }
+
+  .technical-path__intro .sec-h {
+    max-width: 12ch;
+  }
+
+  .technical-path__intro .sec-p {
+    margin: 0 0 4px;
+  }
+
+  .technical-path__intro code {
+    color: var(--accent);
+  }
+
+  .lifecycle {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin: clamp(28px, 5vw, 52px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lifecycle::before {
+    position: absolute;
+    top: 30px;
+    right: 7%;
+    left: 7%;
+    z-index: 0;
+    height: 1px;
+    content: "";
+    background: var(--accent-line);
+  }
+
+  .lifecycle-stage {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: 61px 1fr;
+    min-width: 0;
+    overflow: visible;
+    background: var(--obsidian);
+  }
+
+  .lifecycle-stage__rail {
+    position: relative;
+    display: grid;
+    place-items: center;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lifecycle-stage__rail span {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    color: var(--accent);
+    background: var(--obsidian);
+    border: 1px solid var(--accent-line);
+    box-shadow: 0 0 0 6px var(--obsidian), var(--glow-accent);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+  }
+
+  .lifecycle-stage article {
+    display: flex;
+    min-height: 318px;
+    padding: 18px 16px 16px;
+    flex-direction: column;
+  }
+
+  .lifecycle-stage header {
+    display: grid;
+    gap: 5px;
+  }
+
+  .lifecycle-stage header p {
+    margin: 0;
+    color: var(--accent);
+    font-size: 0.62rem;
+  }
+
+  .lifecycle-stage header code {
+    min-height: 2.8em;
+    color: var(--bone);
+    font-size: 0.67rem;
+    line-height: 1.4;
+  }
+
+  .lifecycle-stage h3 {
+    margin: 16px 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .lifecycle-stage article > p {
+    margin: 12px 0 0;
+    color: var(--fog);
+    font-size: 0.78rem;
+    line-height: 1.55;
+  }
+
+  .lifecycle-stage__files {
+    display: flex;
+    gap: 5px;
+    margin-top: auto;
+    padding-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .lifecycle-stage__files span {
+    padding: 3px 6px;
+    color: var(--file);
+    background: color-mix(in srgb, var(--file) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--file) 28%, transparent);
+    font-size: 0.57rem;
+  }
+
+  .technical-path__exit {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    margin-top: 12px;
+    padding: 18px 20px;
+    border-color: var(--accent-line);
+    background:
+      linear-gradient(110deg, var(--accent-soft), transparent 48%),
+      var(--obsidian);
+  }
+
+  .technical-path__exit > p {
+    max-width: 64ch;
+    margin: 0;
+    color: var(--fog);
+    font-size: 0.86rem;
+  }
+
+  .technical-path__exit > div {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .technical-path__alternate {
+    color: var(--fog);
+    font-size: 0.7rem;
+    text-underline-offset: 4px;
+  }
+
+  .technical-path__alternate:hover,
+  .technical-path__alternate:focus-visible {
+    color: var(--accent);
+  }
+
+  @media (max-width: 980px) {
+    .lifecycle {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .lifecycle::before {
+      top: 28px;
+      right: auto;
+      bottom: 28px;
+      left: 29px;
+      width: 1px;
+      height: auto;
+    }
+
+    .lifecycle-stage {
+      grid-template-columns: 60px 1fr;
+      grid-template-rows: 1fr;
+    }
+
+    .lifecycle-stage__rail {
+      border-right: 1px solid var(--line);
+      border-bottom: 0;
+    }
+
+    .lifecycle-stage article {
+      min-height: 0;
+    }
+
+    .lifecycle-stage header code {
+      min-height: 0;
+    }
+
+    .lifecycle-stage__files {
+      margin-top: 0;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .technical-path__intro {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .technical-path__exit {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .technical-path__exit > div {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lifecycle-stage__rail span {
+      box-shadow: 0 0 0 6px var(--obsidian);
+    }
+  }

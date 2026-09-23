@@ -1,0 +1,1385 @@
+@layer components {
+  .junji-page {
+    --jn-panel: color-mix(in srgb, var(--obsidian) 92%, var(--void));
+    --jn-well: color-mix(in srgb, var(--void) 78%, var(--obsidian));
+    --jn-line: color-mix(in srgb, var(--accent) 42%, var(--line-2));
+    position: relative;
+    background:
+      radial-gradient(
+      circle at 78% 8%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 30rem
+    ),
+      radial-gradient(
+      circle at 14% 48%,
+      color-mix(in srgb, var(--blossom) 7%, transparent),
+      transparent 34rem
+    );
+    scroll-behavior: smooth;
+  }
+
+  .junji-page::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image:
+      linear-gradient(
+      color-mix(in srgb, var(--line) 54%, transparent) 1px,
+      transparent 1px
+    ),
+      linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--line) 54%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 74%);
+    content: "";
+    pointer-events: none;
+  }
+
+  .junji-page .wrap {
+    width: min(calc(100% - 40px), 1200px);
+  }
+
+  .junji-page .kicker {
+    width: fit-content;
+    margin: 0 0 13px;
+    padding: 0;
+    color: var(--accent);
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+  }
+
+  .junji-page .sec-h {
+    max-width: 780px;
+    margin: 0;
+    color: var(--bone);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.2vw, 3.75rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: normal;
+    text-wrap: balance;
+  }
+
+  .junji-page .sec-p {
+    max-width: 720px;
+    color: var(--fog);
+    font-size: clamp(0.98rem, 1.45vw, 1.1rem);
+    line-height: 1.7;
+  }
+
+  /* Sentinel command shrine */
+  .junji-hero {
+    position: relative;
+    display: grid;
+    width: min(100%, 1260px);
+    min-height: min(920px, calc(100dvh - 64px));
+    grid-template-columns: minmax(0, 1.03fr) minmax(400px, 0.77fr);
+    align-items: center;
+    gap: clamp(52px, 8vw, 118px);
+    margin-inline: auto;
+    padding: clamp(72px, 9vw, 136px) clamp(20px, 4vw, 48px);
+    overflow: hidden;
+  }
+
+  .junji-hero__copy {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: center;
+    gap: 21px;
+  }
+
+  .junji-hero__scope {
+    width: fit-content;
+    margin: 0;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+
+  .junji-hero__wordmark {
+    color: var(--bone);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: normal;
+  }
+
+  .junji-hero__thesis {
+    max-width: 12ch;
+    margin: 2px 0 0;
+    color: var(--bone);
+    font-family: var(--font-display);
+    font-size: clamp(2.9rem, 6.4vw, 4.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: normal;
+    text-wrap: balance;
+  }
+
+  .junji-hero__thesis em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .junji-hero__lede {
+    max-width: 650px;
+    margin: 4px 0 0;
+    color: var(--fog);
+    font-size: clamp(1.03rem, 1.55vw, 1.2rem);
+    line-height: 1.7;
+  }
+
+  .junji-hero__lede strong {
+    color: var(--bone);
+    font-weight: 650;
+  }
+
+  .junji-hero__lede code {
+    color: var(--accent);
+  }
+
+  .junji-hero__routes {
+    display: grid;
+    max-width: 720px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 4px;
+  }
+
+  .junji-route {
+    position: relative;
+    display: grid;
+    min-width: 0;
+    min-height: 126px;
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 14px;
+    overflow: hidden;
+    border: 1px solid var(--line-2);
+    border-radius: 2px 2px 16px 2px;
+    background: color-mix(in srgb, var(--obsidian) 92%, transparent);
+    color: var(--bone);
+    text-decoration: none;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      translate 160ms ease;
+  }
+
+  .junji-route--short {
+    border-color: var(--accent-line);
+    background:
+      linear-gradient(125deg, var(--accent-soft), transparent 68%),
+      var(--jn-panel);
+  }
+
+  .junji-route:hover,
+  .junji-route:focus-visible {
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
+    translate: 0 -2px;
+  }
+
+  .junji-route:focus-visible {
+    outline: 3px solid var(--accent-core);
+    outline-offset: 3px;
+  }
+
+  .junji-route__number {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border: 1px solid var(--line-2);
+    color: var(--steel);
+    font-family: var(--font-mono);
+    font-size: 0.53rem;
+  }
+
+  .junji-route--short .junji-route__number {
+    border-color: var(--accent-line);
+    color: var(--accent);
+  }
+
+  .junji-route > span:nth-child(2) {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+  }
+
+  .junji-route small {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.03em;
+  }
+
+  .junji-route strong {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.7vw, 1.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .junji-route i {
+    overflow: hidden;
+    color: var(--fog);
+    font-size: 0.68rem;
+    font-style: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .junji-route > b {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+  }
+
+  .junji-hero__console {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    min-height: 610px;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    overflow: hidden;
+    border: 1px solid var(--accent-line);
+    border-radius: 4px 4px 30px 4px;
+    background:
+      radial-gradient(
+      circle at 50% 42%,
+      color-mix(in srgb, var(--accent) 9%, transparent),
+      transparent 22rem
+    ),
+      var(--jn-panel);
+    box-shadow: var(--glow-accent);
+  }
+
+  .junji-hero__console::before {
+    position: absolute;
+    inset: 46px 0 0;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 19px 19px;
+    mask-image: radial-gradient(circle, #000 0%, transparent 72%);
+    content: "";
+    pointer-events: none;
+  }
+
+  .junji-hero__console > header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 0 17px;
+    border-bottom: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--charcoal) 34%, transparent);
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.07em;
+  }
+
+  .junji-hero__console > header p {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    color: var(--jade);
+  }
+
+  .junji-hero__console > header i {
+    width: 7px;
+    height: 7px;
+    background: currentColor;
+    box-shadow: 0 0 11px currentColor;
+  }
+
+  .junji-hero__sentinel {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: min(88%, 410px);
+    aspect-ratio: 1;
+    place-self: center;
+    place-items: center;
+  }
+
+  .junji-hero__sentinel::before,
+  .junji-hero__sentinel::after {
+    position: absolute;
+    border: 1px solid var(--accent-line);
+    content: "";
+    pointer-events: none;
+  }
+
+  .junji-hero__sentinel::before {
+    inset: 8%;
+    rotate: 45deg;
+    opacity: 0.5;
+  }
+
+  .junji-hero__sentinel::after {
+    inset: 18%;
+    border-color: var(--line-2);
+    rotate: 45deg;
+  }
+
+  .junji-hero__sentinel .sentinel-art {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+  }
+
+  .junji-hero__eyes {
+    position: absolute;
+    z-index: 3;
+    top: 48.5%;
+    left: 50%;
+    width: 46%;
+    height: 15%;
+    translate: -50% -50%;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in srgb, var(--accent-core) 72%, transparent),
+      color-mix(in srgb, var(--accent) 40%, transparent) 40%,
+      transparent 72%
+    );
+    mix-blend-mode: screen;
+    filter: blur(2.5px);
+    animation: junji-eye-flicker 4.2s var(--ease-out) infinite;
+    pointer-events: none;
+  }
+
+  [data-hour="hiru"] .junji-hero__eyes {
+    mix-blend-mode: normal;
+    opacity: 0.9;
+  }
+
+  .junji-hero__seal {
+    position: absolute;
+    z-index: 4;
+    right: 11%;
+    bottom: 11%;
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 1rem;
+  }
+
+  .junji-hero__position {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 5px;
+    margin: 0 18px 14px;
+    padding: 13px 14px;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .junji-hero__position span {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .junji-hero__position strong {
+    color: var(--bone);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  .junji-hero__position small {
+    color: var(--fog);
+    font-size: 0.67rem;
+  }
+
+  .junji-hero__readout {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    border-top: 1px solid var(--line-2);
+  }
+
+  .junji-hero__readout div {
+    display: grid;
+    min-width: 0;
+    gap: 4px;
+    padding: 13px 11px;
+    border-right: 1px solid var(--line-2);
+  }
+
+  .junji-hero__readout div:last-child {
+    border-right: 0;
+  }
+
+  .junji-hero__readout dt {
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.48rem;
+  }
+
+  .junji-hero__readout dd {
+    overflow: hidden;
+    margin: 0;
+    color: var(--bone);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .junji-hero__readout div:last-child dd {
+    color: var(--jade);
+  }
+
+  @keyframes junji-eye-flicker {
+    0%,
+    100% {
+      opacity: 0.72;
+    }
+
+    43% {
+      opacity: 1;
+    }
+
+    47% {
+      opacity: 0.55;
+    }
+
+    52% {
+      opacity: 0.95;
+    }
+
+    70% {
+      opacity: 0.8;
+    }
+  }
+
+  /* Shared console bars */
+  .junji-page .technical-path__bar,
+  .junji-page .tutorial-shell__bar,
+  .junji-page .deck-layout__bar {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 17px;
+    border-bottom: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--charcoal) 34%, transparent);
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.07em;
+  }
+
+  .junji-page .technical-path__bar p,
+  .junji-page .tutorial-shell__bar p,
+  .junji-page .deck-layout__bar p {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    color: var(--jade);
+    letter-spacing: 0;
+  }
+
+  .junji-page .technical-path__bar i,
+  .junji-page .tutorial-shell__bar i,
+  .junji-page .deck-layout__bar i {
+    width: 7px;
+    height: 7px;
+    background: currentColor;
+    box-shadow: 0 0 11px currentColor;
+  }
+
+  /* Short technical route */
+  .junji-page .technical-path {
+    padding: clamp(86px, 11vw, 158px) 0;
+  }
+
+  .junji-page .technical-path__intro {
+    grid-template-columns: minmax(270px, 0.78fr) minmax(0, 1.22fr);
+    align-items: end;
+  }
+
+  .junji-page .technical-path__intro .sec-h {
+    max-width: 10ch;
+  }
+
+  .junji-page .technical-path__board {
+    margin-top: clamp(30px, 5vw, 58px);
+    overflow: hidden;
+    border: 1px solid var(--accent-line);
+    border-radius: 4px 4px 30px 4px;
+    background:
+      radial-gradient(
+      circle at 50% 18%,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 29rem
+    ),
+      var(--jn-panel);
+    box-shadow: var(--glow-accent);
+  }
+
+  .junji-page .technical-path__board .lifecycle {
+    gap: 8px;
+    margin: 0;
+    padding: clamp(18px, 3vw, 30px);
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .junji-page .technical-path__board .lifecycle::before {
+    right: 8%;
+    left: 8%;
+    background: var(--accent);
+    opacity: 0.45;
+  }
+
+  .junji-page .technical-path__board .lifecycle-stage {
+    overflow: hidden;
+    border-color: var(--line-2);
+    border-radius: 2px 2px 15px 2px;
+    background: color-mix(in srgb, var(--obsidian) 94%, transparent);
+  }
+
+  .junji-page .technical-path__board .lifecycle-stage__rail {
+    background: color-mix(in srgb, var(--void) 48%, transparent);
+  }
+
+  .junji-page .technical-path__board .lifecycle-stage__rail span {
+    border-color: var(--accent-line);
+    background: var(--jn-panel);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    box-shadow: 0 0 0 6px var(--jn-panel), var(--glow-accent);
+  }
+
+  .junji-page .technical-path__board .lifecycle-stage article {
+    min-height: 330px;
+    padding: 20px 17px 17px;
+  }
+
+  .junji-page .technical-path__board .lifecycle-stage h3 {
+    font-size: clamp(1.12rem, 1.8vw, 1.45rem);
+    line-height: 1.12;
+  }
+
+  .junji-page .technical-path__board .lifecycle-stage__files span {
+    border-color: color-mix(in srgb, var(--file) 32%, transparent);
+    background: color-mix(in srgb, var(--file) 9%, transparent);
+  }
+
+  .junji-page .technical-path__board .technical-path__exit {
+    margin: 0;
+    padding: 19px clamp(20px, 3vw, 30px);
+    border: 0;
+    border-top: 1px solid var(--line-2);
+    background:
+      linear-gradient(110deg, var(--accent-soft), transparent 48%),
+      color-mix(in srgb, var(--void) 35%, transparent);
+  }
+
+  /* Interactive tabletop cockpit */
+  .junji-page .tutorial {
+    padding: clamp(86px, 11vw, 158px) 0;
+  }
+
+  .junji-page .tutorial__intro {
+    display: grid;
+    max-width: 840px;
+    gap: 13px;
+  }
+
+  .junji-page .tutorial__intro .sec-h {
+    max-width: 10ch;
+  }
+
+  .junji-page .tutorial .tutorial-shell {
+    margin-top: clamp(32px, 5vw, 58px);
+    overflow: hidden;
+    border: 1px solid var(--accent-line);
+    border-radius: 4px 4px 30px 4px;
+    background:
+      radial-gradient(
+      circle at 68% 34%,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 28rem
+    ),
+      var(--jn-panel);
+    box-shadow: var(--glow-accent);
+  }
+
+  .junji-page .tutorial .tutorial-spine {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--void) 36%, transparent);
+  }
+
+  .junji-page .tutorial .spine-card {
+    min-height: 68px;
+    align-content: center;
+    border-color: var(--line-2);
+  }
+
+  .junji-page .tutorial .spine-card[data-state="current"] {
+    background:
+      linear-gradient(110deg, var(--accent-soft), transparent 80%),
+      var(--obsidian);
+  }
+
+  .junji-page .tutorial .tutorial-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  }
+
+  .junji-page .tutorial .tutorial-play {
+    padding: clamp(22px, 3vw, 34px);
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .junji-page .tutorial .quest-card {
+    border-left: 3px solid var(--accent);
+    border-radius: 2px 2px 14px 2px;
+    background:
+      linear-gradient(115deg, var(--accent-soft), transparent 66%),
+      var(--jn-panel);
+  }
+
+  .junji-page .tutorial .turn-copy {
+    margin-top: 28px;
+  }
+
+  .junji-page .tutorial .turn-copy h3 {
+    font-size: clamp(1.65rem, 3vw, 2.45rem);
+    line-height: 1.08;
+  }
+
+  .junji-page .tutorial .turn-copy__position {
+    border: 1px solid var(--line-2);
+    background: var(--jn-panel);
+  }
+
+  .junji-page .tutorial .turn-copy__prompt {
+    max-width: 64ch;
+    color: var(--fog);
+    line-height: 1.65;
+  }
+
+  .junji-page .tutorial .tutorial-hand {
+    gap: 10px;
+  }
+
+  .junji-page .tutorial .tutorial-choice {
+    min-height: 214px;
+    overflow: hidden;
+    border: 1px solid var(--line-2);
+    border-radius: 2px 2px 17px 2px;
+    background: color-mix(in srgb, var(--obsidian) 94%, transparent);
+    transition:
+      border-color 150ms ease,
+      translate 150ms ease,
+      opacity 150ms ease;
+  }
+
+  .junji-page .tutorial .tutorial-choice:hover,
+  .junji-page .tutorial .tutorial-choice:focus-visible {
+    border-color: var(--accent);
+    translate: 0 -2px;
+  }
+
+  .junji-page .tutorial .tutorial-choice:focus-visible {
+    outline: 3px solid var(--accent-core);
+    outline-offset: 3px;
+  }
+
+  .junji-page .tutorial .tutorial-choice__art {
+    border-bottom-color: var(--line-2);
+    background: var(--jn-well);
+  }
+
+  .junji-page .tutorial .turn-feedback {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--void) 55%, transparent);
+  }
+
+  .junji-page .tutorial .trigger-stack {
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+  }
+
+  .junji-page .tutorial .table-state {
+    border-color: var(--line-2);
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      var(--jn-well);
+    background-size: 18px 18px;
+  }
+
+  .junji-page .tutorial .table-state__head {
+    min-height: 76px;
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--charcoal) 30%, transparent);
+  }
+
+  .junji-page .tutorial .table-state__window {
+    border-color: color-mix(in srgb, var(--jade) 38%, transparent);
+    background: var(--jade-soft);
+    color: var(--jade);
+  }
+
+  .junji-page .tutorial .table-state__run,
+  .junji-page .tutorial .turn-marker,
+  .junji-page .tutorial .phase-board,
+  .junji-page .tutorial .gate-board,
+  .junji-page .tutorial .table-result {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--obsidian) 78%, transparent);
+  }
+
+  .junji-page .tutorial .gate-board {
+    border-left-width: 3px;
+  }
+
+  .junji-page .tutorial .tutorial-footer {
+    min-height: 82px;
+    border-color: var(--line-2);
+    background:
+      linear-gradient(110deg, var(--accent-soft), transparent 42%),
+      color-mix(in srgb, var(--void) 35%, transparent);
+  }
+
+  /* Full verb deck */
+  .junji-page .deck-story {
+    padding: clamp(86px, 11vw, 158px) 0;
+  }
+
+  .junji-page .deck-story__intro {
+    display: grid;
+    max-width: 860px;
+    gap: 13px;
+  }
+
+  .junji-page .deck-story__intro .sec-h {
+    max-width: 11ch;
+  }
+
+  .junji-page .deck-story .chain-key {
+    margin-top: 9px;
+  }
+
+  .junji-page .deck-story .deck-layout {
+    gap: 0;
+    margin-top: clamp(32px, 5vw, 58px);
+    overflow: visible;
+    border: 1px solid var(--accent-line);
+    border-radius: 4px 4px 30px 4px;
+    background: var(--jn-panel);
+    box-shadow: var(--glow-accent);
+  }
+
+  .junji-page .deck-story .deck-layout__bar {
+    grid-column: 1 / -1;
+  }
+
+  .junji-page .deck-story .deck-board {
+    border: 0;
+    border-right: 1px solid var(--line-2);
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      var(--jn-well);
+    background-size: 18px 18px;
+  }
+
+  .junji-page .deck-story .deck-families {
+    gap: 18px;
+    padding: clamp(17px, 2.5vw, 28px);
+  }
+
+  .junji-page .deck-story .card-family {
+    overflow: visible;
+    border: 1px solid var(--line-2);
+    border-radius: 2px 2px 17px 2px;
+    background: color-mix(in srgb, var(--obsidian) 88%, transparent);
+  }
+
+  .junji-page .deck-story .card-family__head {
+    min-height: 56px;
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--charcoal) 31%, transparent);
+  }
+
+  .junji-page .deck-story .card-family__head h3 {
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  .junji-page .deck-story .card-family__row {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .junji-page .deck-story .verb-card {
+    overflow: hidden;
+    border-radius: 2px 2px 16px 2px;
+    background: var(--jn-panel);
+    box-shadow: none;
+  }
+
+  .junji-page .deck-story .verb-card[data-selected="true"] {
+    box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 11%, transparent);
+  }
+
+  .junji-page .deck-story .verb-card__art {
+    background: var(--jn-well);
+  }
+
+  .junji-page .deck-story .rulebook {
+    top: 18px;
+    padding: clamp(17px, 2.5vw, 28px);
+    background: color-mix(in srgb, var(--void) 35%, transparent);
+  }
+
+  .junji-page .deck-story .rule-card {
+    overflow: hidden;
+    border-color: var(--accent-line);
+    border-radius: 2px 2px 20px 2px;
+    background:
+      radial-gradient(
+      circle at 50% 29%,
+      color-mix(in srgb, var(--accent) 8%, transparent),
+      transparent 17rem
+    ),
+      var(--jn-panel);
+  }
+
+  .junji-page .deck-story .rule-card__head {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--charcoal) 30%, transparent);
+  }
+
+  .junji-page .deck-story .rule-card__scene {
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      var(--jn-well);
+    background-size: 16px 16px;
+  }
+
+  .junji-page .deck-story .rule-card__effects div {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--void) 43%, transparent);
+  }
+
+  .junji-page .deck-story .rule-card__chains {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--obsidian) 72%, transparent);
+  }
+
+  .junji-page .deck-story__guide {
+    margin-top: 22px;
+    padding: 18px 20px;
+    border: 1px solid var(--line-2);
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /* Questions and proof notes */
+  .junji-page .faq {
+    padding: clamp(86px, 11vw, 158px) 0;
+  }
+
+  .junji-page .faq__layout {
+    grid-template-columns: minmax(270px, 0.72fr) minmax(0, 1.28fr);
+    gap: clamp(42px, 8vw, 108px);
+  }
+
+  .junji-page .faq__intro {
+    top: 24px;
+    padding: 22px 0 22px 22px;
+    border-left: 1px solid var(--accent);
+  }
+
+  .junji-page .faq__intro .sec-h {
+    max-width: 12ch;
+  }
+
+  .junji-page .faq__facts {
+    gap: 6px;
+  }
+
+  .junji-page .faq__facts span {
+    padding: 6px 9px;
+    border: 1px solid color-mix(in srgb, var(--jade) 29%, var(--line-2));
+    border-left-width: 3px;
+    background: var(--jade-soft);
+  }
+
+  .junji-page .faq__list {
+    gap: 9px;
+  }
+
+  .junji-page .faq-item {
+    border-color: var(--line-2);
+    border-radius: 2px 2px 16px 2px;
+    background: color-mix(in srgb, var(--obsidian) 92%, transparent);
+  }
+
+  .junji-page .faq-item[open] {
+    border-color: var(--accent-line);
+    background:
+      linear-gradient(115deg, var(--accent-soft), transparent 52%),
+      var(--jn-panel);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 7%, transparent);
+  }
+
+  .junji-page .faq-item summary {
+    min-height: 86px;
+    padding-inline: 18px;
+  }
+
+  .junji-page .faq-item__number {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    border: 1px solid var(--line-2);
+    font-family: var(--font-mono);
+  }
+
+  .junji-page .faq-item[open] .faq-item__number {
+    border-color: var(--accent-line);
+    background: var(--accent-soft);
+  }
+
+  .junji-page .faq-item__heading strong {
+    font-size: clamp(1.05rem, 1.9vw, 1.35rem);
+  }
+
+  .junji-page .faq-item__answer {
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--void) 30%, transparent);
+  }
+
+  /* Optional driver card */
+  .junji-page .yokai-bonus {
+    padding: clamp(74px, 9vw, 126px) 0;
+  }
+
+  .junji-page .yokai-bonus .bonus-card {
+    grid-template-columns: 168px minmax(0, 1fr) auto;
+    overflow: hidden;
+    border-color: var(--accent-line);
+    border-radius: 4px 4px 28px 4px;
+    background:
+      linear-gradient(115deg, var(--accent-soft), transparent 48%),
+      var(--jn-panel);
+    box-shadow: var(--glow-accent);
+  }
+
+  .junji-page .yokai-bonus .bonus-card__art {
+    width: 168px;
+    border-color: var(--line-2);
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      var(--jn-well);
+    background-size: 16px 16px;
+  }
+
+  .junji-page .yokai-bonus .bonus-card__copy h2 {
+    max-width: 15ch;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    line-height: 1.08;
+    letter-spacing: normal;
+  }
+
+  .junji-page .yokai-bonus .bonus-card__checks span {
+    border: 1px solid color-mix(in srgb, var(--jade) 29%, var(--line-2));
+    border-left-width: 2px;
+  }
+
+  /* Method-only first hand */
+  .junji-page .install {
+    padding: clamp(86px, 11vw, 158px) 0;
+  }
+
+  .junji-page .install > .wrap {
+    display: grid;
+  }
+
+  .junji-page .install .sec-h {
+    max-width: 13ch;
+  }
+
+  .junji-page .install .sec-p {
+    max-width: 700px;
+  }
+
+  .junji-page .install__frame {
+    margin-top: clamp(30px, 5vw, 54px);
+    overflow: hidden;
+    border: 1px solid var(--accent-line);
+    border-radius: 4px 4px 30px 4px;
+    background:
+      linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 38%
+    ),
+      var(--jn-panel);
+    box-shadow: var(--glow-accent);
+  }
+
+  .junji-page .install__bar {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 17px;
+    border-bottom: 1px solid var(--line-2);
+    background: color-mix(in srgb, var(--charcoal) 34%, transparent);
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.07em;
+  }
+
+  .junji-page .install__bar p {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    color: var(--jade);
+    letter-spacing: 0;
+  }
+
+  .junji-page .install__bar i {
+    width: 7px;
+    height: 7px;
+    background: currentColor;
+    box-shadow: 0 0 11px currentColor;
+  }
+
+  .junji-page .install .start-path {
+    gap: 0;
+  }
+
+  .junji-page .install .start-step {
+    min-height: 300px;
+    border: 0;
+    border-right: 1px solid var(--line-2);
+    background:
+      linear-gradient(var(--line-2) 0 0) 0 56px / 100% 1px no-repeat,
+      color-mix(in srgb, var(--obsidian) 86%, transparent);
+  }
+
+  .junji-page .install .start-step:last-child {
+    border-right: 0;
+  }
+
+  .junji-page .install .start-step--accent {
+    background:
+      linear-gradient(var(--accent-line) 0 0) 0 56px / 100% 1px no-repeat,
+      linear-gradient(135deg, var(--accent-soft), transparent 62%),
+      color-mix(in srgb, var(--obsidian) 88%, transparent);
+  }
+
+  .junji-page .install .start-step h3 {
+    font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  }
+
+  .junji-page .install .command-line code {
+    border-color: var(--line-2);
+    background: var(--jn-well);
+  }
+
+  .junji-page .install .copy {
+    border-color: var(--line-2);
+    background: var(--jn-panel);
+  }
+
+  .junji-page .install .install-more {
+    grid-template-columns: auto minmax(0, 1fr);
+    margin: 0;
+    padding: 20px 22px;
+    border-color: var(--line-2);
+    background: color-mix(in srgb, var(--void) 37%, transparent);
+  }
+
+  .junji-page .install__status {
+    min-height: 0;
+    margin: 0;
+    padding: 0 22px;
+    background: color-mix(in srgb, var(--void) 37%, transparent);
+    color: var(--jade);
+    font-size: 0.65rem;
+  }
+
+  .junji-page .install__status:not(:empty) {
+    min-height: 30px;
+    padding-bottom: 12px;
+  }
+
+  /* Chapter footer */
+  .junji-footer {
+    display: grid;
+    width: min(calc(100% - 40px), 1160px);
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 20px 36px;
+    margin-inline: auto;
+    padding: 42px 0 92px;
+    border-top: 1px solid var(--line-2);
+  }
+
+  .junji-footer__mark {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--bone);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    text-decoration: none;
+  }
+
+  .junji-footer__mark img {
+    image-rendering: pixelated;
+  }
+
+  .junji-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px 22px;
+  }
+
+  .junji-footer nav a {
+    color: var(--bone);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-decoration-color: var(--line-2);
+    text-underline-offset: 4px;
+  }
+
+  .junji-footer p {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--fog);
+    font-size: 0.76rem;
+  }
+
+  @media (max-width: 1080px) {
+    .junji-hero {
+      min-height: auto;
+      grid-template-columns: 1fr;
+    }
+
+    .junji-hero__copy {
+      max-width: 820px;
+    }
+
+    .junji-hero__console {
+      width: min(100%, 720px);
+    }
+  }
+
+  @media (max-width: 960px) {
+    .junji-page .technical-path__board .lifecycle {
+      gap: 6px;
+    }
+
+    .junji-page .deck-story .deck-board {
+      border-right: 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .junji-page .deck-story .rulebook {
+      padding-top: 24px;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .junji-page .technical-path,
+    .junji-page .tutorial,
+    .junji-page .deck-story,
+    .junji-page .faq,
+    .junji-page .install {
+      padding-block: 86px;
+    }
+
+    .junji-page .technical-path__bar p,
+    .junji-page .tutorial-shell__bar p,
+    .junji-page .deck-layout__bar p,
+    .junji-page .install__bar p {
+      display: none;
+    }
+
+    .junji-page .faq__intro {
+      position: static;
+    }
+
+    .junji-page .install .start-step {
+      border-right: 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .junji-page .install .start-step:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .junji-page .wrap {
+      width: min(calc(100% - 30px), 1200px);
+    }
+
+    .junji-hero {
+      gap: 56px;
+      padding: 86px 18px 58px;
+    }
+
+    .junji-hero__thesis {
+      max-width: 11ch;
+      font-size: clamp(2.55rem, 13vw, 3.75rem);
+    }
+
+    .junji-hero__routes {
+      grid-template-columns: 1fr;
+    }
+
+    .junji-route {
+      min-height: 112px;
+    }
+
+    .junji-hero__console {
+      min-height: 520px;
+    }
+
+    .junji-hero__readout {
+      grid-template-columns: 1fr;
+    }
+
+    .junji-hero__readout div {
+      grid-template-columns: 90px minmax(0, 1fr);
+      border-right: 0;
+      border-bottom: 1px solid var(--line-2);
+    }
+
+    .junji-hero__readout div:last-child {
+      border-bottom: 0;
+    }
+
+    .junji-page .technical-path__bar,
+    .junji-page .tutorial-shell__bar,
+    .junji-page .deck-layout__bar,
+    .junji-page .install__bar {
+      min-height: 42px;
+      padding-inline: 13px;
+      font-size: 0.5rem;
+    }
+
+    .junji-page .technical-path__board .lifecycle {
+      padding: 13px;
+    }
+
+    .junji-page .technical-path__board .technical-path__exit {
+      padding-inline: 16px;
+    }
+
+    .junji-page .tutorial .tutorial-play {
+      padding: 18px 14px;
+    }
+
+    .junji-page .tutorial .tutorial-choice {
+      min-height: 192px;
+    }
+
+    .junji-page .deck-story .deck-families,
+    .junji-page .deck-story .rulebook {
+      padding: 13px;
+    }
+
+    .junji-page .faq__intro {
+      padding-left: 16px;
+    }
+
+    .junji-page .yokai-bonus .bonus-card {
+      border-radius: 3px 3px 20px 3px;
+    }
+
+    .junji-page .install .install-more {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .junji-footer {
+      width: calc(100% - 30px);
+      grid-template-columns: 1fr;
+    }
+
+    .junji-footer nav {
+      justify-content: flex-start;
+    }
+
+    .junji-footer p {
+      grid-column: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .junji-page {
+      scroll-behavior: auto;
+    }
+
+    .junji-route {
+      transition: none;
+    }
+
+    .junji-route:hover,
+    .junji-route:focus-visible {
+      translate: 0;
+    }
+
+    .junji-hero__eyes {
+      animation: none;
+      opacity: 0.82;
+    }
+  }
+}

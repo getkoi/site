@@ -1,0 +1,28 @@
+# .koi/Dockerfile.sandbox — rust stack, docker backend
+#
+#   docker build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
+#   # ensure .koi/sandbox.yml: image: koi-myproj-sandbox
+# After rebuilding, recreate the named sandbox (sbx rm / container rm).
+
+FROM docker/sandbox-templates:shell-docker
+
+USER root
+RUN apt-get update -qq \
+ && apt-get install -y -qq curl ca-certificates git build-essential nodejs npm \
+ && rm -rf /var/lib/apt/lists/*
+
+# Gate toolchain: rust + fmt/clippy + coverage floor.
+# Shared CARGO_HOME so the final `agent` USER can run cargo too.
+ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
+ && rustup component add rustfmt clippy \
+ && cargo install cargo-llvm-cov
+ENV PATH="/usr/local/cargo/bin:${PATH}"
+
+# Agent (claude): node/npx feed the ACP adapter (already in this image);
+# install the full CLI on top.
+RUN command -v node && command -v npm && command -v npx
+RUN npm install -g @anthropic-ai/claude-code && command -v claude
+
+USER agent          # docker backend scaffold expects USER agent
+WORKDIR /home/agent

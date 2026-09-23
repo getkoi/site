@@ -1,0 +1,71 @@
+/* Docs leftovers: view transitions. Primitive styles live in dotto. */
+
+::view-transition-group(docs-content) {
+  animation: none;
+}
+
+::view-transition-old(docs-content),
+::view-transition-new(docs-content) {
+  mix-blend-mode: normal;
+  animation-fill-mode: both;
+}
+
+::view-transition-old(docs-content) {
+  animation: docs-content-fade-out 0.1s ease-out both;
+}
+
+::view-transition-new(docs-content) {
+  animation: docs-content-fade-in 0.2s var(--ease-out-quint) both;
+}
+
+@keyframes docs-content-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes docs-content-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(docs-content),
+  ::view-transition-new(docs-content) {
+    animation: none;
+  }
+}
+
+/* Optional detail stays in the document for search, links and machine feeds. */
+.docs-page [data-slot="prose"] details {
+  margin-block: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--steel);
+  border-radius: 2px;
+  background: var(--obsidian);
+}
+
+.docs-page [data-slot="prose"] summary {
+  color: var(--bone);
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.docs-page [data-slot="prose"] summary::marker {
+  color: var(--accent);
+}
+
+.docs-page [data-slot="prose"] summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 5px;
+}
+
+.docs-page [data-slot="prose"] details[open] > summary {
+  margin-bottom: 1rem;
+}
+
+.docs-page [data-slot="prose"] details > :last-child {
+  margin-bottom: 0;
+}

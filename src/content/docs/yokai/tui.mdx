@@ -1,0 +1,119 @@
+---
+title: yokai TUI
+navLabel: TUI
+description: Cockpit layout, keyboard and mouse controls, themes, and views.
+section: yokai
+kind: reference
+order: 40
+---
+
+The default interface is a **read-only cockpit**: it monitors the supervisor, but it does not pace
+phases. Launch with bare `yokai`; use `--headless` or a non-TTY stdout for plain text.
+
+**Font:** use a crisp monospace font, such as SF Mono on macOS. The TUI draws into the cell grid and
+cannot load fonts.
+
+## Layout
+
+| Region | Content |
+|--------|---------|
+| Header | agent · model, cumulative cost + tokens, theme chip |
+| Left | phase list + recent runs from ledger (outcome · cost) |
+| Gauge strip | live context-window occupancy (green → amber → red) |
+| Body | current **view** (below) |
+| Right (Cockpit) | **agent stream**: prose, tools, act banners (`Plan` / `Build` / `Seal`, iteration). During swarm fan-out this pane splits: **swarm roster** (each work item) \| focused worker stream |
+
+**Agent stream** is ephemeral and bounded per phase. Durable per-turn history is
+`sessions.jsonl` and the **Sessions** view.
+
+In token savings mode, multiple turn rows can share a session. Phase headers count
+distinct sessions and use each session's latest reported cost. Rows show short,
+collision-aware provider session IDs. Every row for the same session displays its
+latest known context occupancy, including live updates. Returning to a session
+restores its bar; a new session starts unknown. Compaction may lower occupancy.
+The durable log retains the original per-turn readings; snapshots are not summed.
+
+### Context gauge
+
+Updates live when the agent emits ACP `usage_update` (Claude does). Otherwise it shows the declared
+window size with an agent-specific note, for example when cursor sends no live usage. OpenCode reports
+usage at **turn end** only, so during a long phase the strip may read `usage at turn end`.
+
+Header `Σ` and ledger remain authoritative for cost.
+
+### Phase rail
+
+Under the gauge, a thin strip of stations: `plan → coder → sensors → judge → seal → gate`. When the
+live phase actually fans out (`swarm.enabled` and `[swarm]`), the rail adds
+`split → workers → merge` (and `judge-split → judge-workers → judge-merge`). Later iterations replay
+those swarm stations. Recovery mutes the strip.
+While `workers` (or `judge-workers`) is the current station, the label is `workers 3/5` (still
+running / work-item total).
+
+During fan-out the agent pane morphs: a **swarm roster** lists each work item (id, title, status,
+last event; a running row that has gone silent shows `quiet 2m`) beside one **focused** stream.
+The first work item is focused until you click another row; sibling activity does not switch the
+stream. Both panes scroll horizontally and vertically (wheel over the pane; Shift+wheel or `←`/`→`
+for the stream). The context gauge tracks the focused worker. Split, merge, and a one-item skip
+stay the normal single stream. This is Cockpit chrome, not a fourth `w` view. Quiet age is
+visibility only; the 30-minute turn timeout is still the only adapter kill.
+
+## Views (`w` / View chip)
+
+`w` cycles **Cockpit → Sessions → Deliverable** (round-robin). Mouse: click **View**.
+
+| View | Shows |
+|------|-------|
+| **Cockpit** | phases + attributed agent stream (default) |
+| **Sessions** | every session a phase spawned (Plan, each Build coder/worker/merge/judge turn, Seal), with per-session context bar. Worker rows include the work-item id; during fan-out each in-flight worker has a live row |
+| **Deliverable** | proving commit range for a ledger row: file tree + highlighted patch |
+
+**Deliverable view keys** (when focused): `↑`/`↓` tree or patch scroll, `Tab` toggle tree/patch,
+`←`/`→` patch horizontal scroll, `Enter` open file patch, `Esc` back to tree focus.
+
+## Themes (`t` / Theme chip)
+
+Two pastel **hours** (ADR-0052): **yoru** (night) and **hiru** (day), after
+**terminal** (ADR-0042). `terminal` is not an hour: it uses the emulator's default fg/bg and the
+16 ANSI colors. The Kitsune drawing keeps its branded RGB. `yoi` and `asa` alias to **yoru**.
+
+The initial theme is **terminal**. `--theme` or `YOKAI_THEME` override it. Press `t` or click the
+Theme chip to snap to the next entry (`terminal` → `yoru` → `hiru`).
+
+## Controls
+
+Mouse clicks on **Theme**, **View**, **stop**, and **resume** chips are primary; keys are secondary
+hints. Stop shows only while the drive is Live; resume only while STOPPED. Contract **HALT** (gate
+red, stall, cost ceiling, gated-pending) has neither chip: `[r]` does not continue a broken
+contract. A fresh `yokai` after crash or power-off auto-continues; it does not wait for `[r]`.
+
+Headless maps an agent interrupt to halt + exit 2; relaunch to recover. There is no `yokai --resume`
+flag.
+
+| Key | Action |
+|-----|--------|
+| any key (splash) | skip intro to cockpit |
+| `w` | cycle view (Cockpit / Sessions / Deliverable) |
+| `t` | cycle theme |
+| `x` | abort the in-flight phase while **Live**: kills the agent and parks the run (**STOPPED**) |
+| `r` | resume a **STOPPED** run (same on-disk worklog pickup; no confirm) |
+| `q` / `Esc` | quit confirm (then `y` confirm, `n` cancel) |
+| `↑` / `↓` | scroll agent stream (Cockpit) or deliverable tree/patch |
+| `←` / `→` | scroll agent stream horizontally (Cockpit) or deliverable patch |
+| `PgUp` / `PgDn` | page scroll |
+| Shift+wheel | horizontal scroll (Cockpit stream or roster under the cursor; deliverable patch) |
+
+Quit kills the in-flight agent run.
+
+## Headless mode
+
+`yokai --headless` prints supervisor events as plain lines: phase start, acts, iterations,
+sensor/judge results, streamed agent text, verification summary. Exit code `2` on halt.
+
+Implied automatically when stdout is not a terminal.
+
+## Related
+
+- [Run](/docs/yokai/run): launch flags
+- [Build](/docs/yokai/build): what Plan / Build / Seal mean in the stream
+- [Reference: driver glossary](/docs/reference/glossaries): session vs turn vs agent stream

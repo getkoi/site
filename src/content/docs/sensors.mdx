@@ -1,0 +1,51 @@
+---
+title: "Sensors — the atomic verification bar"
+navLabel: Sensors
+description: "Add one script per check. Yokai stops at the first failure and names the sensor."
+section: sensors
+kind: hub
+order: 10
+---
+
+Add one shell script per check under `.koi/sensors/`. Each script passes when it exits with code 0. The folder is your verification bar. The gate is green only when every script passes.
+
+```
+.koi/sensors/
+├── 10-cargo-fmt.sh       ← one command, one name when red
+├── 20-cargo-clippy.sh
+├── 30-cargo-test.sh
+└── 40-coverage.sh
+```
+
+`koi setup` scaffolds the folder with a README pointer only. It never adds an executable sensor. Write the scripts with the [yokai skill](/docs/junji/skills) or `/junji plan`. Copy-ready scripts live at [/recipes](/recipes).
+
+Layout and terms: [Start here](/docs/start-here).
+
+## Runtime contract
+
+Yokai runs regular `*.sh` files in filename order from the repository root. It invokes each with `bash <path>` and stops at the first failure. The TUI names the failed script without its `.sh` extension; the run records that stem as `failed_sensor`.
+
+If the folder is missing or contains no scripts, Yokai stops before starting the first phase's agent turn. `koi doctor` reports a warning.
+
+Every script uses `set -euo pipefail`. Sensors observe and fail only. They do not install dependencies, perform network I/O, run `--fix`, or rewrite tracked config. Put installs, lockfile generation, and advisory DB seeding in setup prose (sandbox image, human prep), not inside the sensor.
+
+Decision records: [ADR-0005](https://github.com/getkoi/koi/blob/main/docs/adr/0005-atomic-sensors-folder.md) (framework) and [ADR-0029](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0029-sensors-folder.md) (driver discovery + fail-fast).
+
+## Smoke one sensor
+
+Run a sensor the same way the driver does:
+
+```bash
+bash .koi/sensors/30-cargo-test.sh
+```
+
+## Sacred rule
+
+Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/docs/junji/skills) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
+
+## Where to go next
+
+| Doc | Use when |
+|-----|----------|
+| [Recipes](/recipes) | Copy a script for your stack |
+| [Wire your bar](/docs/sensors/how-to/wire-your-bar) | Survey, filename order, smoke-run, CONTEXT lockstep |

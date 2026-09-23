@@ -1,0 +1,6 @@
+/* Named-layer order must be the first CSS the client graph emits.
+   Turbopack concatenates DottoTheme's CSS ahead of global.css; without this
+   prelude, `@layer reset` from dotto.css is created first and Tailwind
+   preflight (`@layer base`) lands after `@layer components`, wiping
+   landing padding and heading sizes. */
+@layer reset, theme, base, astryx-base, astryx-theme, components, utilities;

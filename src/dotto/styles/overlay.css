@@ -1,0 +1,206 @@
+@layer components {
+  [data-slot="tooltip-popup"] {
+    z-index: 80;
+    border-color: var(--btn-line);
+    background: var(--obsidian);
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--bone);
+  }
+
+  [data-slot="drawer-trigger"] {
+    margin-bottom: 20px;
+    display: flex;
+    min-height: 44px;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: color-mix(in srgb, var(--charcoal) 55%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    color: var(--fog);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  [data-slot="drawer-title"] {
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    color: var(--bone);
+  }
+
+  [data-slot="drawer-close"] {
+    display: inline-flex;
+    min-height: 44px;
+    min-width: 44px;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--fog);
+    cursor: pointer;
+  }
+
+  [data-slot="drawer-close"]:hover {
+    border-color: var(--accent);
+    color: var(--bone);
+  }
+
+  [data-slot="drawer-backdrop"] {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: color-mix(in srgb, var(--void) 70%, transparent);
+    transition: opacity var(--dur-feedback) ease;
+  }
+
+  [data-slot="drawer-backdrop"][data-ending-style],
+  [data-slot="drawer-backdrop"][data-starting-style] {
+    opacity: 0;
+  }
+
+  [data-slot="drawer-viewport"] {
+    position: fixed;
+    inset: 0;
+    z-index: 71;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  [data-slot="drawer-popup"] {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: min(20rem, 90vw);
+    border-right: 1px solid var(--line);
+    background: var(--obsidian);
+    padding-top: env(safe-area-inset-top);
+    outline: none;
+    transition: transform 200ms var(--ease-out);
+  }
+
+  [data-slot="drawer-popup"][data-ending-style],
+  [data-slot="drawer-popup"][data-starting-style] {
+    transform: translateX(-100%);
+  }
+
+  [data-slot="scroll-area"] {
+    min-height: 0;
+    flex: 1;
+  }
+
+  [data-slot="scroll-area-viewport"] {
+    height: 100%;
+    overscroll-behavior: contain;
+  }
+
+  [data-slot="scroll-area-scrollbar"] {
+    display: flex;
+    width: 4px;
+    justify-content: center;
+    background: transparent;
+  }
+
+  [data-slot="scroll-area-thumb"] {
+    width: 4px;
+    border-radius: var(--radius-frame);
+    background: var(--steel);
+  }
+
+  [data-slot="collapsible-trigger"] {
+    display: flex;
+    min-height: 44px;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 2px solid transparent;
+    background: transparent;
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  [data-slot="collapsible-trigger"]:hover,
+  [data-slot="collapsible-trigger"][data-panel-open] {
+    background: color-mix(in srgb, var(--charcoal) 70%, transparent);
+    color: var(--bone);
+  }
+
+  [data-slot="collapsible-panel"] {
+    height: var(--collapsible-panel-height);
+    overflow: hidden;
+    transition: height 200ms var(--ease-out);
+  }
+
+  [data-slot="collapsible-panel"][data-ending-style],
+  [data-slot="collapsible-panel"][data-starting-style] {
+    height: 0;
+  }
+
+  [data-slot="combobox"] {
+    position: relative;
+  }
+
+  [data-slot="combobox-popup"] {
+    box-sizing: border-box;
+    max-height: min(55vh, 420px);
+    overflow: auto;
+    background: var(--obsidian);
+    padding: 6px;
+  }
+
+  [data-slot="combobox-item"] {
+    display: block;
+    padding: 9px 10px;
+    border-radius: var(--radius-frame);
+    color: var(--fog);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  [data-slot="combobox-item"][data-highlighted],
+  [data-slot="combobox-item"]:hover,
+  [data-slot="combobox-item"]:focus-visible {
+    background: var(--accent-soft);
+    color: var(--bone);
+    outline: none;
+  }
+
+  [data-slot="combobox-item"] strong,
+  [data-slot="combobox-item"] span {
+    display: block;
+  }
+
+  [data-slot="combobox-item"] span {
+    margin-top: 2px;
+    color: var(--fog);
+    font-size: 0.7rem;
+  }
+
+  [data-slot="combobox-empty"] {
+    margin: 0;
+    padding: 9px 10px;
+    color: var(--fog);
+    font: 0.76rem/1.4 var(--font-mono);
+  }
+
+  [data-slot="combobox-positioner"] {
+    z-index: 80;
+    min-width: var(--anchor-width);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-slot="drawer-popup"],
+    [data-slot="collapsible-panel"],
+    [data-slot="drawer-backdrop"],
+    [data-slot="tooltip-popup"] {
+      transition: none;
+    }
+  }
+}

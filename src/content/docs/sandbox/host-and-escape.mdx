@@ -1,0 +1,152 @@
+---
+title: Host runs and escape hatches
+navLabel: Host & escape
+description: "yokai --host, sandbox-setup.sh, workspace mount, Linux artifacts, and what sandboxing does not guarantee."
+section: sandbox
+kind: reference
+order: 60
+---
+
+Reference for running on the host despite sandbox config, optional setup hooks, the
+read-write workspace mount, Linux harness artifacts, and limits of sandbox mode.
+
+Overview: [Sandboxing](/docs/sandbox/overview). CLI flags: [Reference CLI](/docs/reference/cli).
+
+## Force the host supervisor
+
+```bash
+yokai --host
+```
+
+When `.koi/sandbox.yml` has `enabled: true`, `--host` skips the sandbox launcher and runs the
+supervisor on the host ([ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md),
+[ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md)).
+Use it for debugging, or when sandbox tooling is unavailable.
+
+`--host` is a per-run launch flag. It is never written to `config.yml` or `sandbox.yml`.
+
+Alternatives:
+
+- Set `enabled: false` in `.koi/sandbox.yml` for a durable host-first project.
+- Fix the backend CLI (`sbx login`, `container system start`) instead of permanently forcing host.
+
+## Inner supervisor env
+
+Inside the VM, the launcher sets:
+
+```
+YOKAI_SANDBOX_INNER=1
+```
+
+so the inner `yokai` process does not re-enter the host launcher. If an inner run incorrectly
+re-launches the sandbox, check this env var and that you are not nesting host `yokai` inside a manual
+`container exec` without it.
+
+## Workspace mount (read-write, same path)
+
+Both backends bind-mount the git repo at the same absolute path as on the host:
+
+| Backend | Create-time mount |
+|---------|-------------------|
+| **Docker** | `sbx create … shell <canonical-repo-path>` |
+| **Apple** | `-v <repo>:<repo>` on `container run` |
+
+The inner supervisor runs with `-w` set to that path. Edits inside the VM are edits on the host
+checkout. There is no copy-on-write project sync layer.
+
+## Optional setup script (once per sandbox)
+
+**`.koi/sandbox-setup.sh`** is the project-home escape hatch for in-VM setup the **Dockerfile** does
+not cover. It is **not** the primary agent install path ([ADR-0028](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0028-sandbox-dockerfile-scaffold.md)).
+
+The launcher runs it at most once per named sandbox, gated by a marker file:
+
+| Backend | Marker path |
+|---------|-------------|
+| **docker** | `/home/agent/.local/share/koi/sandbox-setup.done` |
+| **apple** | `/var/lib/koi/sandbox-setup.done` |
+
+Flow when the script exists and the marker is absent:
+
+1. `bash <absolute-path-to-sandbox-setup.sh>` inside the VM (`set -euo pipefail`)
+2. `mkdir -p` the backend state dir
+3. Write the marker (`date -u > …/sandbox-setup.done`)
+
+If the script is missing, the launcher skips setup entirely.
+
+## Linux harness artifacts (host)
+
+Before exec, the launcher ensures Linux ELFs exist on the host, then copies them into the VM:
+
+```
+${KOI_DATA_DIR:-$HOME/.local/share/koi}/bin/yokai-linux-<arch>
+${KOI_DATA_DIR:-$HOME/.local/share/koi}/bin/koi-linux-<arch>
+```
+
+`<arch>` is `aarch64` or `x86_64` (matches `uname -m`, with `arm64` mapped to `aarch64`).
+
+| Backend | In-VM install path |
+|---------|-------------------|
+| **docker** | `/home/agent/.local/bin/yokai` (and `koi`) |
+| **apple** | `/usr/local/bin/yokai` (and `koi`) |
+
+Built by `scripts/build-linux-artifacts.sh` when missing:
+
+- **Linux host:** native `cargo build -p yokai -p koi --release`
+- **macOS:** prefers a running Docker daemon. If the `docker` CLI is present but the daemon is down, the script stops instead of silently using `sbx`. With no Docker CLI, it tries `sbx`, then Apple `container` (requires the koi checkout to be visible from cwd)
+
+Override: `KOI_LINUX_BUILD_BACKEND=docker|sbx|container`. Data dir override: `KOI_DATA_DIR`.
+
+`./install.sh` triggers this build path on macOS when artifacts are absent.
+
+## Host doctor vs in-VM checks
+
+`koi doctor` structural checks run on the host when sandbox is enabled and the process is not
+already inner (`YOKAI_SANDBOX_INNER` unset):
+
+| Check | Host doctor | Notes |
+|-------|-------------|-------|
+| `sandbox image` | ✓ / ✗ | `image:` required when enabled |
+| `sbx` or `container` | ✓ / ✗ | Backend CLI present |
+| `container system` | ✓ / ⚠ | Apple only. Runs before yokai |
+| `sandbox auth` | ✓ hint | Apple: **in-VM** login once |
+| `linux yokai` | ✓ / ⚠ | Host artifact path |
+| `sandbox Dockerfile` | ✓ / ⚠ | Missing file warns; image may still work |
+| `sandbox setup` | ✓ | If `.koi/sandbox-setup.sh` exists |
+
+With **`koi doctor --probe`** additionally:
+
+| Check | Where | Notes |
+|-------|-------|-------|
+| **auth probe** | **Host** | One capped agent turn through the real connector |
+| **docker/apple sandbox** | In-VM via `sbx exec` / `container exec` | Named sandbox must exist (run `yokai` once first) |
+| **agent adapter** | In-VM | `command -v` for configured agent (`node`+`npx`, `codex-acp`, `cursor-agent`, `opencode`, …) |
+
+Without `--probe`, doctor reminds you that auth and in-VM agent presence are not verified
+end-to-end.
+
+**Apple + in-VM auth:** structural doctor notes in-VM login; the live **auth probe still runs on
+the host**. Configure OpenCode with `/connect` inside the named container even if host-side hints
+look fine.
+
+## What sandboxing does not guarantee
+
+Sandbox mode co-locates inner yokai, the agent, and gate scripts in a Linux VM. koi does **not**
+promise:
+
+| Expectation | Reality |
+|-------------|---------|
+| Network isolation | VM may use the network for APIs and package installs; no documented air-gap |
+| Host filesystem isolation | Direct **read-write** bind mount. Same repo tree as the host |
+| Apple credential proxy | No `sbx secret` parity; auth stays in-VM ([ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md)) |
+| Security boundary vs agent | Gate + git contract remain the safety model, not VM hardening |
+
+The gate (`.koi/sensors/`) and post-phase git checks are authoritative. The VM is for Linux
+tooling parity and co-location, not containment.
+
+## Related
+
+- [sandbox.yml and image](/docs/sandbox/sandbox-yml)
+- [Launch](/docs/sandbox/launch)
+- [Troubleshooting](/docs/reference/troubleshooting)
+- [yokai run](/docs/yokai/run): supervisor loop on host or inner

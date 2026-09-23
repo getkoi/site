@@ -1,0 +1,214 @@
+@layer components {
+  [data-slot="breadcrumb"] {
+    margin: 0 0 22px;
+  }
+
+  [data-slot="breadcrumb-list"] {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
+  [data-slot="breadcrumb-item"] + [data-slot="breadcrumb-item"]::before {
+    content: "/";
+    margin-right: 6px;
+    color: var(--steel);
+  }
+
+  [data-slot="breadcrumb-link"] {
+    color: var(--fog);
+    text-decoration: none;
+  }
+
+  [data-slot="breadcrumb-link"]:hover {
+    color: var(--accent);
+  }
+
+  [data-slot="breadcrumb-current"] {
+    color: var(--fog);
+  }
+
+  [data-slot="nav-link"] {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 2px solid transparent;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    color: var(--fog);
+    text-decoration: none;
+    transition: color var(--dur-feedback) ease, background var(--dur-feedback) ease;
+  }
+
+  [data-slot="nav-link"]:hover {
+    background: color-mix(in srgb, var(--charcoal) 70%, transparent);
+    color: var(--bone);
+  }
+
+  [data-slot="nav-link"][aria-current="page"] {
+    border-color: var(--btn-line);
+    background: color-mix(in srgb, var(--accent) 22%, var(--charcoal));
+    color: var(--accent);
+  }
+
+  [data-slot="toc"] {
+    position: sticky;
+    top: 20px;
+    display: none;
+    max-height: calc(100dvh - 80px);
+    overflow: auto;
+    padding-bottom: 24px;
+  }
+
+  @media (min-width: 960px) {
+    [data-slot="toc"] {
+      display: block;
+    }
+  }
+
+  [data-slot="toc-title"] {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--fog);
+    text-transform: uppercase;
+  }
+
+  [data-slot="toc-list"] {
+    margin: 0;
+    list-style: none;
+    border-left: 1px solid var(--line);
+    padding: 0;
+  }
+
+  [data-slot="toc-link"] {
+    position: relative;
+    display: block;
+    padding: 6px 0 6px 12px;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--fog);
+    text-decoration: none;
+    transition: color var(--dur-feedback) ease;
+  }
+
+  [data-slot="toc-link"][data-level="3"] {
+    padding-left: 22px;
+    font-size: 0.76rem;
+  }
+
+  [data-slot="toc-link"]:hover {
+    color: var(--bone);
+  }
+
+  [data-slot="toc-link"][aria-current="location"] {
+    color: var(--accent);
+    background: linear-gradient(90deg, var(--accent-soft), transparent 78%);
+  }
+
+  [data-slot="toc-link"][aria-current="location"]::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 8px;
+    width: 3px;
+    height: calc(100% - 16px);
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.45);
+  }
+
+  [data-slot="prev-next"] {
+    margin-top: 52px;
+    display: grid;
+    max-width: 68ch;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+
+  @media (min-width: 560px) {
+    [data-slot="prev-next"] {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  [data-slot="prev-next-link"] {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px;
+    color: var(--fog);
+    text-decoration: none;
+  }
+
+  [data-slot="prev-next-link"]:hover {
+    border-color: var(--accent);
+  }
+
+  [data-slot="prev-next-kicker"] {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    line-height: 1.3;
+    color: var(--fog);
+    text-transform: uppercase;
+  }
+
+  [data-slot="prev-next-title"] {
+    font-family: var(--font-mono);
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--bone);
+  }
+
+  .docs-mobile-trigger {
+    margin-bottom: 20px;
+  }
+
+  .docs-nav-section__label {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+  }
+
+  .docs-nav .astryx-collapsible > button {
+    display: flex;
+    min-height: 44px;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 2px solid transparent;
+    background: transparent;
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .docs-nav .astryx-collapsible > button:hover {
+    background: color-mix(in srgb, var(--charcoal) 70%, transparent);
+    color: var(--bone);
+  }
+
+  .astryx-button[data-variant="notch"] {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    --button-dither: var(--accent);
+    --button-dither-opacity: 0.14;
+  }
+}

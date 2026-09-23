@@ -1,0 +1,64 @@
+---
+title: "Wire your verification bar"
+navLabel: Wire your bar
+description: "Survey the repo, pick atomic scripts, order by filename, smoke-run, and mirror into CONTEXT."
+section: sensors
+kind: how-to
+order: 20
+---
+
+Use this page when you are setting up or updating **`.koi/sensors/`**. Sensors are **observe-only**. Setup (install deps, seed audit DBs, bake toolchains into the sandbox image) must finish before the gate runs.
+
+## Prerequisites
+
+- A real stack survey: package manager, fmt/lint/typecheck, unit/integration/E2E tests, coverage: the project's actual gates, not a bespoke growing assertion script.
+- `.koi/sensors/` at project-home root (durable; survives `consolidate`). `koi setup` creates it with a README pointer; the scripts are yours to author.
+- Optional: `.koi/run/CONTEXT.md` for prose lockstep (yokai skill mirrors scripts there).
+
+## Workflow
+
+1. **List concerns**: one atomic check each (never a monolithic `gate.sh`).
+2. **Prefix order**: `NN-name.sh` when fmt must precede test, or audits after build artifacts exist.
+3. **Copy recipes** from [/recipes](/recipes). Tune thresholds via env vars or project config, not by weakening scripts.
+4. **Write** under `.koi/sensors/` only after agreement (yokai skill: do not overwrite existing scripts without an explicit ask).
+5. **Mirror** the same list into `CONTEXT.md › Verification bar`.
+6. **Smoke-run** each script from repo root: `bash .koi/sensors/<name>.sh`.
+
+## Suggested filename order (template)
+
+| Order | Example | Concern |
+| --- | --- | --- |
+| 05 | `05-package-manager-present.sh` | Toolchain present (no install) |
+| 10–20 | `10-fmt.sh`, `20-lint.sh` | Static analysis |
+| 30 | `30-typecheck.sh` | Types |
+| 40 | `40-unit-test.sh` | Fast tests |
+| 45 | `45-coverage.sh` | Coverage floor |
+| 50+ | `50-audit-offline.sh` | Security (offline / local DB) |
+
+## Minimal scaffold
+
+```bash
+mkdir -p .koi/sensors
+# copy a script from /recipes into .koi/sensors/NN-name.sh
+bash .koi/sensors/NN-name.sh
+```
+
+## What exit 0 proves (aggregate)
+
+Every script that exits 0 yields a passing sensor, so yokai may proceed. One red script names itself in the TUI (filename stem). Fix that concern, then re-run the gate.
+
+## Tuning
+
+- Split slow checks (E2E) from fast ones; order matters because of fail-fast.
+- Keep generated artifacts **gitignored**; sensors may write coverage output to ignored paths only.
+- Wire real stack gates (fmt/lint/typecheck/tests). Do not invent a growing custom assertion script the judge can keep punching holes in.
+
+## Sandbox tool requirements
+
+Bake every CLI the bar invokes into **`.koi/Dockerfile.sandbox`** (or host PATH for `--host`). A missing toolchain yields a red sensor with a clear message, not an install inside the script.
+
+## Official links
+
+- [yokai SKILL.md](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md)
+- [junji CONTEXT.md — Sensor](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md)
+- [Sensor template](https://github.com/getkoi/koi/blob/main/skills/junji/templates/sensors/sensor.template.sh)

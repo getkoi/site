@@ -1,0 +1,56 @@
+---
+title: Glossaries
+navLabel: Glossaries
+description: "Find the definitions used by the method, driver, and site."
+section: reference
+kind: reference
+order: 40
+---
+
+Each context has a **domain glossary** on disk. These pages are only an index. Terminology lives in the linked files, not here.
+
+Entry point for how contexts relate:
+[CONTEXT-MAP.md](https://github.com/getkoi/koi/blob/main/CONTEXT-MAP.md).
+
+## Method: junji
+
+**File:** [`skills/junji/CONTEXT.md`](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md)
+
+The project-agnostic skill vocabulary: project home vs working folder, the ten verbs
+(`begin`, `research`, `design`, `plan`, `grill`, `brief`, `refine`, `next`, `iterate`, `consolidate`), phases, verification bar,
+deliverable spec, Next-action pointer, grilling, run `DESIGN.md`, Skill scout / `CONTEXT.md › Skills`,
+BACKLOG **strategy** (`[plain]` / `[swarm]`) and **tier** (`[low]` / `[medium]` / `[high]` / `[ultra]`).
+
+Agent-facing skill: [`skills/junji/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/junji/SKILL.md).
+Human guide: [Learn junji](/docs/junji/guide).
+
+## Driver: yokai
+
+**File:** [`crates/yokai/CONTEXT.md`](https://github.com/getkoi/koi/blob/main/crates/yokai/CONTEXT.md)
+
+The supervisor application: driver, supervisor, connector (tori), turn, session, agent stream, gate,
+contract, backlog, ledger, sandbox launcher, recovery. Loop terms live here too: iteration, judge,
+guide, feedback thread, spec, budget, verdict. **Tier**, **Candidate**, and **Skip** (unreachable /
+limited / unstable) are the model-band walk. Shared **tori** vocabulary (Connector, Agent, Model,
+Effort, Progress event) is defined here. There is no separate tori glossary.
+
+Turn prompts: [`crates/yokai/prompts/`](https://github.com/getkoi/koi/tree/main/crates/yokai/prompts).
+
+Operational guide: [yokai](/docs/yokai). Build loop: [Build](/docs/yokai/build). Recovery: [Recovery](/docs/yokai/recovery).
+
+## Shared terms across contexts
+
+| Term | Meaning across contexts |
+|------|-----------------|
+| **Phase** | junji method and yokai driver: one independently verifiable unit of work |
+| **Gate** | Method verification bar (`.koi/sensors/*.sh`) and yokai aggregate gate |
+| **Spec** | junji deliverable spec vs Build task spec (phase plan when junji is the caller) |
+| **Tier** | Method BACKLOG tag and driver capability band: `[low]` / `[medium]` / `[high]` / `[ultra]` |
+
+See [CONTEXT-MAP.md § Shared vocabulary](https://github.com/getkoi/koi/blob/main/CONTEXT-MAP.md#shared-vocabulary-across-contexts).
+
+## Site (no glossary)
+
+Product and brand language for the marketing site is in
+[`PRODUCT.md`](https://github.com/getkoi/koi/blob/main/PRODUCT.md) and
+[`DESIGN.md`](https://github.com/getkoi/koi/blob/main/DESIGN.md). These are not a domain glossary.

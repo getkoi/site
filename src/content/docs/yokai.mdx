@@ -1,0 +1,54 @@
+---
+title: Drive with yokai
+navLabel: Overview
+description: What the yokai driver is, when to use it, and where to go next.
+section: yokai
+kind: hub
+order: 10
+---
+
+Yokai runs your prepared phases through a coding agent and verifies the results on disk. [Junji](/docs/junji) prepares the project plan and backlog. Yokai writes each phase’s implementation plan, runs it, and shows progress in a terminal UI. The driver owns the prompts for Plan, Build, Seal, and recovery. See [Build](/docs/yokai/build).
+
+koi is the setup CLI (`setup`, `init`, `doctor`). yokai is the runner. First green run: [Quickstart](/docs/start-here/quickstart). Layout and terms: [Start here](/docs/start-here).
+
+## Choose your next step
+
+Start with the [quickstart](/docs/start-here/quickstart) to verify one phase. Then use [Run](/docs/yokai/run) to continue the effort.
+
+Read [Sessions](/docs/yokai/sessions) to understand fresh context, token savings, and interrupted turns. Read [Swarms](/docs/yokai/swarms) to enable parallel workers.
+
+## What it does
+
+Every phase runs Plan → Build → Seal. After each phase the driver checks the contract on disk: the phase is marked `[done]`, there is a new commit, the gate is green, and the tree is clean. It never trusts the agent's self-report. The driver halts fail-fast for a red gate, stall, gated phase under `--guarded`, cost ceiling, or completion.
+
+## yokai driver vs yokai skill
+
+| | **yokai driver** (binary) | **yokai skill** (coding agent) |
+|---|---------------------------|--------------------------------|
+| Runs phases | yes — unattended supervisor | no — not a junji verb |
+| Owns | config, ledger, TUI, contract checks | atomic `.koi/sensors/*.sh`, sandbox image recipe |
+| Invoke | `yokai` from repo root | in your agent when wiring the verification bar |
+
+Use the skill to survey the repo and propose sensors. Use the driver to execute phases. See [sensors](/docs/sensors) and [wire your bar](/docs/sensors/how-to/wire-your-bar).
+
+## When to use it
+
+- You have (or will scaffold) a junji working folder and a machine-runnable gate under `.koi/sensors/`.
+- You want unattended phase execution with objective verification, not chat-driven one-offs.
+- You are ready to log the agent in (Claude, Cursor, OpenCode, or Codex). There is no separate driver login.
+
+Connector: native ACP only (`claude`, `cursor`, `opencode`, `codex`).
+
+## Where to go next
+
+| Goal | Doc |
+|------|-----|
+| First install | [Quickstart](/docs/start-here/quickstart) |
+| Flags, sandboxes, permissions, ledger | [Run](/docs/yokai/run) |
+| Cockpit keys, themes, views | [TUI](/docs/yokai/tui) |
+| Repair + Diagnose cycle | [Recovery](/docs/yokai/recovery) |
+| Build loop, judge, `FEEDBACK.md` | [Build](/docs/yokai/build) |
+| Symptom → fix | [Troubleshooting](/docs/reference/troubleshooting) |
+| Method verbs | [junji guide](/docs/junji/guide) |
+| Gate scripts | [sensors](/docs/sensors) · [recipes](/recipes) |
+| VM isolation | [sandbox](/docs/sandbox/overview) |

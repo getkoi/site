@@ -1,0 +1,18 @@
+# build output
+dist/
+.next/
+out/
+# generated types
+.astro/
+*.tsbuildinfo
+# dependencies
+node_modules/
+# logs
+npm-debug.log*
+.deno/
+# environment
+.env
+.env.production
+.env.local
+# macOS
+.DS_Store

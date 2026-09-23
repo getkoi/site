@@ -1,0 +1,112 @@
+---
+title: Decision records
+navLabel: ADRs
+description: "Architecture decision records indexed by context — framework, method, driver, and site."
+section: reference
+kind: reference
+order: 50
+---
+
+ADRs record *why* the system behaves as it does. Full text stays in the repo paths below. This page is only an index.
+
+Layout follows [CONTEXT-MAP.md § Decision records](https://github.com/getkoi/koi/blob/main/CONTEXT-MAP.md#decision-records).
+
+## System-wide (framework)
+
+Shared skill + driver on-disk convention under `.koi/`.
+
+| ADR | Title |
+|-----|-------|
+| [0004](https://github.com/getkoi/koi/blob/main/docs/adr/0004-project-home-and-run-working-folder.md) | Project home vs run working folder under `.koi/` |
+| [0005](https://github.com/getkoi/koi/blob/main/docs/adr/0005-atomic-sensors-folder.md) | Atomic sensors folder is the verification bar |
+| [0006](https://github.com/getkoi/koi/blob/main/docs/adr/0006-method-and-backlog-filenames.md) | METHOD.md and BACKLOG.md (was HOW-WE-WORK.md / WORKLOG.md) |
+
+Directory: [`docs/adr/`](https://github.com/getkoi/koi/tree/main/docs/adr).
+
+## Method (junji)
+
+Skill packaging and progressive disclosure.
+
+| ADR | Title |
+|-----|-------|
+| [0001](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0001-one-skill-progressive-disclosure.md) | One skill, progressive verb disclosure |
+| [0002](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0002-research-verb-and-frontier-grill.md) | Optional research verb and frontier grilling |
+| [0003](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0003-design-verb-and-run-design-md.md) | Optional design verb and run DESIGN.md |
+| [0004](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0004-chat-contract-and-document-types.md) | Chat contract and document types |
+| [0005](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0005-iterate-verb.md) | Post-execution iterate verb |
+| [0006](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0006-skill-scout-and-context-skills.md) | Skill scout at begin; CONTEXT › Skills by role |
+| [0007](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0007-begin-copies-method-and-backlog.md) | Begin copies METHOD and BACKLOG; agent authors CONTEXT only |
+| [0008](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0008-brief-verb.md) | Chat-only brief verb |
+| [0009](https://github.com/getkoi/koi/blob/main/skills/junji/docs/adr/0009-per-phase-model-tier.md) | Per-phase model tier heading tag (`[low]` `[medium]` `[high]` `[ultra]`) |
+
+Directory: [`skills/junji/docs/adr/`](https://github.com/getkoi/koi/tree/main/skills/junji/docs/adr).
+
+## Driver (yokai)
+
+Supervisor, TUI, sandbox, setup split, Build loop, recovery.
+
+| ADR | Title |
+|-----|-------|
+| [0003](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0003-native-acp-connector-only.md) | Native ACP connector only |
+| [0004](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0004-autonomous-by-default.md) | Driver runs autonomously by default; honor gated via a launch flag |
+| [0005](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0005-workspace-split-extract-acp-connector.md) | Split the driver into a workspace; extract `tori` as the shared port |
+| [0006](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0006-tengu-self-correction-harness.md) | Tengu: a self-correction harness with an advisory judge |
+| [0007](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0007-init-config-wizard-and-begin-reconnaissance.md) | `koi init` is a config wizard; `begin` gains reconnaissance; per-project config in `.koi/run/` |
+| [0008](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0008-attributed-tui-stream-and-effects.md) | The TUI attributes its stream by act; tachyonfx splash-only |
+| [0009](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0009-per-session-records-and-the-sessions-view.md) | Per-session run records; the sessions view shows every turn |
+| [0010](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0010-recovery-last-look-before-halt.md) | Recovery: an intelligent last look before a halt becomes final (amended by 0044) |
+| [0013](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0013-project-koi.md) | Project name: koi |
+| [0015](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0015-koi-setup-yokai-runner.md) | Split setup into `koi`; yokai is a fail-fast runner |
+| [0016](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0016-harness-owned-turn-prompts.md) | Turn prompts live in harness crates |
+| [0017](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0017-amabie-recovery-harness.md) | Amabie is the recovery harness |
+| [0019](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0019-deliverable-view.md) | Deliverable view: read proving commits in the cockpit |
+| [0022](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0022-repair-clean-tree-and-gate-dirty-attribution.md) | Repair restores a clean tree; gate side-effects are not contract dirt |
+| [0023](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0023-four-pastel-hours.md) | Four pastel hours (superseded by 0052) |
+| [0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md) | Apple Container as a second sandbox backend |
+| [0025](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0025-bounded-tui-stream-memory.md) | Bounded TUI agent-stream memory |
+| [0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md) | Apple sandbox VM memory and CPU sizing |
+| [0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md) | Repo-owned sandbox image |
+| [0028](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0028-sandbox-dockerfile-scaffold.md) | Sandbox Dockerfile scaffold (primary agent path) |
+| [0029](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0029-sensors-folder.md) | Sensors folder: discover, fail-fast, N tengu sensors |
+| [0030](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0030-init-ratatui-stepper.md) | `koi init` uses a ratatui step strip (revises ADR-0007) |
+| [0031](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0031-tengu-only-implementation.md) | Tengu is the only implementation path |
+| [0032](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0032-koi-setup-owns-project-home.md) | `koi setup` owns the durable project home; `init` is volatile-only (amends ADR-0015 and ADR-0030; supersedes ADR-0028's scaffold owner) |
+| [0033](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0033-acp-session-options.md) | ACP-discovered session options (Cursor reasoning/fast); `effort` is ThoughtLevel alias |
+| [0034](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0034-adaptive-cockpit-and-timeouts.md) | Adaptive cockpit FPS + soft agent/sensor timeouts |
+| [0035](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0035-reuse-build-sensors-at-gate.md) | Reuse green Build sensors at the gate when Seal left the product tree unchanged |
+| [0036](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0036-unmark-worklog-on-gate-red.md) | Un-mark BACKLOG when the gate is red after Seal (provisional `[done]`) |
+| [0037](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0037-phase-rail.md) | Cockpit phase rail: plan→coder→sensors→judge→seal→gate (amended by 0045 for swarm stations; 0048 replays them each iteration) |
+| [0038](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0038-multi-agent-role-profiles.md) | Multi-agent / multi-model role profiles |
+| [0039](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0039-yokai-owns-build-and-recovery.md) | yokai owns the Build loop and recovery (supersedes 0006, 0016, 0017, 0031) |
+| [0040](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0040-worklog-act-status.md) | Backlog act status tags (`[todo]` `[planning]` `[building]` `[sealing]` `[done]`; `[gated]` prefix; `[plain]`/`[swarm]` strategy, ADR-0047) |
+| [0041](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0041-tui-resume-after-abort.md) | TUI `[r]` after abort/disconnect; live-session ACP reattach |
+| [0042](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0042-terminal-theme.md) | `terminal` theme inherits the emulator palette (amends 0023) |
+| [0043](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0043-judge-reads-context-skills.md) | Judge (and thin coder/seal) read CONTEXT › Skills |
+| [0044](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0044-recovery-continue-and-saves.md) | Recovery continue cycle and saves (amends 0010) |
+| [0045](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0045-swarm-inside-build.md) | Optional swarm: partition-and-merge fan-out inside one Build act (amended by 0047, 0048) |
+| [0046](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0046-swarm-cockpit-roster.md) | Swarm roster in the Cockpit (focused stream during fan-out) |
+| [0047](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0047-per-phase-build-strategy.md) | Per-phase `[plain]` / `[swarm]` strategy; swarm.enabled is the kill-switch |
+| [0048](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0048-swarm-every-iteration.md) | Swarm fan-out is per Build iteration, not first-pass only |
+| [0049](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0049-model-tiers.md) | Model tiers: candidate lists, turn-open walk, skip rows |
+| [0050](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0050-token-savings.md) | Token savings: reusable implementation, review, and seal conversations per phase |
+| [0051](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0051-two-session-savings-and-context-display.md) | Two-session savings, session-aware context bars and recovery bookkeeping |
+| [0052](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0052-two-pastel-hours.md) | Two pastel hours (yoru / hiru); yoi and asa alias to yoru |
+
+Directory: [`crates/yokai/docs/adr/`](https://github.com/getkoi/koi/tree/main/crates/yokai/docs/adr).
+
+## Site (dotto)
+
+Pixel design system and the marketing/docs host.
+
+| ADR | Title |
+|-----|-------|
+| [0001](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0001-dotto-open-box.md) | Open-box CSS kit (superseded by 0003) |
+| [0002](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0002-docs-progressive-disclosure.md) | Native docs `<details>` for optional detail |
+| [0003](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0003-astryx-theme.md) | Dotto is an in-repo Astryx theme |
+| [0004](https://github.com/getkoi/koi/blob/main/site/src/dotto/docs/adr/0004-next-bun-host.md) | Next.js App Router + Bun host |
+
+Directory: [`site/src/dotto/docs/adr/`](https://github.com/getkoi/koi/tree/main/site/src/dotto/docs/adr).
+
+## Numbering note
+
+Driver ADRs reuse numbers 0004 and 0005 in a different directory from framework ADRs. Dotto ADRs live under `site/src/dotto/docs/adr/`. Always use the full path.

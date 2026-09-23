@@ -1,0 +1,181 @@
+.install {
+    padding-bottom: clamp(76px, 10vw, 128px);
+  }
+
+  .start-path {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .start-step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    min-width: 0;
+    min-height: 260px;
+    padding: 22px;
+    overflow: hidden;
+    background:
+      linear-gradient(var(--line) 0 0) 0 52px / 100% 1px no-repeat,
+      var(--obsidian);
+  }
+
+  .start-step--accent {
+    border-color: var(--accent-line);
+    background:
+      linear-gradient(var(--accent-line) 0 0) 0 52px / 100% 1px no-repeat,
+      linear-gradient(135deg, var(--accent-soft), transparent 62%),
+      var(--obsidian);
+  }
+
+  .start-step__number {
+    position: absolute;
+    top: 13px;
+    right: 16px;
+    color: var(--steel);
+    font-size: 0.82rem;
+  }
+
+  .start-step--accent .start-step__number {
+    color: var(--accent);
+  }
+
+  .start-step__label {
+    margin: 0 0 23px;
+    color: var(--accent);
+    font-size: 0.67rem;
+  }
+
+  .start-step h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+    font-weight: 400;
+  }
+
+  .start-step h3 code {
+    color: var(--accent);
+    font-size: 0.88em;
+  }
+
+  .start-step p:not(.start-step__label) {
+    margin: 12px 0 0;
+    color: var(--fog);
+    font-size: 0.82rem;
+  }
+
+  .start-step p code {
+    color: var(--accent);
+  }
+
+  .command-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 24px;
+  }
+
+  .command-line code {
+    min-width: 0;
+    padding: 11px 12px;
+    overflow-x: auto;
+    color: var(--bone);
+    background: var(--void);
+    border: 1px solid var(--line);
+    font-size: 0.68rem;
+    white-space: nowrap;
+  }
+
+  .command-line code span {
+    color: var(--accent);
+  }
+
+  .copy {
+    min-height: 44px;
+    padding: 7px 11px;
+    color: var(--fog);
+    background: var(--charcoal);
+    border: 1px solid var(--line-2);
+    cursor: pointer;
+  }
+
+  .copy:hover,
+  .copy:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent-line);
+  }
+
+  .copy[data-copied="true"] {
+    color: var(--jade);
+    background: var(--jade-soft);
+    border-color: color-mix(in srgb, var(--jade) 38%, transparent);
+  }
+
+  .install-more {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 28px;
+    align-items: start;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .install-more > p {
+    margin: 0;
+    color: var(--fog);
+    font-size: 0.7rem;
+  }
+
+  .install-more nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+  }
+
+  .install-more a {
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    text-decoration: none;
+  }
+
+  .install-more a::after {
+    content: " ↗";
+    color: var(--accent);
+  }
+
+  .install-more a:hover,
+  .install-more a:focus-visible {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 860px) {
+    .start-path {
+      grid-template-columns: 1fr;
+    }
+
+    .start-step {
+      min-height: 0;
+    }
+
+    .command-line {
+      margin-top: 18px;
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .install-more {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }

@@ -1,0 +1,500 @@
+@layer components {
+  [data-slot="panel"],
+  .panel {
+    background: var(--obsidian);
+  }
+
+  [data-slot="badge"],
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    padding: 4px 10px;
+    white-space: nowrap;
+    background: var(--charcoal);
+    color: var(--bone);
+  }
+
+  [data-slot="badge"][data-status="accent"],
+  .badge[data-k="accent"] {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  [data-slot="badge"][data-status="jade"],
+  .badge[data-k="jade"] {
+    background: var(--jade-soft);
+    color: var(--jade);
+  }
+
+  [data-slot="badge"][data-status="amber"],
+  .badge[data-k="amber"] {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+
+  [data-slot="badge"][data-status="blood"],
+  .badge[data-k="blood"] {
+    background: var(--blood-soft);
+    color: var(--blood);
+  }
+
+  [data-slot="badge"][data-status="plan"] {
+    background: color-mix(in srgb, var(--plan) 16%, transparent);
+    color: var(--plan);
+  }
+
+  [data-slot="badge"][data-status="tool"] {
+    background: color-mix(in srgb, var(--tool) 16%, transparent);
+    color: var(--tool);
+  }
+
+  [data-slot="badge"][data-status="file"] {
+    background: color-mix(in srgb, var(--file) 16%, transparent);
+    color: var(--file);
+  }
+
+  [data-slot="badge"][data-status="judge"] {
+    background: color-mix(in srgb, var(--judge) 16%, transparent);
+    color: var(--judge);
+  }
+
+  [data-slot="alert"] {
+    margin: 0 0 1.3em;
+    padding: 16px 20px;
+    background: color-mix(in srgb, var(--accent) 18%, var(--obsidian));
+    color: var(--fog);
+  }
+
+  [data-slot="alert"][data-status="jade"] {
+    background: color-mix(in srgb, var(--jade) 16%, var(--obsidian));
+  }
+
+  [data-slot="alert"][data-status="amber"] {
+    background: color-mix(in srgb, var(--amber) 16%, var(--obsidian));
+  }
+
+  [data-slot="alert"][data-status="blood"] {
+    background: color-mix(in srgb, var(--blood) 16%, var(--obsidian));
+  }
+
+  [data-slot="code-block"] {
+    position: relative;
+    margin: 0 0 1.4em;
+    background: color-mix(in srgb, var(--void) 55%, var(--obsidian));
+  }
+
+  [data-slot="code-block"] pre {
+    margin: 0;
+    padding: 44px 20px 18px;
+    overflow-x: auto;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    clip-path: none;
+    filter: none;
+  }
+
+  [data-slot="code-block"] [data-slot="copy-button"] {
+    position: absolute;
+    z-index: 2;
+    top: 9px;
+    right: 9px;
+  }
+
+  [data-slot="code-block"] pre code span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style, inherit);
+  }
+
+  html[data-hour="hiru"] [data-slot="code-block"] pre code span {
+    color: var(--shiki-light);
+    font-style: var(--shiki-light-font-style, inherit);
+  }
+
+  [data-slot="table"] {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.5em;
+    font-size: 0.92rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  [data-slot="table"] thead {
+    border-bottom: 1px solid var(--steel);
+  }
+
+  [data-slot="table"] th,
+  [data-slot="table"] td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  [data-slot="table"] th {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--fog);
+    white-space: nowrap;
+  }
+
+  [data-slot="table"] td {
+    color: var(--bone);
+  }
+
+  [data-slot="prose"] {
+    max-width: 68ch;
+    color: var(--bone);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  [data-slot="prose"] > :first-child {
+    margin-top: 0;
+  }
+
+  [data-slot="prose"] h1,
+  [data-slot="prose"] h2,
+  [data-slot="prose"] h3,
+  [data-slot="prose"] h4 {
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--bone);
+    -webkit-font-smoothing: none;
+    font-smooth: never;
+  }
+
+  [data-slot="prose"] h1 {
+    font-size: 1.55rem;
+    margin: 0 0 0.85em;
+  }
+
+  [data-slot="prose"] h2 {
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin: 1.5em 0 0.5em;
+    scroll-margin-top: 28px;
+  }
+
+  [data-slot="prose"] h3 {
+    font-size: 1.25rem;
+    margin: 1.25em 0 0.4em;
+    scroll-margin-top: 28px;
+  }
+
+  [data-slot="prose"] h4 {
+    font-size: 1.05rem;
+    margin: 1em 0 0.35em;
+    color: var(--fog);
+  }
+
+  [data-slot="prose"] p {
+    margin: 0 0 1.15em;
+    text-wrap: pretty;
+  }
+
+  [data-slot="prose"] a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  [data-slot="prose"] a:hover {
+    color: var(--accent-btn-hover);
+  }
+
+  [data-slot="prose"] strong {
+    color: var(--bone);
+    font-weight: 700;
+  }
+
+  [data-slot="prose"] ul,
+  [data-slot="prose"] ol {
+    margin: 0 0 1.2em;
+    padding-left: 1.35em;
+  }
+
+  [data-slot="prose"] li {
+    margin-bottom: 0.4em;
+  }
+
+  [data-slot="prose"] li::marker {
+    color: var(--accent);
+  }
+
+  [data-slot="prose"] hr {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 2.2em 0;
+  }
+
+  [data-slot="prose"] [role="separator"] {
+    margin: 2.2em 0;
+  }
+
+  [data-slot="prose"] :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--charcoal);
+    padding: 0.12em 0.4em;
+    border-radius: 3px;
+    color: var(--bone);
+  }
+
+  [data-slot="prose"] pre {
+    margin: 0 0 1.4em;
+    padding: 18px 20px;
+    background: color-mix(in srgb, var(--void) 55%, var(--obsidian));
+    overflow-x: auto;
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  [data-slot="prose"] pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: var(--fog);
+    white-space: pre;
+  }
+
+  [data-slot="prose"] pre code span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style, inherit);
+  }
+
+  html[data-hour="hiru"] [data-slot="prose"] pre code span {
+    color: var(--shiki-light);
+    font-style: var(--shiki-light-font-style, inherit);
+  }
+
+  [data-slot="prose"] [data-slot="code-block"] pre {
+    margin: 0;
+  }
+
+  [data-slot="prose"] [data-slot="alert"] p:last-child {
+    margin-bottom: 0;
+  }
+
+  [data-slot="prose"] img {
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+  }
+
+  [data-slot="prose"] .heading-anchor {
+    position: absolute;
+    right: 100%;
+    top: 0.08em;
+    width: 1.15em;
+    display: inline-grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    text-decoration: none;
+    margin: 0;
+    opacity: 0;
+    color: var(--fog);
+    transition:
+      opacity var(--dur-instant) ease,
+      color var(--dur-instant) ease;
+  }
+
+  [data-slot="prose"] :is(h1, h2, h3, h4):is(:hover, :focus-within, :target) .heading-anchor {
+    opacity: 1;
+  }
+
+  [data-slot="prose"] .heading-anchor:hover,
+  [data-slot="prose"] .heading-anchor:focus-visible {
+    color: var(--accent);
+  }
+
+  [data-slot="prose"] [data-slot="table"],
+  [data-slot="prose"] table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.5em;
+    font-size: 0.92rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  [data-slot="prose"] thead {
+    border-bottom: 1px solid var(--steel);
+  }
+
+  [data-slot="prose"] th,
+  [data-slot="prose"] td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  [data-slot="prose"] th {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--fog);
+    white-space: nowrap;
+  }
+
+  [data-slot="prose"] td {
+    color: var(--bone);
+  }
+
+  [data-slot="mermaid"] {
+    margin: 1.8em 0;
+    padding: clamp(14px, 3vw, 24px);
+    overflow: auto;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 15px, var(--line) 16px),
+      var(--obsidian);
+    color: var(--bone);
+  }
+
+  [data-slot="mermaid"] > pre.mermaid,
+  [data-slot="mermaid"] > .mermaid {
+    min-width: min(620px, 100%);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--fog);
+    white-space: pre;
+  }
+
+  [data-slot="mermaid"] svg {
+    display: block;
+    width: 100%;
+    min-width: 560px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* Wide sequence diagrams keep readable labels and scroll inside the frame. */
+  [data-slot="mermaid"][data-mermaid-kind="sequence"] svg {
+    width: auto;
+    max-width: none;
+    min-width: 100%;
+  }
+
+  [data-slot="mermaid"] .nodeLabel,
+  [data-slot="mermaid"] .edgeLabel,
+  [data-slot="mermaid"] text {
+    font-family: var(--font-mono) !important;
+    fill: var(--bone) !important;
+  }
+
+  [data-slot="mermaid-error"] {
+    margin: 0 0 12px;
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  [data-slot="mermaid"] .diagram-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+
+  [data-slot="mermaid"] .diagram-toolbar button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--steel);
+    border-radius: 2px;
+    background: var(--charcoal);
+    color: var(--bone);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  [data-slot="mermaid"] .diagram-toolbar button:hover {
+    border-color: var(--accent);
+  }
+
+  [data-slot="mermaid"] .diagram-toolbar output {
+    min-width: 5ch;
+    text-align: center;
+  }
+
+  [data-slot="mermaid"] .diagram-viewport {
+    height: clamp(280px, 60vh, 640px);
+    overflow: scroll;
+    scrollbar-gutter: stable;
+    scrollbar-color: var(--fog) var(--obsidian);
+    border: 1px solid var(--steel);
+    cursor: grab;
+    touch-action: pan-x pan-y;
+  }
+
+  [data-slot="mermaid"] .diagram-viewport.is-panning {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  [data-slot="mermaid"] .diagram-viewport:focus-visible,
+  [data-slot="mermaid"] .diagram-toolbar button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  [data-slot="mermaid"] .diagram-viewport > .mermaid {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  [data-slot="mermaid"] .diagram-viewport svg {
+    /* Dimensions come from the zoom control, not responsive SVG defaults. */
+    min-width: 0;
+    max-width: none !important;
+    margin: 0 auto;
+  }
+
+  [data-slot="mermaid"] .diagram-hint {
+    margin: 10px 0 0;
+    color: var(--fog);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+
+  dialog.diagram-dialog[data-slot="mermaid"] {
+    position: fixed;
+    inset: 0;
+    width: calc(100vw - 32px);
+    max-width: none;
+    max-height: calc(100dvh - 32px);
+    margin: auto;
+    padding: 16px;
+    border: 2px solid var(--steel);
+    background: var(--obsidian);
+    color: var(--bone);
+  }
+
+  dialog.diagram-dialog::backdrop {
+    background: color-mix(in srgb, var(--void) 85%, transparent);
+  }
+
+  dialog.diagram-dialog .diagram-viewport {
+    height: max(180px, calc(100dvh - 210px));
+  }
+}

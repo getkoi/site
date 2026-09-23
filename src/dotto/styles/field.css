@@ -1,0 +1,59 @@
+@layer components {
+  [data-slot="field"] {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  [data-slot="field-label"],
+  [data-slot="combobox-label"] {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--fog);
+  }
+
+  [data-slot="input"],
+  [data-slot="combobox-input"] {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    background: color-mix(in srgb, var(--charcoal) 55%, transparent);
+    color: var(--bone);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  [data-slot="input"]::placeholder,
+  [data-slot="combobox-input"]::placeholder {
+    color: var(--fog);
+  }
+
+  [data-slot="input"]:focus-visible,
+  [data-slot="combobox-input"]:focus-visible {
+    border-color: var(--accent);
+  }
+
+  [data-slot="field-description"] {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--fog);
+  }
+
+  [data-slot="separator"] {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 0;
+  }
+
+  [data-slot="kbd"] {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1;
+    padding: 3px 6px;
+    background: var(--charcoal);
+    color: var(--fog);
+  }
+}
