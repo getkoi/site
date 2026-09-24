@@ -87,15 +87,15 @@ test("every recipe carries complete operational metadata", () => {
         `${recipe.id} must contain a sandbox pair`,
       );
       assert(
-        recipe.files.some((file) => file.label === "sandbox.yml"),
-        `${recipe.id} is missing sandbox.yml`,
+        recipe.files.some((file) => file.label === "yokai.yml"),
+        `${recipe.id} is missing yokai.yml`,
       );
       assert(
         recipe.files.some((file) => file.label === "Dockerfile.sandbox"),
         `${recipe.id} is missing Dockerfile.sandbox`,
       );
       assert(
-        recipe.steps.at(-1)?.command === "koi doctor --probe",
+        recipe.steps.at(-1)?.command === "yokai doctor --probe",
         `${recipe.id} must end with the in-sandbox probe`,
       );
     }

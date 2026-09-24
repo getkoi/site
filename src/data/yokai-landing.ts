@@ -30,7 +30,7 @@ export const YOKAI_MAP_NODES: readonly YokaiMapNode[] = [
     title: "A prepared run",
     body:
       "The project already has an ordered backlog, a phase plan, driver preferences, and executable sensors. junji is the usual way to prepare these files.",
-    facts: [".koi/run/BACKLOG.md", ".koi/run/config.yml", ".koi/sensors/*.sh"],
+    facts: [".koi/run/BACKLOG.md", ".koi/yokai.yml", ".koi/sensors/*.sh"],
   },
   {
     id: "supervisor",

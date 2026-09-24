@@ -7,15 +7,15 @@ kind: reference
 order: 30
 ---
 
-Precedence: CLI flag → committed YAML → built-in default. Project layout: [Project home](/koi/docs/project-home). Sandbox declaration: [sandbox.yml](/yokai/docs/sandbox/sandbox-yml). Sensor scripts: [Sensors](/yokai/docs/sensors).
+Precedence: explicit CLI flag → optional `.koi/run/yokai.yml` → durable `.koi/yokai.yml` → built-in default. Project layout: [Project home](/koi/docs/project-home). Sandbox declaration: [Sandbox settings](/yokai/docs/sandbox/sandbox-yml). Sensor scripts: [Sensors](/yokai/docs/sensors).
 
-## `.koi/run/config.yml`
+## `.koi/yokai.yml`
 
-Driver per-project settings. Written by `koi init`; read by `yokai` and `koi doctor`.
+Reusable driver settings (including the nested `sandbox` block). Written by `yokai configure`; read by `yokai` and `yokai doctor`.
 
 | Field | Values | Default when omitted |
 |-------|--------|----------------------|
-| `tiers` | four ordered candidate lists (`low` / `medium` / `high` / `ultra`) | **required** — missing or empty band → Halt; re-run `koi init` |
+| `tiers` | four ordered candidate lists (`low` / `medium` / `high` / `ultra`) | omitted bands use the configured agent/model defaults; explicitly empty lists are invalid |
 | `tiers.retry_after_secs` | seconds | `3600` (cooldown after a skip) |
 | `session_options` | map of ACP category/id/name → value | empty (run-global; a candidate's `speed` overlays `fast` for that turn) |
 | `agent_timeout_secs` | wall-clock seconds per agent turn | `1800` (30m) |
@@ -24,16 +24,16 @@ Driver per-project settings. Written by `koi init`; read by `yokai` and `koi doc
 | `token_savings` | `true` \| `false` | `false`; reuse two conversations per phase, require review, disable swarms |
 | `recovery` | `true` \| `false` | `true` (repair + Diagnose cycle + saves) |
 | `build` | block (below) | omitted `max_iters` = unlimited; `judge: true`; `guides: []` |
-| `roles` | per-slot `tier` lift (below) | omit a slot → phase tag (plan/coder/judge/seal) or **ultra** (repair/fix/triage) |
-| `swarm` | block (below) | omitted = off (kill-switch; per-phase `[swarm]` still required) |
+| `roles` | per-slot `tier` lift (below) | omit a slot → resolved phase tier (plan/coder/judge/seal) or **ultra** (repair/fix/triage) |
+| `swarm` | block (below) | omitted = off (kill-switch; per-phase swarm strategy still required) |
 
-Top-level `agent` / `model` / `effort` still deserialize on old files, then Halt if `tiers:` is absent (no legacy synthesize).
+Top-level `agent` / `model` / `effort` supply default candidates when a tier band is omitted.
 
 ### Token savings
 
 Read [Sessions](/yokai/docs/sessions) for the lifecycle and interruption scenarios. Use the settings below to configure that behavior.
 
-Enable `token_savings: true`, select it in `koi init`, or pass `yokai --token-savings`
+Enable `token_savings: true`, select it in `yokai configure`, or pass `yokai --token-savings`
 for one launch. Each phase shares one session for planning, implementation and sealing,
 and one for repeated reviews. Corrections return to the implementation
 session. Existing phase plans still skip Plan.
@@ -135,12 +135,12 @@ A new phase starts new sessions. Failed reattachment or explicit context
 exhaustion can replace a session, so two is not a hard cap. Interrupted turns
 may reattach even without token savings.
 
-**Not in this file:** sandbox (`../sandbox.yml`), launch-only flags, theme, cost/token ceilings.
+**Not in this file:** launch-only flags, theme and cost/token ceilings. Sandbox settings belong in its `sandbox:` mapping.
 
 Example:
 
 ```yaml
-# .koi/run/config.yml
+# .koi/yokai.yml
 token_savings: false        # opt in to two reusable conversations per phase
 tiers:
   # retry_after_secs: 3600
@@ -186,7 +186,7 @@ build:
 
 A **candidate** is `(agent, model, effort, speed)`. Model, effort, and speed may be omitted (that agent's defaults). Speed is an opaque per-candidate session option, not a koi enum. List order is preference: yokai walks at **turn open**; a skip (`unreachable` / `limited` / `unstable`) records a ledger skip row and tries the next. The next turn starts at the preferred again after `retry_after_secs`. All candidates skipped → Halt. Missing effort/speed is a notice, not a skip.
 
-`koi init` requires at least one candidate on every band. Four ordered multi-selects (Low / Medium / High / Ultra); switch Agent inside a step to mix providers. `koi init --yes` stamps `--agent` / `--model` / `--effort` onto all four bands (one candidate each).
+`yokai configure` requires at least one candidate on every band. Four ordered multi-selects (Low / Medium / High / Ultra); switch Agent inside a step to mix providers. Headless startup never writes defaults; prepare settings interactively or author the documented configuration explicitly.
 
 `yokai --agent` / `--model` / `--effort` **pin** this launch and skip the walk.
 
@@ -196,7 +196,7 @@ Optional `tier` lift per slot. Drop role-level `agent` / `model` / `effort`.
 
 | Slot | Omit ⇒ |
 |------|--------|
-| `plan`, `coder`, `judge`, `seal` | the phase's BACKLOG tier tag |
+| `plan`, `coder`, `judge`, `seal` | the phase override, then legacy tier tag, then medium |
 | `repair`, `fix`, `triage` | **ultra** |
 
 Swarm adds no slot: split walks plan's band; workers and merge walk coder's; judge fan-out walks judge's.
@@ -207,23 +207,23 @@ Swarm adds no slot: split walks plan's band; workers and merge walk coder's; jud
 | Unknown role key | hard error (`deny_unknown_fields`) |
 | Permission / timeouts / `session_options` | run-global |
 
-`koi init` **Advanced: per-role tier lifts** is opt-in. The cockpit shows the active Agent · Model; a notice when the chosen candidate is not first in the list.
+`yokai configure` **Advanced: per-role tier lifts** is opt-in. The cockpit shows the active Agent · Model; a notice when the chosen candidate is not first in the list.
 
 ### `swarm:` (ADR-0045, ADR-0047, ADR-0048)
 
-Optional fan-out inside Build (each iteration of a `[swarm]` phase). **Omit the block to leave it off.** `koi init` asks whether
-this run may honor `[swarm]` phases, plus the worker cap; `--yes` leaves it omitted.
+Optional fan-out inside Build (each iteration of a `[swarm]` phase). **Omit the block to leave it off.** `yokai configure` asks whether
+this run may honor `[swarm]` phases, plus the worker cap. Reconfiguration preserves fields the wizard does not expose.
 
 | Field | Default when omitted |
 |-------|----------------------|
 | `enabled` | `false` (kill-switch; does not fan out `[plain]` phases) |
 | `max_workers` | `8` (item cap **and** concurrency) |
 
-Fan-out runs only when `enabled` is true **and** the live BACKLOG heading is `[swarm]`. `[plain]`
+Fan-out runs only when `enabled` is true **and** the phase override selects `swarm` (or a legacy heading has `[swarm]`). `[plain]`
 (or a missing tag) stays a single coder. One work item skips the fan-out. There is no `--swarm` flag.
-## `.koi/run/config.yml` `build:`
+## `.koi/yokai.yml` `build:`
 
-Plan → Build → Seal tuning for every phase. Written by `koi init`; overridable per run with `yokai --max-iters`.
+Plan → Build → Seal tuning for every phase. Written by `yokai configure`; overridable per run with `yokai --max-iters`.
 
 | Field | Default when omitted |
 |-------|----------------------|
@@ -234,12 +234,12 @@ Plan → Build → Seal tuning for every phase. Written by `koi init`; overridab
 
 **Not configurable here:** the gate (authoritative sensors) and the judge's advisory-only role are junji's contract ([ADR-0006](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0006-tengu-self-correction-harness.md), superseded by [ADR-0039](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0039-yokai-owns-build-and-recovery.md)). Which candidate runs a turn comes from `tiers:` plus optional `roles.*.tier` ([ADR-0049](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0049-model-tiers.md)).
 
-If `.koi/run/tengu.yml` is still present, `koi doctor` / yokai preflight **warn**. Move those keys into `build:` and delete the file. yokai does not read it.
+If `.koi/run/tengu.yml` is still present, `yokai doctor` / yokai preflight **warn**. Move those keys into `build:` and delete the file. yokai does not read it.
 
 Example:
 
 ```yaml
-# inside .koi/run/config.yml
+# inside .koi/yokai.yml
 build:
   # max_iters: 3            # omit = unlimited
   judge: true
@@ -263,3 +263,118 @@ Auto-created files under `.koi/run/`. Removed with `consolidate` unless copied e
 **`FEEDBACK.md` location:** under `.koi/run/FEEDBACK.md` during a phase (not repo root). Diagnose reads that path. On convergence, yokai removes it before Seal. On non-convergence it stays for the human or Diagnose.
 
 Copy `ledger.jsonl` and `sessions.jsonl` before `consolidate` if you want the audit trail outside git history.
+
+## Files and precedence
+
+Settings resolve as built-in defaults → `.koi/yokai.yml` → optional `.koi/run/yokai.yml` → explicit
+CLI flags. Each mapping merges recursively, including roles, session options, sandbox settings and
+tier bands. Lists replace as a whole, preserving candidate order. `null` clears a value to its
+built-in default; `[]` deliberately clears a list such as `build.guides`. A supplied empty tier list
+is invalid. An omitted tier band inherits the lower layer, then the built-in candidate.
+
+For example, durable settings:
+
+```yaml
+agent: claude
+agent_timeout_secs: 2400
+sensor_timeout_secs: 1200
+permission: approve-all
+token_savings: false
+build:
+  judge: true
+  max_iters: 8
+  guides: [docs/style.md]
+swarm:
+  enabled: false
+  max_workers: 8
+sandbox:
+  enabled: false
+```
+
+Most efforts need no override file. A particular effort can supply only these differences:
+
+```yaml
+# .koi/run/yokai.yml
+build:
+  max_iters: 3
+phases:
+  P2:
+    strategy: plain
+    tier: high
+```
+
+This inherits the durable guide, timeouts and sandbox preferences. `yokai --max-iters 2` overrides
+the effort's iteration limit for that launch. `--token-savings` and `--no-token-savings` explicitly
+override saved token savings in either direction. `--agent`, `--model` and `--effort` pin the runtime
+candidate for the launch. Budgets (`--max-cost`, `--max-tokens`), `--once`, `--headless`, `--host`,
+`--allow-gated` and the theme flag remain launch choices.
+
+Optional `tiers` defines `low`, `medium`, `high` and `ultra` ordered candidate lists, plus
+`retry_after_secs`. Candidate fields are `agent`, `model`, `effort`, `speed`. `roles.<role>.tier`
+can lift a role's tier; the roles are plan, coder, judge, seal, triage, repair and fix. Opaque ACP
+settings live under `session_options`. Recovery accepts a boolean or the existing legacy mapping.
+`build.judge_model` and other accepted legacy fields are preserved during migration and wizard edits.
+
+Phase overrides belong only to the effort file, keyed by existing phase ID. They override optional
+legacy heading annotations; absent values retain annotations or use plain/medium defaults. They
+never alter the headings, dependency order, status or `[gated]` marker. If you renumber a phase,
+review its override. Junji neither reads nor writes this configuration schema.
+
+The nested `sandbox` mapping accepts `enabled`, `backend` (`docker` or `apple`), `image`, `name`,
+`memory` and `cpus`. Enabled sandboxes require a repo-owned image. The Dockerfile and optional
+`sandbox-setup.sh` hook remain separate files. `--host` bypasses the sandbox for one invocation.
+Readiness runs in the selected execution environment. Sandbox re-entry does not repeat onboarding.
+
+## Gate review
+
+Yokai's configured agent reads CONTEXT and project checks in a read-only turn, then proposes JSON
+containing a rationale and atomic shell scripts. Review the complete verification bar and exact
+scripts before approving. Yokai validates shell syntax, keeps omitted existing sensors, and preserves
+replaced script originals as `.sh.before-review` files. Preserve an existing backup elsewhere before
+approving a second replacement of that script. No agent proposal can silently delete checks.
+
+`.koi/gate-review.yml` stores the reviewed verification section and script contents. Other CONTEXT
+sections can change without invalidating it. Changing the verification bar or a script requires human
+reconciliation; headless execution reports the mismatch. Do not author or edit the receipt yourself.
+Shell validity and a passing check are distinct: failing checks remain intact, with their output
+reported. Setup does not weaken the bar or approve gated phases. A prepared failing gate may be used
+by the normal Build loop to fix the underlying implementation, but no phase can complete while red.
+
+## Migration
+
+The Koi binary has been removed without a compatibility wrapper. Replace `koi setup` / `koi init`
+with interactive `yokai` or `yokai configure`, and `koi doctor` with `yokai doctor`.
+
+```bash
+yokai migrate
+```
+
+This validates `.koi/run/config.yml` and `.koi/sandbox.yml`, moves reusable values to `.koi/yokai.yml`,
+and retains byte-for-byte originals as `config.yml.legacy` and `sandbox.yml.legacy`. New-only projects
+are already migrated. Unreadable files, malformed YAML and unknown settings are errors, not defaults.
+
+If legacy values conflict with durable or effort settings, migration lists the field paths and makes
+no changes. Reconcile the files manually or explicitly choose a side:
+
+```bash
+yokai migrate --prefer legacy
+# or
+yokai migrate --prefer new
+```
+
+The choice resolves collisions only; other fields survive. Choosing legacy also resolves colliding
+effort values so the chosen value is effective. Writes are atomic per destination, originals stay
+recoverable until success, and retrying after interruption accepts identical backups. An existing
+different backup blocks migration rather than being overwritten. After success, review the settings
+and commit them with the project. Retain or archive the originals until satisfied.
+
+Migration leaves active plans, customized METHOD/CONTEXT, phase progress and sensors unchanged. Old
+annotated headings still work. To adopt the simplified method in an active effort, compare current
+skill templates with your copies and merge the relevant prose deliberately, preserving standing
+directives and custom sections. `begin` never overwrites an active backlog or customized method.
+Fresh efforts automatically use the new templates.
+
+`consolidate` still removes all of `.koi/run/`: effort overrides, session handles, ledgers, recovery,
+and budget accounting. It preserves everything else under `.koi/`. The next effort inherits reusable
+settings but starts new accounting. Junji's free workflow and this convention do not depend on private
+Yokai implementation code; distribution and licensing changes are follow-up work.

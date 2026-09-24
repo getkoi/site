@@ -10,7 +10,7 @@ order: 30
 Install the project-agnostic skill from the koi repository:
 
 ```bash
-npx skills add getkoi/koi
+npx skills add getkoi/koi --skill junji
 ```
 
 Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/junji/SKILL.md). Invoke `/junji <verb>` in your coding agent; the [guide](/junji/docs/guide) walks through each verb. The skill saves the plan and progress under `.koi/run/` and executes one phase at a time with `next`.
@@ -21,6 +21,6 @@ Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/j
 - “Do the next task” → `next`.
 - Otherwise, consult `BACKLOG.md` › Next action.
 
-The skill loads its per-verb instructions only as needed. It owns the method files and can wire the initial verification bar during `plan`. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
+The skill loads its per-verb instructions only as needed. It owns the method files and documents runnable verification commands during `plan`. It requires no CLI, sensor scripts, model tiers or sandbox configuration. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
 
 For later sensor changes and sandbox image recipes, use the [yokai helper skill](/yokai/docs/skill). To run prepared phases unattended, use the [yokai driver](/yokai/docs/run).

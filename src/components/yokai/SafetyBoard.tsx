@@ -64,9 +64,9 @@ export default function SafetyBoard() {
           <h4>guarded</h4>
           <p>
             Halt before each phase marked [gated] so a human can review it. Bare
-            yokai pre-authorizes those phases.
+            yokai halts at those phases. Explicit approval applies to one launch.
           </p>
-          <code>yokai --guarded</code>
+          <code>yokai --allow-gated</code>
         </article>
         <article>
           <span aria-hidden="true">02</span>
@@ -75,7 +75,7 @@ export default function SafetyBoard() {
             Declare a container or Apple boundary in the project home. yokai
             launches the agent there; the same files and sensors decide the result.
           </p>
-          <code>koi setup --sandbox on</code>
+          <code>yokai configure</code>
         </article>
         <article>
           <span aria-hidden="true">03</span>

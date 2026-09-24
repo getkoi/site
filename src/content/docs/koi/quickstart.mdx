@@ -9,30 +9,37 @@ order: 20
 
 <span id="outcome"></span>
 
-Run one planned phase and verify the result on disk. This walkthrough uses your host machine with sandboxing off. You will install the tools, prepare a project with Junji, then run `yokai --once`.
+Start with the free Junji method. Add Yokai when you want automated execution of a prepared project.
 
-## Prerequisites
+## Junji alone
 
-Install Rust (`cargo`), Git, Node.js 18+, and Claude before starting. Rust builds the CLIs; Git records verified phases; Node runs the Claude ACP adapter.
-
-<details>
-<summary>Use another coding agent</summary>
-
-Yokai also supports Cursor, OpenCode, and Codex. Claude and Codex use Node-based ACP adapters. Cursor and OpenCode serve ACP directly. Install and log in to the agent you choose; then select it in `koi init`.
-
-</details>
-
-Install the junji method skill (separate from the CLIs):
+You need a repository, a coding agent, and the project's build/test tools. No Koi or Yokai executable is required.
 
 ```bash
-npx skills add getkoi/koi
+npx skills add getkoi/koi --skill junji
 ```
 
-## Steps
+In your coding agent:
 
-### 1. Install the CLIs
+```text
+/junji begin
+/junji plan
+/junji refine
+/junji next
+```
 
-Clone the [koi repo](https://github.com/getkoi/koi), then install its CLIs:
+`begin` creates `.koi/run/` and surveys the repo. `plan` defines the work and runnable verification
+commands. `refine` creates ordered phases with dependencies and human gates. Repeat `next` to implement,
+verify and commit one phase at a time. Neither sensor scripts nor strategy/model-tier tags are mandatory.
+
+When every phase is done, use `/junji consolidate` to produce the repo-native deliverable and remove
+`.koi/run/`. Use `/junji iterate <request>` first to add more work. All documented verification commands
+must pass; destructive or gated actions still require human authorization.
+
+## Add Yokai to a prepared project
+
+Install a Rust toolchain and Git, then clone the [framework repository](https://github.com/getkoi/koi)
+and install Yokai:
 
 ```bash
 git clone https://github.com/getkoi/koi.git
@@ -40,108 +47,42 @@ cd koi
 ./install.sh
 ```
 
-This release-builds **`koi`** (setup) and **`yokai`** (driver) into `~/.cargo/bin`. Re-run to upgrade.
-
-### 2. Log the agent in
-
-There is no driver login. Credentials live in the agent. Claude example:
-
-```bash
-claude auth login
-```
-
-This walkthrough uses Claude. If you choose another agent, follow its login steps in the [yokai CLI reference](/yokai/docs/cli#agent-login).
-
-### 3. Set up the project home
-
-In **your project repo** (where `.koi/` will live), once per repo:
-
-```bash
-koi setup --yes --sandbox off
-```
-
-That writes `.koi/sensors/` (README pointer only) and `.koi/sandbox.yml` with sandbox disabled. Interactive `koi setup` is the same wizard if you prefer TTY prompts. Isolation later: [sandbox](/yokai/docs/sandbox).
-
-### 4. Initialize driver config
-
-Per effort, from the repo root:
-
-```bash
-koi init
-```
-
-Select Claude in the wizard. Leave token savings and swarms off for this first plain run. The wizard saves driver settings in `.koi/run/config.yml` and creates a context stub for Junji to replace.
-
-<details>
-<summary>Initialize without the wizard</summary>
-
-
-```bash
-koi init --yes --agent claude --model opus
-```
-
-</details>
-
-### 5. Scaffold the working folder
-
-In your coding agent:
-
-```
-/junji begin
-```
-
-`begin` surveys your repository and creates the working files. When it finishes, the backlog points to `/junji plan`. Existing sensors and driver settings stay intact.
-
-### 6. Plan and refine
-
-```
-/junji plan          # RFC/idea → PLAN.md + verification bar + CONTEXT.md
-/junji refine        # PLAN → ordered phase list in BACKLOG.md
-```
-
-Describe the work you want done and answer the planning questions. Agree on checks that prove the result. `plan` writes sensors when the folder has no `*.sh` files; `refine` turns the plan into an ordered phase list. Your backlog should now contain at least one `[todo]` phase.
-
-### 7. Verify the environment
-
-```bash
-koi doctor --probe
-```
-
-Structural checks always run. `--probe` adds a live auth round-trip.
-
-### 8. Drive a phase
+The installer builds only Yokai. Install and log in to a supported coding agent; see
+[agent login](/yokai/docs/cli#agent-login). Return to your prepared project:
 
 ```bash
 yokai --once
 ```
 
-`--once` runs one phase, then exits. Watch Plan, Build, and Seal in the terminal. If your first phase is tagged `[gated]`, use `yokai --once --guarded` to stop before it; an unguarded run pre-authorizes gated work. After the first verified phase, follow [Run Yokai](/yokai/docs/run) to continue.
+Interactive startup guides missing runtime and sandbox preferences. Its configured agent reads Junji's
+verification bar and proposes executable checks. Review the exact scripts before accepting. Yokai
+validates them, checks readiness, and offers to start the phase. Later runs reuse saved settings.
+A failing check stays intact and is reported; setup never weakens it to get a green result.
 
-## Existing repo
+Yokai reads the repository's METHOD, CONTEXT, backlog and phase plans. The execution machine does not
+need the Junji skill installed. Yokai does not take raw goals or arbitrary plans.
 
-Use the checks your project already runs. Confirm they pass from the repo root, then have `/junji plan` wire them as atomic sensors. If you need to add or update scripts yourself, follow [wire your bar](/yokai/docs/sensors/wire-your-bar).
+## Later launches
 
-## Verification
+```bash
+yokai                 # reuse settings and continue
+# Optional diagnostics or reconfiguration:
+yokai doctor --probe
+yokai configure    # interactive runtime and sandbox settings
+```
 
-You are ready when:
+Bare Yokai halts at `[gated]` phases. `--allow-gated` explicitly authorizes them for one invocation;
+standing directives still apply. Configuration, gate review and plan import do not grant that approval.
 
-1. `koi doctor --probe` ends with `✓ ready` (`✗` items must be fixed; warnings are acceptable)
-2. `.koi/run/BACKLOG.md` lists at least one `[todo]` phase (after `refine`)
-3. `.koi/sensors/` contains at least one `*.sh` (missing sensors fail closed before any turn)
+`--headless` and noninteractive startup never prompt or write setup defaults. Prepare and review the
+gate interactively first. Changed verification commands or scripts require another review.
 
-After yokai finishes a phase, the **contract** on disk is:
+Settings persist in `.koi/yokai.yml`; `.koi/run/yokai.yml` is an optional differences file.
+Consolidation removes effort overrides, sessions and accounting but preserves reusable settings,
+sensors and sandbox artifacts. See [configuration](/yokai/docs/configuration).
 
-- Phase marked `[done]` in the backlog
-- New git commit
-- Gate green (every sensor exit 0)
-- Clean tree
+## Existing installations
 
-Setup symptoms: [koi troubleshooting](/koi/docs/troubleshooting). Run failures: [yokai troubleshooting](/yokai/docs/troubleshooting).
-
-## Next
-
-- [junji guide](/junji/docs/guide): verb-by-verb method
-- [yokai run](/yokai/docs/run): flags, TUI, ledger
-- [Recipes](/yokai/recipes): copy-paste sensors
-- [Build](/yokai/docs/build): Plan → Build → Seal
-- [Sandbox launch](/yokai/docs/sandbox/launch): isolate later
+There is no replacement Koi binary. Run `yokai migrate` for legacy configuration, then `yokai` to review
+the gate. Migration preserves active plans, customized method documents, progress and sensors.
+[Migration details](/koi/docs/cli).

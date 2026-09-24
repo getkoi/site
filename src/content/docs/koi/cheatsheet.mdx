@@ -7,50 +7,37 @@ kind: reference
 order: 10
 ---
 
-For driver and sandbox commands, see the [yokai cheatsheet](/yokai/docs/cheatsheet).
-
-## Install (once)
+## Junji alone
 
 ```bash
-# from a koi checkout
-./install.sh
-# ensures koi + yokai on PATH (~/.cargo/bin)
+npx skills add getkoi/koi --skill junji
 ```
 
-```bash
-# OpenCode on the host
-npm install -g opencode-ai@latest
-opencode    # then /connect
-```
-
-```bash
-# Claude (default agent) — log in before yokai
-claude auth login
-claude auth status
-```
-
-```bash
-# Codex — API key, or ChatGPT login via the Codex CLI
-export CODEX_API_KEY=…   # or OPENAI_API_KEY; NO_BROWSER=1 in sandbox
-npx -y @agentclientprotocol/codex-acp --version
-```
-## Project setup + init (host-first)
-
-```bash
-cd /path/to/repo
-koi setup               # once per repo — .koi/sensors/ + .koi/sandbox.yml
-# sandbox: No
-koi init                # per effort — .koi/run/ config
-# agent: opencode
-```
-
-```bash
-koi setup --sandbox off --yes                # non-interactive project home
-koi init --yes                               # non-interactive defaults
-koi init --agent cursor --permission approve-all
-```
-
-```bash
-# in the coding agent
+```text
 /junji begin
+/junji plan
+/junji refine
+/junji next          # repeat per phase
+/junji consolidate  # all phases done; human-approved collapse
 ```
+
+Run the documented verification commands and commit each phase. Sensor scripts and runtime tags are
+optional. Human gates, dependency order and standing directives remain binding.
+
+## Optional Yokai
+
+From the framework checkout, `./install.sh` installs Yokai. Then, in the Junji-prepared project:
+
+```bash
+yokai --once            # guided missing setup, review gate, offer to run one phase
+yokai                   # later runs reuse settings
+yokai configure    # interactive runtime and sandbox settings
+yokai doctor --probe    # optional diagnostics
+yokai migrate           # existing legacy settings only
+```
+
+Reusable settings: `.koi/yokai.yml`. Optional effort differences: `.koi/run/yokai.yml`.
+Headless startup never prompts or authors setup. Bare runs halt at human-gated phases; explicit
+`--allow-gated` authorizes them for that invocation without overriding standing directives.
+
+[Quickstart](/koi/docs/quickstart) · [Configuration](/yokai/docs/configuration)

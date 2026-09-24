@@ -8,13 +8,13 @@ order: 30
 ---
 
 Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **CLI flag** >
-`.koi/run/config.yml` + `.koi/sandbox.yml` > built-in defaults.
+`.koi/run/yokai.yml` > `.koi/yokai.yml` > built-in defaults.
 
 ## Prerequisites
 
-- [Quickstart](/koi/docs/quickstart) complete, `koi doctor --probe` green
+- Junji-prepared METHOD, CONTEXT and BACKLOG; no installed method skill is needed to execute
 - `[todo]` (or in-flight) phases in `.koi/run/BACKLOG.md`
-- gate scripts under `.koi/sensors/` (project home)
+- Interactive startup reviews missing or changed sensors; headless runs require already-reviewed scripts
 
 ## Outcome
 
@@ -25,8 +25,8 @@ ignore those.
 ## Launch
 
 ```bash
-yokai                  # TUI (default); [gated] phases pre-authorized
-yokai --guarded        # halt before each [gated] phase
+yokai                  # interactive setup if needed, then TUI
+yokai --allow-gated    # explicitly authorize [gated] phases for this launch
 yokai --once           # one phase, then exit (CI / external loop)
 yokai --headless       # plain text (also when stdout is not a TTY)
 yokai --host           # local supervisor even when sandbox.enabled
@@ -38,7 +38,7 @@ Defaults: `--working-folder .koi/run`, `--repo .`.
 
 Relaunch `yokai` from the same repo to continue interrupted work. Yokai reads the phase state and saved session records. See [Sessions](/yokai/docs/sessions) for what resumes after an interruption.
 
-To reuse context within each phase, enable `token_savings: true` in `config.yml`
+To reuse context within each phase, enable `token_savings: true` in `yokai.yml`
 or launch with `yokai --token-savings`. Planning, implementation and Seal share a
 session; reviews share another. Review is required and swarms are disabled.
 See [token savings configuration](/yokai/docs/configuration#token-savings) for
@@ -73,7 +73,7 @@ Unattended default is `--permission approve-all`. The safety net is gate + git, 
 
 Headless runs deny anything that would need an interactive prompt. `--policy-file` is not supported.
 
-Set once in `config.yml`; flags override for one run.
+Set once in `yokai.yml`; flags override for one run.
 
 ### Build budget
 
@@ -81,13 +81,13 @@ Set once in `config.yml`; flags override for one run.
 yokai --max-iters 3
 ```
 
-Overrides `.koi/run/config.yml` `build.max_iters`. Each phase runs Plan → Build → Seal (see
+Overrides `.koi/yokai.yml` `build.max_iters`. Each phase runs Plan → Build → Seal (see
 [Build](/yokai/docs/build)). Non-convergence enters [recovery](/yokai/docs/recovery) by default
 (Diagnose → grant Build) and leaves `.koi/run/FEEDBACK.md`. `recovery: false` Halts immediately.
 
 ### Run-wide cost ceiling
 
-Launch only, not in `config.yml`:
+Launch only, not in `yokai.yml`:
 
 ```bash
 yokai --max-cost 5.00
@@ -122,7 +122,7 @@ Failure ⇒ [recovery](/yokai/docs/recovery) by default (Diagnose cycle). `recov
 
 ## Sandbox mode
 
-When `.koi/sandbox.yml` has `enabled: true`, bare `yokai` is a **thin launcher**: it ensures the
+When the `sandbox` mapping in `.koi/yokai.yml` has `enabled: true`, bare `yokai` is a **thin launcher**: it ensures the
 named VM from your repo **image**, copies Linux harness binaries in, optionally runs
 `.koi/sandbox-setup.sh` once, then execs the inner supervisor (`YOKAI_SANDBOX_INNER=1`).
 
@@ -138,16 +138,17 @@ Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch). Overview: [sandbox]
 Durable declaration (project home):
 
 ```yaml
-# .koi/sandbox.yml
-enabled: true
-backend: docker          # docker | apple
-image: koi-myproj-sandbox
-# name: yokai-myproj     # default yokai-<repo-basename>
-# memory: 8g             # apple only
-# cpus: 4                # apple only
+# .koi/yokai.yml
+sandbox:
+  enabled: true
+  backend: docker       # docker | apple
+  image: koi-myproj-sandbox
+  # name: yokai-myproj  # default yokai-<repo-basename>
+  # memory: 8g          # apple only
+  # cpus: 4             # apple only
 ```
 
-Per-run driver prefs stay in `.koi/run/config.yml`. Do not put a `sandbox:` block there.
+Reusable settings and the `sandbox` mapping live in `.koi/yokai.yml`. Optional `.koi/run/yokai.yml` overrides individual fields for one effort.
 
 After rebuilding the image or changing agent, **recreate** the named sandbox.
 
@@ -181,11 +182,11 @@ Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/yokai/docs/tui)).
 
 | Symptom | Fix |
 |---------|-----|
-| preflight ✗ on launch | run `koi doctor --probe` |
-| every phase gate red | fix `.koi/sensors/*.sh`; run each by hand |
-| halt at [gated] | expected with `--guarded`; relaunch bare `yokai` |
+| preflight ✗ on launch | run `yokai doctor --probe` |
+| every phase gate red | fix the underlying failing check; review intentional sensor changes interactively |
+| halt at [gated] | expected by default; review the phase and explicitly use `--allow-gated` if authorized |
 | `cost ceiling reached` | raise or omit `--max-cost` / `--max-tokens` |
-| missing `tiers:` / empty band | re-run `koi init` |
+| explicitly empty tier band | re-run `yokai configure` |
 | every candidate skipped | wait `retry_after_secs` (default 3600) or fix auth/quota |
 | sandbox agent not found | build `.koi/Dockerfile.sandbox`; recreate VM |
 

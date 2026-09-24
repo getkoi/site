@@ -127,7 +127,7 @@ export function CitationDemo() {
 
 export function CodeBlockDemo() {
   return (
-    <CodeBlock code={"koi doctor --probe"} language="bash" title="probe" width="100%" />
+    <CodeBlock code={"yokai doctor --probe"} language="bash" title="probe" width="100%" />
   );
 }
 

@@ -7,12 +7,15 @@ kind: how-to
 order: 20
 ---
 
+Interactive `yokai` can propose these scripts through its configured agent and record human review. This guide is for manually authoring or changing the checks. After changes, run `yokai` to reconcile the verification bar; do not edit `.koi/gate-review.yml` yourself.
+
+
 Use this page when you are setting up or updating **`.koi/sensors/`**. Sensors are **observe-only**. Setup (install deps, seed audit DBs, bake toolchains into the sandbox image) must finish before the gate runs.
 
 ## Prerequisites
 
 - A real stack survey: package manager, fmt/lint/typecheck, unit/integration/E2E tests, coverage: the project's actual gates, not a bespoke growing assertion script.
-- `.koi/sensors/` at project-home root (durable; survives `consolidate`). `koi setup` creates it with a README pointer; the scripts are yours to author.
+- `.koi/sensors/` at project-home root (durable; survives `consolidate`). `yokai configure` creates it with a README pointer; the scripts are yours to author.
 - Optional: `.koi/run/CONTEXT.md` for prose lockstep (yokai skill mirrors scripts there).
 
 ## Workflow

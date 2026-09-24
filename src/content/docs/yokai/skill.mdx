@@ -7,7 +7,7 @@ kind: how-to
 order: 15
 ---
 
-Install the skill with `npx skills add getkoi/koi`. Its source is [`skills/yokai/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md). Ask your coding agent to wire sensors or prepare a sandbox image. This helper does not run phases; the [yokai driver](/yokai/docs/run) does that.
+This helper is optional: Yokai can prepare and review its own gate without it. Install it with `npx skills add getkoi/koi --skill yokai`. Its source is [`skills/yokai/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md). Ask your coding agent to wire sensors or prepare a sandbox image. This helper does not run phases; the [yokai driver](/yokai/docs/run) does that.
 
 ## Sensor workflow
 
@@ -20,6 +20,6 @@ Never weaken a failing sensor just to turn the gate green. See [sensor semantics
 
 ## Sandbox image
 
-The skill can prepare `.koi/Dockerfile.sandbox` for the selected backend. Apple installs the harness under `/usr/local/bin` and ends as root; Docker uses a writable harness path under `/home/agent/.local/bin` with the `agent` user. After changing the image, rebuild and recreate the named sandbox. See [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml).
+The skill can prepare `.koi/Dockerfile.sandbox` for the selected backend. Apple installs the harness under `/usr/local/bin` and ends as root; Docker uses a writable harness path under `/home/agent/.local/bin` with the `agent` user. After changing the image, rebuild and recreate the named sandbox. See [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml).
 
-The [koi CLI](/koi/docs/cli) scaffolds the folder and declaration; the helper authors the project's actual checks and image recipe.
+Interactive `yokai` owns runtime setup and sensor review. After helper edits, run it to reconcile the reviewed bar. The helper must not author the gate receipt.

@@ -16,10 +16,10 @@ Supervisor, TUI, sandbox, setup split, Build loop, recovery.
 | ADR | Title |
 |-----|-------|
 | [0003](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0003-native-acp-connector-only.md) | Native ACP connector only |
-| [0004](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0004-autonomous-by-default.md) | Driver runs autonomously by default; honor gated via a launch flag |
+| [0004](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0004-autonomous-by-default.md) | Autonomous pacing; human gates now halt by default (amended by ADR-0053) |
 | [0005](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0005-workspace-split-extract-acp-connector.md) | Split the driver into a workspace; extract `tori` as the shared port |
 | [0006](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0006-tengu-self-correction-harness.md) | Tengu: a self-correction harness with an advisory judge |
-| [0007](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0007-init-config-wizard-and-begin-reconnaissance.md) | `koi init` is a config wizard; `begin` gains reconnaissance; per-project config in `.koi/run/` |
+| [0007](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0007-init-config-wizard-and-begin-reconnaissance.md) | Historical init wizard and begin reconnaissance; ownership and settings amended by ADR-0053 |
 | [0008](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0008-attributed-tui-stream-and-effects.md) | The TUI attributes its stream by act; tachyonfx splash-only |
 | [0009](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0009-per-session-records-and-the-sessions-view.md) | Per-session run records; the sessions view shows every turn |
 | [0010](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0010-recovery-last-look-before-halt.md) | Recovery: an intelligent last look before a halt becomes final (amended by 0044) |
@@ -36,9 +36,9 @@ Supervisor, TUI, sandbox, setup split, Build loop, recovery.
 | [0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md) | Repo-owned sandbox image |
 | [0028](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0028-sandbox-dockerfile-scaffold.md) | Sandbox Dockerfile scaffold (primary agent path) |
 | [0029](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0029-sensors-folder.md) | Sensors folder: discover, fail-fast, N tengu sensors |
-| [0030](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0030-init-ratatui-stepper.md) | `koi init` uses a ratatui step strip (revises ADR-0007) |
+| [0030](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0030-init-ratatui-stepper.md) | Ratatui configuration stepper; ownership amended by ADR-0053 |
 | [0031](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0031-tengu-only-implementation.md) | Tengu is the only implementation path |
-| [0032](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0032-koi-setup-owns-project-home.md) | `koi setup` owns the durable project home; `init` is volatile-only (amends ADR-0015 and ADR-0030; supersedes ADR-0028's scaffold owner) |
+| [0032](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0032-koi-setup-owns-project-home.md) | Historical Koi setup ownership; superseded by ADR-0053 |
 | [0033](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0033-acp-session-options.md) | ACP-discovered session options (Cursor reasoning/fast); `effort` is ThoughtLevel alias |
 | [0034](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0034-adaptive-cockpit-and-timeouts.md) | Adaptive cockpit FPS + soft agent/sensor timeouts |
 | [0035](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0035-reuse-build-sensors-at-gate.md) | Reuse green Build sensors at the gate when Seal left the product tree unchanged |
@@ -61,3 +61,7 @@ Supervisor, TUI, sandbox, setup split, Build loop, recovery.
 | [0052](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0052-two-pastel-hours.md) | Two pastel hours (yoru / hiru); yoi and asa alias to yoru |
 
 Directory: [`crates/yokai/docs/adr/`](https://github.com/getkoi/koi/tree/main/crates/yokai/docs/adr).
+
+## Independent entry points
+
+[Framework ADR-0007](https://github.com/getkoi/koi/blob/main/docs/adr/0007-independent-junji-and-yokai-setup.md) defines standalone Junji and the file handoff. [Driver ADR-0053](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0053-owned-onboarding-and-reviewed-gate.md) supersedes ADR-0015/0032 with Yokai-owned onboarding, layered settings and reviewed sensors.

@@ -62,7 +62,7 @@ const typeFaces = [
     token: "--font-mono",
     use: "Labels, code, kickers. 0.8125rem / 1.5 / 0.02em.",
     sampleClass: "font-mono text-[0.8125rem] leading-normal tracking-[0.02em] text-fog",
-    sample: "koi doctor --probe",
+    sample: "yokai doctor --probe",
   },
 ];
 

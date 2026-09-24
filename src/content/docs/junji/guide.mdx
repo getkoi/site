@@ -9,8 +9,8 @@ order: 20
 
 ## Prerequisites
 
-- **junji skill** installed: `npx skills add getkoi/koi`
-- **`koi setup`** run once per repo (durable project home), then **`koi init`** (or you accept cold `begin` without driver config yet)
+- **junji skill** installed: `npx skills add getkoi/koi --skill junji`
+- No CLI, runtime configuration, or sensor scripts are required for Junji.
 - A **source doc** or rough idea for `plan` (RFC, ADR, PRD, ticket prose)
 - Repo root as the anchor: paths are always repo-root-relative; never create `phases/` or `BACKLOG.md` at the repo root or `.koi/` root
 
@@ -21,7 +21,7 @@ A git-committed `.koi/run/` working folder with:
 - Stable **PLAN.md** (strategy) and **CONTEXT.md** (execution contract)
 - Optional **DESIGN.md** (visual / experiential contract) when the run ships human-facing surfaces
 - An ordered **phase list** in **BACKLOG.md**
-- Runnable **sensors** under `.koi/sensors/`
+- Runnable verification commands documented in CONTEXT; optional existing sensors can supply them
 - Phases executed one at a time via `next` (or `yokai`). After every phase is `[done]`, **iterate** can grill more work onto the backlog, or **consolidate** collapses `run/` into a repo-native deliverable
 
 ## The verb pipeline
@@ -54,14 +54,14 @@ flowchart TD
 
 ## `begin`: scaffold + survey
 
-**Prerequisites:** None (idempotent after `koi setup` + `koi init` or cold).
+**Prerequisites:** The Junji skill. `begin` creates missing scaffolding and preserves customized files.
 
 **Steps:**
 
 1. In the agent: `/junji begin`
 2. Skill copies `METHOD.md` and `BACKLOG.md` from templates (byte-identical; Next action already `/junji plan`). Copies the CONTEXT skeleton if missing or still the init stub. Empty `phases/`.
 3. Surveys the repo for observable facts only: file map, toolchain commands, spec conventions, **Skill scout** (`CONTEXT.md › Skills`: Must from `AGENTS.md` / `DESIGN.md` / siblings, catalog of in-repo `SKILL.md`, by-role index). **No load-bearing decisions.** The agent authors CONTEXT only.
-4. Leaves `.koi/run/config.yml` and existing `.koi/sensors/*.sh` untouched
+4. Leaves optional Yokai configuration and existing sensor scripts untouched
 
 **Verification:** `BACKLOG.md` shows `Next action: /junji plan`. No `PLAN.md` yet. Skills section is filled (`none` is valid).
 
@@ -111,11 +111,11 @@ Use before `plan`/`grill` when facts must be pinned to sources. Distinct from **
 3. Reason, then **grill** (frontier rounds) until decisions are solid
 4. Write `.koi/run/PLAN.md`: problem, approach, decisions, **with rationale**, success criteria
 5. Move binding facts into `.koi/run/CONTEXT.md`: locked decisions, verification bar, deliverable spec model, standing overrides
-6. Create **sensors**: if `.koi/sensors/` has no `*.sh`, write one atomic script per bar concern; if scripts exist, mirror them into CONTEXT prose (no silent overwrite)
+6. Document the project’s runnable verification commands and expected exit codes. Existing sensors may be referenced. Yokai can later propose atomic scripts for review.
 
-**Verification:** Verification bar in CONTEXT matches `.koi/sensors/*.sh`. `Next action: /junji refine`.
+**Verification:** CONTEXT contains runnable commands for the verification bar. `Next action: /junji refine`.
 
-**Failure:** Judgment-call "bar" with no exit-code commands. Rewrite it as automatable sensors: the project's real stack gates (fmt/lint/typecheck/tests), not a bespoke growing assertion script.
+**Failure:** Judgment-call "bar" with no exit-code commands. Rewrite it as runnable checks: the project's real stack gates (fmt/lint/typecheck/tests), not a bespoke growing assertion script.
 
 ---
 
@@ -158,13 +158,10 @@ Useful after some phases have landed. If nothing is `[done]`, it stops. Distinct
 1. `/junji refine`. First run decomposes; later runs split/merge/reorder a *live* list.
 2. Each phase is one **independently-verifiable** unit, ordered by dependency.
 3. Irreversible steps → prefix `[gated]`.
-4. Select strategy: `[plain]` or `[swarm]` on every heading (default `[plain]`; `[swarm]` only when the
-   phase is one bar whose work is the same step across many independently mergeable items).
-5. Select tier: `[low]` `[medium]` `[high]` `[ultra]` after strategy (default **medium**; low only if
-   mechanical; ultra only if it is the hardest unsplittable work in the plan).
-6. Writes phase list to `BACKLOG.md` only. No code, no `phases/` plans yet.
+4. Use ordinary status headings such as `### [todo] P0 - Title`, with dependencies and human gates. Runtime strategy and tier choices are optional Yokai settings.
+5. Write the phase list to `BACKLOG.md` only. No code or phase plans yet.
 
-**Verification:** Ordered list; every heading has strategy and tier; `Next action: /junji next`. Chat: `Strategy selected.` plus each phase with both tags.
+**Verification:** Ordered, independently verifiable phases; `Next action: /junji next`.
 
 Once every phase is `[done]`, `refine` does not add work: use `iterate`.
 
@@ -172,16 +169,13 @@ Once every phase is `[done]`, `refine` does not add work: use `iterate`.
 
 ## `next`: one phase end-to-end
 
-**Prerequisites:** Phase list in `BACKLOG.md`; gate scripts present.
+**Prerequisites:** Phase list in `BACKLOG.md`; runnable verification bar in CONTEXT.
 
-A backlog heading looks like `### [plain] [medium] [todo] P0 - Title`.
-
-- `[plain]` selects one coder. `[swarm]` allows Yokai to fan out when swarms are enabled.
-- `[medium]` is the capability tier. The refine rubric can choose `[low]`, `[high]`, or `[ultra]` instead.
+A backlog heading looks like `### [todo] P0 - Title`.
 - `[todo]` is the status. Work moves through `[planning]`, `[building]`, `[sealing]`, and `[done]`.
 - An optional `[gated]` prefix marks a phase that needs human pre-authorization.
 
-Interactive `next` preserves these tags and does not switch the agent or model.
+Interactive `next` preserves user text and any legacy runtime annotations. It does not switch the agent or model.
 
 **Steps (same every run):**
 
@@ -190,7 +184,7 @@ Interactive `next` preserves these tags and does not switch the agent or model.
 2 research   read files the phase will touch; study idioms for this slice
 3 plan       write .koi/run/phases/phase-NN-<slug>.md unless that file already exists
 4 implement  scoped to this phase only
-5 verify     run every .koi/sensors/*.sh — all exit 0
+5 verify     run every command in CONTEXT’s verification bar — all must pass
 6 compact    `[sealing]` then `[done]`; Outcome on phase plan; carry-forward; update Next action
 7 commit     one conventional commit; honor standing overrides (e.g. never push)
 ```
@@ -202,7 +196,7 @@ Invoke: `/junji next` or "do the next task". The **yokai driver** splits this in
 **Failure:**
 
 - Red gate → fix root cause; never weaken sensors
-- `[gated]` → human decision, or `yokai` without `--guarded`
+- `[gated]` → human decision; an unattended launch requires explicit `yokai --allow-gated`
 - Started two phases in one run → violation; only one phase per `next`
 
 **Next action:** `/junji next` while `[todo]` or in-flight remain; else `/junji consolidate` (or `/junji iterate <request>` to add more work).
@@ -216,11 +210,11 @@ Invoke: `/junji next` or "do the next task". The **yokai driver** splits this in
 **Steps:**
 
 1. `/junji iterate` with the request. Missing request → the skill asks in one line and stops.
-2. Reason, then **grill** until the frontier is empty: including how many phases, boundaries, `depends_on`, `[gated]`, `[plain]` / `[swarm]`, and `[low]` / `[medium]` / `[high]` / `[ultra]`.
-3. **Select strategy and tier** for each new phase (defaults `[plain]` `[medium]`; same rubrics as refine). Write BACKLOG headings continuing `P{n+1}` **with both tags** (`### [plain] [medium] [todo] PN - …`) **and** a full `phases/phase-NN-<slug>.md` for each. No product code.
-4. Commit those working-folder artifacts (honor standing overrides). `Next action: /junji next`. Chat: `Strategy selected.` plus each new phase with both tags.
+2. Reason, then **grill** until phase boundaries, dependencies, verification and human gates are settled.
+3. Write ordinary `[todo]` headings continuing `P{n+1}` and a full `phases/phase-NN-<slug>.md` for each. No runtime tags or product code are required.
+4. Commit the working-folder artifacts, honoring standing overrides. `Next action: /junji next`.
 
-**Verification:** New `[todo]` phases each tagged `[plain]` or `[swarm]` and a tier, matching phase files; pointer is `/junji next`. Then `next` or `yokai` (yokai skips Plan because the files exist).
+**Verification:** New `[todo]` phases with matching phase files; pointer is `/junji next`. Then `next` or `yokai` (yokai skips Plan because the files exist).
 
 **Failure:**
 
@@ -239,7 +233,7 @@ Repeat as needed: iterate → next ↺ → iterate …
 
 1. `/junji consolidate`
 2. Rewrite the build log into the repo's native spec home (per CONTEXT › Deliverable spec model)
-3. `git rm -r .koi/run/` in one commit. **Project home** (`sensors/`, `sandbox.yml`) stays.
+3. `git rm -r .koi/run/` in one commit. Durable `.koi/yokai.yml`, reviewed sensors, gate receipt and sandbox assets stay. Effort overrides, ledgers and sessions under `run/` are removed.
 
 **Verification:** Deliverable on disk; `.koi/run/` gone; history retains phases.
 
@@ -261,7 +255,7 @@ When a decision moves, update both: rationale in PLAN, binding fact in CONTEXT.
 
 ## Running unattended
 
-When sensors and phases are reliable, **yokai** loops without a human:
+Optionally install **Yokai** and run `yokai` from the prepared repository. Interactive startup configures runtime preferences, proposes sensors for review, checks readiness and offers to start. Execution does not require an installed Junji skill. Once prepared, Yokai loops through authorized phases:
 
 ```mermaid
 flowchart TD
@@ -285,7 +279,7 @@ Yokai checks the results against your sensors and git history. Define a verifica
 
 | Question | Answer |
 |----------|--------|
-| Where do I start? | [Quickstart](/koi/docs/quickstart): `koi setup`, `koi init`, `/junji begin` |
+| Where do I start? | [Quickstart](/koi/docs/quickstart): install Junji, then `/junji begin` |
 | What are we doing? | `/junji plan` |
 | Turn plan into tasks? | `/junji refine` |
 | Do one slice? | `/junji next` or `yokai` |
