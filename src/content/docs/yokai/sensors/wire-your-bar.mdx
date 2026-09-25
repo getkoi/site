@@ -7,11 +7,11 @@ kind: how-to
 order: 20
 ---
 
-Run interactive `yokai sensors`, or use the optional `/yokai sensors` helper to prepare proposals.
+Run interactive `yokai`, or use the optional `/yokai sensors` helper to prepare proposals.
 The executable uses the same sensor policy without requiring installed skills. Junji's CONTEXT
 verification bar defines requirements; actual project commands provide the checks.
 
-When sensors already exist, decline the offer for agent-proposed changes to review them directly.
+When sensors already exist, the Sensors screen shows them for direct review. Generate is optional.
 Yokai shows the bar and exact scripts, asks you to confirm coverage and prerequisites, then follows
 the same smoke-and-approve flow. Missing fingerprints do not mean your scripts are missing.
 
@@ -68,10 +68,13 @@ runtime gate is fail-fast; preparation collects all smoke results.
 
 ## Review metadata
 
-Yokai stores versioned bar and script fingerprints under `gate_review` in `.koi/yokai.yml`.
-Changing checks or verification requirements requires review again. Never hand-edit fingerprints.
+Yokai stores version-2 fingerprints of the bar, scripts and selected environment under `gate_review`
+in `.koi/yokai.yml`. The helper and wizard share this metadata. Changing checks or verification
+requirements requires review again. Changing environment requires re-smoke and final approval of
+existing scripts, without regeneration. Use the helper’s metadata calculator only after human
+approval; never refresh fingerprints to bypass review.
 For the legacy `.koi/gate-review.yml`, `yokai migrate` converts only an exact matching receipt;
-stale receipts stay available for reconciliation. See [migration](/yokai/docs/configuration#migrate-an-existing-installation).
+stale receipts stay available for reconciliation. Migrated content review still needs an environment smoke review. See [migration](/yokai/docs/configuration#migrate-an-existing-installation).
 
 ## Next
 

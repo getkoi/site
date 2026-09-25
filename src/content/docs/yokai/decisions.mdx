@@ -69,3 +69,7 @@ Directory: [`crates/yokai/docs/adr/`](https://github.com/getkoi/koi/tree/main/cr
 [Framework ADR-0008](https://github.com/getkoi/koi/blob/main/docs/adr/0008-reviewed-sensors-and-phase-assessments.md) and [driver ADR-0054](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0054-skill-backed-preparation.md) add shared helper policies, reviewed temporary smoke checks, compact gate fingerprints and reviewed phase assessments.
 
 [Authoritative assessment YAML](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0055-authoritative-assessment-mapping.md) removes assessment fingerprints and duplicate runtime approval. Complete skill-approved mappings are immediately usable by the driver.
+
+[Preparation wizard](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0056-tui-preparation-wizard.md)
+puts all interactive preparation under bare `yokai` and the cockpit Prepare control. The helper and
+wizard share [environment-bound gate approval](https://github.com/getkoi/koi/blob/main/docs/adr/0010-shared-environment-bound-gate-review.md).

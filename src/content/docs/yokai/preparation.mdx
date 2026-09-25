@@ -1,0 +1,41 @@
+---
+title: Prepare in the TUI
+navLabel: Preparation
+description: "Review sensors, configure the environment and assess phases before starting Yokai."
+section: guide
+kind: how-to
+order: 15
+---
+
+Run `yokai` in your prepared project. A ready project enters the cockpit; missing preparation opens
+this wizard. Use **Prepare** (`p`) in the cockpit to reopen it. While a phase runs, preparation stays
+queued until the phase finishes. The `/yokai` helper skill remains an alternative.
+
+
+The wizard starts at the first step needing attention. Approved runtime settings, environment
+settings, sensor gates and phase mappings are separate saved checkpoints. Exit discards unapproved
+proposals; the next launch resumes from saved state. Tab or the numbered sidebar navigates steps.
+Keyboard shortcuts have matching mouse actions, and `t` cycles terminal, yoru and hiru themes.
+
+- **Runtime:** edit agents, model bands, permissions and limits; confirm to save.
+- **Environment:** edit host/sandbox settings, review or edit the repository Dockerfile, explicitly
+  build/rebuild and check readiness. Build replaces the named sandbox after confirmation.
+- **Sensors:** review existing scripts or choose Generate. Inspect sources, coverage, removals and
+  diffs; request a textual revision or open the selected script in `$VISUAL`/`$EDITOR`. Approve exact
+  commands for temporary smoke checks, review every result, then approve the complete gate.
+- **Phase assessment:** Generate a proposal or edit each row's tier, plain/swarm strategy and reason.
+  Existing choices remain available for review. Approve the full mapping in effort YAML.
+- **Readiness:** check tools and the executable gate in the selected environment, then choose
+  Start run or Save and exit. Genuine failing checks keep readiness red.
+
+Generate is always explicit and shows the selected agent/model. Generation, builds, environment
+checks and smoke runs show live output and Cancel inside the TUI. Errors leave the wizard open for
+retry, revision, editing or environment repair. An external editor temporarily owns the terminal;
+all other preparation stays in the TUI. Edits invalidate pending smoke results. Cancellation stops
+local process groups and drops temporary scripts; sandbox jobs detect removed shared job leases.
+Backend setup changes already made are not rolled back: check environment readiness again.
+
+For a greenfield project, first use Junji to prepare scope, phases and runnable verification commands.
+If the repository lacks a required check, Yokai reports the gap. Add that real project check as
+separate work, then return to Sensors. It never invents a passing script to finish the wizard.
+

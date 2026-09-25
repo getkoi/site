@@ -7,7 +7,7 @@ kind: reference
 order: 20
 ---
 
-Prepare the method files with Junji, then run `yokai`. Interactive startup handles missing setup, sensor review and phase assessment. Use the focused commands when needed.
+Prepare the method files with Junji, then run `yokai`. Interactive startup handles missing setup, sensor review and phase assessment. Use the cockpit’s Prepare control to reopen preparation.
 
 ## `yokai`
 
@@ -15,18 +15,15 @@ Junji phase driver with owned onboarding. Settings: flags → effort overrides �
 
 ```bash
 yokai [OPTIONS]
-yokai configure
-yokai sensors
-yokai assess
 yokai guidance sensors|assess|sandbox
 yokai doctor [--probe]
 yokai migrate [--prefer legacy|new]
 ```
 
-`sensors` reviews commands, smoke-runs temporary checks, then saves only after approval.
-`assess` reviews phase tiers and strategies in effort YAML. Both require an interactive terminal.
-`guidance` prints the bundled helper policy without setup. Headless execution requires a reviewed
-gate and current phase assessments.
+Interactive preparation lives in [one wizard](/yokai/docs/preparation). The former `configure`,
+`sensors` and `assess` subcommands are removed. `/yokai sensors|assess|sandbox` remain helper skill
+operations. `guidance` prints the bundled helper policy without setup. Headless execution requires
+a reviewed gate and complete phase assessments; it never opens the wizard or writes defaults.
 
 | Flag | Config file | Default / notes |
 |------|-------------|-----------------|
@@ -59,6 +56,7 @@ When `sandbox.enabled` and not `--host`, host `yokai` execs an inner supervisor 
 |-----|--------|
 | `w` | Cycle cockpit → sessions → deliverable |
 | `t` | Cycle theme |
+| `p` / Prepare | Open preparation; queue until the current phase finishes |
 | `x` | Abort in-flight phase |
 | `q` / `Esc` | Open quit confirmation; `y` confirms and kills the in-flight agent, `n` cancels. In Deliverable patch focus, `Esc` returns to the tree |
 ## Environment variables

@@ -7,7 +7,7 @@ kind: reference
 order: 20
 ---
 
-Durable sandbox settings live in **the `sandbox` mapping in `.koi/yokai.yml`** in project home. Interactive `yokai` or `yokai configure` edits this mapping. Optional `.koi/run/yokai.yml` can override individual fields for one effort. The durable file survives `/junji consolidate`.
+Durable sandbox settings live in **the `sandbox` mapping in `.koi/yokai.yml`** in project home. The Environment screen in `yokai` edits this mapping. Optional `.koi/run/yokai.yml` can override individual fields for one effort. The durable file survives `/junji consolidate`.
 
 `.koi/Dockerfile.sandbox` is the path for the coding agent CLI and gate tools in the VM ([ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md), [ADR-0028](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0028-sandbox-dockerfile-scaffold.md)). The repository owns the OCI tag; koi does not publish a stock catalog.
 
@@ -73,7 +73,7 @@ Per-run escape: `yokai --host`. That flag is not stored in this file.
 
 ## Dockerfile.sandbox
 
-When sandboxing is enabled, `yokai configure` creates `.koi/Dockerfile.sandbox` if it is missing. The recipe matches the backend and includes the agents configured in the wizard and the candidates in `tiers:`. A configuration with several agents includes an install block for each.
+When sandboxing is enabled, `yokai` creates `.koi/Dockerfile.sandbox` if it is missing. The recipe matches the backend and includes the agents configured in the wizard and the candidates in `tiers:`. A configuration with several agents includes an install block for each.
 
 Setup preserves existing Dockerfiles. It does not build the image or create `sandbox-setup.sh`.
 

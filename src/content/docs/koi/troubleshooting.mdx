@@ -17,6 +17,6 @@ Start with `yokai doctor --probe` at the repo root. For phase, sensor, and sandb
 | halts immediately, agent error | agent not configured | log agent in; OpenCode: `/connect`; `yokai doctor --probe` |
 | `doctor` working folder ✗ | no `.koi/run/` or wrong directory | repo root; `/junji begin → plan → refine` |
 | `not a git repo` | cwd not inside git | `git init` + commit |
-| unsupported agent in config | not claude/cursor/opencode/codex | choose an agent with `yokai configure` |
+| unsupported agent in config | not claude/cursor/opencode/codex | choose an agent with `yokai` |
 | legacy configuration found | old setup files need migration | run `yokai migrate`; resolve reported conflicts explicitly |
-| `tiers.medium must list at least one candidate` | empty band | add a candidate or re-run `yokai configure` |
+| `tiers.medium must list at least one candidate` | empty band | add a candidate or re-run `yokai` |

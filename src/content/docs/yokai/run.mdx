@@ -17,6 +17,9 @@ Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **
 - Interactive startup reviews missing or changed sensors; headless runs require already-reviewed scripts
 - Complete phase assessments in `.koi/run/yokai.yml`; approval through the helper is sufficient
 
+Open the [preparation wizard](/yokai/docs/preparation) from the cockpit with **p**.
+The request waits for the current phase to finish before settings become editable.
+
 ## Outcome
 
 Phases execute unattended until a halt condition or completion. Each verified phase appends one
@@ -184,11 +187,11 @@ Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/yokai/docs/tui)).
 | Symptom | Fix |
 |---------|-----|
 | preflight ✗ on launch | run `yokai doctor --probe` |
-| missing or incomplete phase assessment | save approved tier, strategy and reason through the helper or CLI; no fingerprint is required |
+| missing or incomplete phase assessment | save approved tier, strategy and reason through the helper or wizard; no fingerprint is required |
 | every phase gate red | fix the underlying failing check; review intentional sensor changes interactively |
 | halt at [gated] | expected by default; review the phase and explicitly use `--allow-gated` if authorized |
 | `cost ceiling reached` | raise or omit `--max-cost` / `--max-tokens` |
-| explicitly empty tier band | re-run `yokai configure` |
+| explicitly empty tier band | re-run `yokai` |
 | every candidate skipped | wait `retry_after_secs` (default 3600) or fix auth/quota |
 | sandbox agent not found | build `.koi/Dockerfile.sandbox`; recreate VM |
 

@@ -47,7 +47,7 @@ bash .koi/sensors/30-cargo-test.sh
 
 ## Review and changes
 
-Approval records compact fingerprints of the bar and scripts under `gate_review` in `.koi/yokai.yml`; it does not duplicate their contents. A changed script or verification section requires another interactive review. Headless startup never creates defaults or approves scripts. Readiness runs checks in the configured execution environment, including the sandbox when enabled. A genuine product-check failure stays intact. Script defects and missing prerequisites require repair before saving. Explicit removals of wrong-scope, duplicate or obsolete checks require reasons and review. Missing required checks are separate work, not permission to invent passing sensors.
+Approval records compact version-2 fingerprints of the bar, scripts and selected environment under `gate_review` in `.koi/yokai.yml`; it does not duplicate their contents. A changed script or verification section requires another review. Environment changes require re-smoke of existing scripts, without regeneration. Unchanged skill-approved metadata needs no duplicate wizard approval. Headless startup never creates defaults or approves scripts. Readiness runs checks in the configured execution environment, including the sandbox when enabled. A genuine product-check failure stays intact. Script defects and missing prerequisites require repair before saving. Explicit removals of wrong-scope, duplicate or obsolete checks require reasons and review. Missing required checks are separate work, not permission to invent passing sensors.
 
 ## Sacred rule
 

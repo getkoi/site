@@ -29,13 +29,13 @@ container --version
 ### Enable and build
 
 ```bash
-yokai configure    # interactive runtime and sandbox settings
+yokai    # interactive runtime and sandbox settings
 container build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
 ```
 
 Confirm `image:` in the `sandbox` mapping in `.koi/yokai.yml` matches that tag. Do not use `docker build` unless a Docker daemon is actually running.
 
-Choose agents in `yokai configure`; launch flags only pin the current execution.
+Choose agents in `yokai`; launch flags only pin the current execution.
 
 Linux harness ELFs (host):
 
@@ -89,7 +89,7 @@ If you see `failed to connect to the docker API` or `docker.sock: no such file`,
 ### Enable and build
 
 ```bash
-yokai configure    # interactive runtime and sandbox settings
+yokai    # interactive runtime and sandbox settings
 docker build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
 ```
 

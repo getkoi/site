@@ -11,7 +11,7 @@ Precedence: explicit CLI flag → `.koi/run/yokai.yml` → durable `.koi/yokai.y
 
 ## `.koi/yokai.yml`
 
-Reusable driver settings (including the nested `sandbox` block). Written by `yokai configure`; read by `yokai` and `yokai doctor`.
+Reusable driver settings (including the nested `sandbox` block). Written by `yokai`; read by `yokai` and `yokai doctor`.
 
 | Field | Values | Default when omitted |
 |-------|--------|----------------------|
@@ -33,7 +33,7 @@ Top-level `agent` / `model` / `effort` supply default candidates when a tier ban
 
 Read [Sessions](/yokai/docs/sessions) for the lifecycle and interruption scenarios. Use the settings below to configure that behavior.
 
-Enable `token_savings: true`, select it in `yokai configure`, or pass `yokai --token-savings`
+Enable `token_savings: true`, select it in `yokai`, or pass `yokai --token-savings`
 for one launch. Each phase shares one session for planning, implementation and sealing,
 and one for repeated reviews. Corrections return to the implementation
 session. Existing phase plans still skip Plan.
@@ -186,7 +186,7 @@ build:
 
 A **candidate** is `(agent, model, effort, speed)`. Model, effort, and speed may be omitted (that agent's defaults). Speed is an opaque per-candidate session option, not a koi enum. List order is preference: yokai walks at **turn open**; a skip (`unreachable` / `limited` / `unstable`) records a ledger skip row and tries the next. The next turn starts at the preferred again after `retry_after_secs`. All candidates skipped → Halt. Missing effort/speed is a notice, not a skip.
 
-`yokai configure` requires at least one candidate on every band. Four ordered multi-selects (Low / Medium / High / Ultra); switch Agent inside a step to mix providers. Headless startup never writes defaults; prepare settings interactively or author the documented configuration explicitly.
+`yokai` requires at least one candidate on every band. Four ordered multi-selects (Low / Medium / High / Ultra); switch Agent inside a step to mix providers. Headless startup never writes defaults; prepare settings interactively or author the documented configuration explicitly.
 
 `yokai --agent` / `--model` / `--effort` **pin** this launch and skip the walk.
 
@@ -207,11 +207,11 @@ Swarm adds no slot: split walks plan's band; workers and merge walk coder's; jud
 | Unknown role key | hard error (`deny_unknown_fields`) |
 | Permission / timeouts / `session_options` | run-global |
 
-`yokai configure` **Advanced: per-role tier lifts** is opt-in. The cockpit shows the active Agent · Model; a notice when the chosen candidate is not first in the list.
+`yokai` **Advanced: per-role tier lifts** is opt-in. The cockpit shows the active Agent · Model; a notice when the chosen candidate is not first in the list.
 
 ### `swarm:` (ADR-0045, ADR-0047, ADR-0048)
 
-Optional fan-out inside Build (each iteration of a phase assessed as `swarm`). **Omit the block to leave it off.** `yokai configure` asks whether
+Optional fan-out inside Build (each iteration of a phase assessed as `swarm`). **Omit the block to leave it off.** `yokai` asks whether
 this run may honor swarm assessments, plus the worker cap. Reconfiguration preserves fields the wizard does not expose.
 
 | Field | Default when omitted |
@@ -223,7 +223,7 @@ Fan-out runs only when `enabled` is true **and** the reviewed phase assessment s
 (or a missing tag) stays a single coder. One work item skips the fan-out. There is no `--swarm` flag.
 ## `.koi/yokai.yml` `build:`
 
-Plan → Build → Seal tuning for every phase. Written by `yokai configure`; overridable per run with `yokai --max-iters`.
+Plan → Build → Seal tuning for every phase. Written by `yokai`; overridable per run with `yokai --max-iters`.
 
 | Field | Default when omitted |
 |-------|----------------------|
@@ -304,7 +304,7 @@ phases:
     reason: Cross-module state migration with recovery invariants.
 ```
 
-Save these choices after human approval through the helper or CLI. It inherits durable guides, timeouts and sandbox
+Save these choices after human approval through the helper or wizard. It inherits durable guides, timeouts and sandbox
 preferences. `yokai --max-iters 2` overrides the iteration limit for that launch.
 `--token-savings` and `--no-token-savings` override saved token savings in either direction.
 `--agent`, `--model` and `--effort` pin the runtime candidate for the launch.
@@ -330,14 +330,14 @@ It wraps established commands; it does not invent assertions to satisfy prose. M
 checks are reported as gaps and proposed as separate work. They block saving a complete gate.
 Commit conventions, historical commits, setup and manual approvals do not become unrelated sensors.
 
-If sensors already exist, Yokai offers direct review without an agent turn. Decline the offer to
-propose changes, inspect the existing scripts against the displayed bar, and confirm their command
+If sensors already exist, the Sensors screen opens them for direct review without an agent turn.
+Inspect the existing scripts against the displayed bar, and confirm their command
 sources, coverage and prerequisites before smoke execution. Final approval records fingerprints
 without rewriting the scripts. Missing review metadata does not mean sensors are missing. Agent
 proposals remain available when checks need changes; headless startup still requires saved review.
 
 Review the exact commands before execution. Yokai validates shell syntax and smoke-runs temporary
-copies of every proposed sensor, using the normal executor from the repository root, on the host or
+copies of every proposed sensor, from the repository root with captured output and process-group cancellation, on the host or
 configured sandbox. Scripts must rely on that cwd rather than derive the root from their file path.
 No sensors or review metadata are saved until the results receive final approval. Declining either
 review leaves existing sensors intact. Temporary script copies are removed after the review.
@@ -353,14 +353,19 @@ requires a specific reason shown during review. Failure alone is never a removal
 Replaced and removed originals receive unique hidden `.before-review-*` backups in the sensor
 folder, which are not executed. Approval of setup never authorizes a human-gated phase.
 
-The durable `gate_review` mapping in `.koi/yokai.yml` contains `version: 1`, `bar_sha256` and a
-`scripts` mapping of filename to SHA-256. It stores no duplicate script bodies. Changing the
+The durable `gate_review` mapping in `.koi/yokai.yml` contains `version: 2`, `bar_sha256`, a
+`scripts` mapping of filename to SHA-256, and `environment_sha256`. It stores no duplicate script bodies. Changing the
 verification section or adding, removing or editing a sensor invalidates review; unrelated CONTEXT
-sections do not. The driver rechecks this binding during execution. Do not hand-author fingerprints.
+sections do not. The driver rechecks this binding during execution. The environment fingerprint
+binds host/sandbox, backend, selected image, Dockerfile and setup-hook contents. An environment
+change requires re-smoke and approval of the existing gate, without regeneration. Rebuilds invalidate
+environment approval before changing the image, including mutable-tag rebuilds. The helper and
+wizard share the exact metadata contract in framework ADR-0010. Use the helper's metadata calculator
+after smoke and human approval; never fabricate approval or refresh fingerprints to bypass review.
 
 ## Phase assessment
 
-`/yokai assess` and interactive `yokai assess` propose a model-capability tier and Build strategy for
+`/yokai assess` and the wizard’s Phase assessment screen propose a model-capability tier and Build strategy for
 each unfinished BACKLOG phase. Low fits mechanical edits; medium fits bounded implementation;
 high fits substantial cross-module reasoning; ultra is for unusually difficult, tightly coupled work.
 Use plain by default. Swarm needs independently mergeable work with clear ownership and integration
@@ -372,7 +377,7 @@ does not request a second approval, agent proposal or assessment fingerprint. Ju
 require the mapping. YAML choices override optional legacy heading tags and stay out of plan Markdown.
 
 Interactive setup proposes missing or incomplete assessments. Existing complete choices remain in
-use after status, plan or scope edits. Reconsider them with `/yokai assess` or explicit `yokai assess`
+use after status, plan or scope edits. Reconsider them with `/yokai assess` or the cockpit’s Prepare menu
 when scope changes warrant different choices; Yokai does not infer staleness from hashes. Explicit
 CLI assessment can review existing values without an agent and preserves unrelated settings.
 New phases need complete entries; removed or renumbered IDs require mapping cleanup.
@@ -385,7 +390,7 @@ omitted on explicit assessment saves; startup does not rewrite them. Assessment 
 ## Migrate an existing installation
 
 The Koi binary has been removed without a compatibility wrapper. Replace `koi setup` / `koi init`
-with interactive `yokai` or `yokai configure`, and `koi doctor` with `yokai doctor`.
+with interactive `yokai`, and `koi doctor` with `yokai doctor`.
 
 ```bash
 yokai migrate
@@ -411,11 +416,11 @@ after interruption accepts identical backups. A different backup is never overwr
 Migration then converts `.koi/gate-review.yml` into compact durable metadata only if the receipt
 exactly matches the current bar and scripts and does not conflict with existing metadata. It removes
 the old receipt after a successful write. A stale or conflicting receipt is retained and reported;
-`--prefer` cannot approve changed checks. Reconcile through `yokai sensors`. Ordinary headless
+`--prefer` cannot approve changed checks. Reconcile through `yokai`. Ordinary headless
 startup never migrates; interactive startup offers migration. Review and commit the resulting files.
 
 Migration leaves active plans, customized METHOD/CONTEXT, progress and sensors unchanged. It does
-not manufacture phase assessments; run interactive `yokai assess` for an existing effort.
+not manufacture phase assessments; open Phase assessment in `yokai` for an existing effort.
 To adopt new method templates, merge relevant prose deliberately, preserving custom sections and
 standing directives. `begin` never overwrites an active backlog or customized method.
 
@@ -423,3 +428,7 @@ standing directives. `begin` never overwrites an active backlog or customized me
 recovery and budget accounting. It preserves everything else under `.koi/`. The next effort inherits
 reusable settings but needs its own phase assessment and starts new accounting. Junji's free workflow
 and this convention do not depend on private Yokai implementation code; licensing changes are separate.
+
+Legacy gate migration retains exact content-review evidence but cannot prove the smoke environment.
+Version-1 metadata therefore requires one environment smoke review in the wizard or helper.
+It never silently approves changed checks or upgrades unproven environment metadata.

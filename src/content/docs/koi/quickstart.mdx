@@ -54,8 +54,8 @@ The installer builds only Yokai. Install and log in to a supported coding agent;
 yokai --once
 ```
 
-Interactive startup guides missing runtime and sandbox preferences. Its configured agent reads Junji's
-verification bar and proposes executable checks. Review the exact scripts before accepting. Yokai
+Interactive startup guides missing runtime and sandbox preferences. Choose Generate when you want the configured agent to read Junji’s
+verification bar and propose executable checks. Review the exact scripts before accepting. Yokai
 validates them, checks readiness, and offers to start the phase. Later runs reuse saved settings.
 A failing check stays intact and is reported; setup never weakens it to get a green result.
 
@@ -66,18 +66,18 @@ need the Junji skill installed. Yokai does not take raw goals or arbitrary plans
 
 ```bash
 yokai                 # reuse settings and continue
-# Optional diagnostics or reconfiguration:
+# Optional read-only diagnostics:
 yokai doctor --probe
-yokai configure    # interactive runtime and sandbox settings
 ```
 
-Bare Yokai halts at `[gated]` phases. `--allow-gated` explicitly authorizes them for one invocation;
+Use **Prepare** (`p`) in the cockpit to reopen the [wizard](/yokai/docs/preparation);
+it waits for the current phase to finish. Bare Yokai halts at `[gated]` phases. `--allow-gated` explicitly authorizes them for one invocation;
 standing directives still apply. Configuration, assessments, gate review and plan import do not grant that approval.
 
 `--headless` and noninteractive startup never prompt or write setup defaults. Prepare and review the
-gate interactively and save phase choices approved through the helper or CLI. Assessment YAML
+gate interactively and save phase choices approved through the helper or wizard. Assessment YAML
 requires no second approval or fingerprint. Changed verification commands or scripts require
-`yokai sensors`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks and final approval.
+`yokai`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks and final approval.
 
 Settings persist in `.koi/yokai.yml`; `.koi/run/yokai.yml` is an optional differences file.
 Consolidation removes effort overrides, sessions and accounting but preserves reusable settings,
@@ -87,5 +87,5 @@ sensors and sandbox artifacts. See [configuration](/yokai/docs/configuration).
 
 There is no replacement Koi binary. Run `yokai migrate` for legacy configuration, then `yokai` to review
 the gate and phase assessments. Matching legacy receipts become compact gate fingerprints in durable
-settings; stale receipts require review. Migration preserves active plans, customized method documents, progress and sensors.
+settings; migrated receipts need an environment smoke review, and stale receipts need reconciliation. Migration preserves active plans, customized method documents, progress and sensors.
 [Migration details](/koi/docs/cli).
