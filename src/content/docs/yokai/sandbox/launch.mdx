@@ -7,9 +7,9 @@ kind: how-to
 order: 40
 ---
 
-Run yokai inside a named Linux VM. Concepts: [Sandboxing overview](/yokai/docs/sandbox). Declaration and Dockerfile rules: [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml). Copy-ready pairs: [/yokai/recipes](/yokai/recipes#sandboxes).
+Run yokai inside a named Linux VM. Concepts: [Sandboxing overview](/yokai/docs/sandbox). Declaration and Dockerfile rules: [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml). Copy-ready pairs: [/yokai/recipes](/yokai/recipes#sandboxes).
 
-Host-first (sandbox off) is [Quickstart](/koi/docs/quickstart). This page assumes you already have `koi` and `yokai` on PATH.
+Host-first (sandbox off) is [Quickstart](/koi/docs/quickstart). This page assumes you already have `yokai` on PATH.
 
 Pick a backend, then follow that section. Recreate steps are at the end (both backends).
 
@@ -29,13 +29,13 @@ container --version
 ### Enable and build
 
 ```bash
-koi setup --sandbox on --backend apple --agent opencode --yes
+yokai    # interactive runtime and sandbox settings
 container build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
 ```
 
-Confirm `image:` in `.koi/sandbox.yml` matches that tag. Do not use `docker build` unless a Docker daemon is actually running.
+Confirm `image:` in the `sandbox` mapping in `.koi/yokai.yml` matches that tag. Do not use `docker build` unless a Docker daemon is actually running.
 
-`--agent` only steers the Dockerfile recipe. The driver agent is set by `koi init`.
+Choose agents in `yokai`; launch flags only pin the current execution.
 
 Linux harness ELFs (host):
 
@@ -43,29 +43,30 @@ Linux harness ELFs (host):
 ./install.sh
 ```
 
-On macOS this builds `yokai-linux-<arch>` / `koi-linux-<arch>` under `~/.local/share/koi/bin/` via `scripts/build-linux-artifacts.sh`.
+On macOS this builds `yokai-linux-<arch>` under `~/.local/share/koi/bin/` via `scripts/build-linux-artifacts.sh`.
 
 ### First run and in-VM auth
 
 ```bash
-koi doctor --probe
+yokai doctor --probe
 yokai
 ```
 
-The first create uses default VM size **8g / 4 cpus** unless you override it in `sandbox.yml` ([ADR-0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md)). Default name: `yokai-<repo-basename>`.
+The first create uses default VM size **8g / 4 cpus** unless you override it in the `sandbox` mapping of `.koi/yokai.yml` ([ADR-0026](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0026-apple-sandbox-vm-sizing.md)). Default name: `yokai-<repo-basename>`.
 
 ```bash
 container exec -it yokai-<repo> opencode
 # /connect — configure provider, then exit
 ```
 
-Re-run `yokai` / `koi doctor --probe` after in-VM auth. A green host auth probe does not replace `/connect` inside the container.
+Re-run `yokai` / `yokai doctor --probe` after in-VM auth. A green host auth probe does not replace `/connect` inside the container.
 
 Optional sizing:
 
 ```yaml
-memory: 8g
-cpus: 4
+sandbox:
+  memory: 8g
+  cpus: 4
 ```
 
 If yokai reconnects to an undersized existing VM, it prints a warning and recreate commands. It does not auto-delete the container.
@@ -88,7 +89,7 @@ If you see `failed to connect to the docker API` or `docker.sock: no such file`,
 ### Enable and build
 
 ```bash
-koi setup --sandbox on --backend docker --agent opencode --yes
+yokai    # interactive runtime and sandbox settings
 docker build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
 ```
 
@@ -105,7 +106,7 @@ Linux harness ELFs: `./install.sh` as above.
 ### First run
 
 ```bash
-koi doctor --probe
+yokai doctor --probe
 yokai
 ```
 
@@ -131,13 +132,13 @@ yokai
 ## Escape hatch
 
 ```bash
-yokai --host          # supervisor on the host despite sandbox.yml
+yokai --host          # supervisor on the host despite saved sandbox settings
 ```
 
 Optional `.koi/sandbox-setup.sh` runs once per sandbox for extras. Bake the agent in the Dockerfile; the hook is not the primary install path. Detail: [Host & escape](/yokai/docs/sandbox/host-and-escape).
 
 ## Next
 
-- [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml)
+- [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml)
 - [Cheatsheet](/yokai/docs/cheatsheet)
 - [Troubleshooting](/yokai/docs/troubleshooting)

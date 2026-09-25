@@ -208,7 +208,7 @@ Do not put multi-line samples in Code.`,
     usage: `import { Code, Text } from "@/dotto/components";
 
 <Text>
-  Inline <Code>koi doctor --probe</Code>.
+  Inline <Code>yokai doctor --probe</Code>.
 </Text>`,
   },
   "code-block": {
@@ -218,7 +218,7 @@ Fenced MDX \`\`\` stays MdxPre so Shiki style strings do not hydrate through a c
     usage: `import { CodeBlock } from "@/dotto/components";
 
 <CodeBlock
-  code="koi doctor --probe"
+  code="yokai doctor --probe"
   language="bash"
   title="probe"
   width="100%"

@@ -43,8 +43,12 @@ Header `Σ` and ledger remain authoritative for cost.
 
 ### Phase rail
 
+The phase list shows tiers and strategies from the resolved effort YAML, falling back to legacy
+heading values only where no override exists. These are the same phase choices used by execution.
+Progress refreshes preserve them; changing launch settings requires restarting Yokai.
+
 Under the gauge, a thin strip of stations: `plan → coder → sensors → judge → seal → gate`. When the
-live phase actually fans out (`swarm.enabled` and `[swarm]`), the rail adds
+live phase actually fans out (`swarm.enabled` and the resolved phase strategy is `swarm`), the rail adds
 `split → workers → merge` (and `judge-split → judge-workers → judge-merge`). Later iterations replay
 those swarm stations. Recovery mutes the strip.
 While `workers` (or `judge-workers`) is the current station, the label is `workers 3/5` (still

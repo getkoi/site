@@ -7,114 +7,49 @@ kind: hub
 order: 10
 ---
 
-Use koi to carry a large engineering project across coding-agent sessions. It works with your existing repository and agent. Start by preparing the work with Junji, then let Yokai run and verify one phase.
+Koi is the product umbrella and documented `.koi/` convention for engineering work that spans agent
+sessions. Junji is the free method. Yokai optionally drives prepared work and verifies it on disk.
+There is no Koi executable and no shared bootstrap layer to install.
 
-[Run your first phase](/koi/docs/quickstart). You can return here for the architecture and terminology.
+## Choose an entry point
 
-The filesystem is durable memory. The context window is a disposable cache. A large effort becomes an ordered list of small phases. Each phase is verified on disk (a passing gate and a real commit), never from the agent's self-report.
+**Junji alone:** install the skill and run `/junji begin`. Plan and refine the effort, then use `next`
+to implement, run the documented verification commands and commit each phase. Sensor scripts and runtime
+model choices are optional. [Start with Junji](/koi/docs/quickstart#junji-alone).
 
-## Pieces
-
-Each piece works alone. Together they run long agent work.
-
-| Piece | What it is |
-|-------|------------|
-| **junji** | The **method** — a coding-agent skill that runs a big effort from an on-disk working folder |
-| **koi** (CLI) | The **setup CLI** — `koi setup` scaffolds the durable project home; `koi init` and `koi doctor` write and check driver config |
-| **yokai** (CLI) | The **driver** — a fail-fast supervisor that runs phases through an agent (Plan → Build → Seal, optional recovery) and verifies each one on disk |
-| **tori** | The **ACP connector port** yokai uses to talk to coding agents |
-
-State lives under `.koi/` at the repo root, git-committed, one junji project per repo.
-
-## When to use koi
-
-Use koi when the work is too large for one sitting or one context window (ports, migrations, large refactors, greenfield builds) and you want:
-
-- Phases you can verify independently, each with an objective gate: every `.koi/sensors/*.sh` exits 0.
-- A durable position on disk so a fresh agent session, or an unattended driver, can pick up without chat history.
-- Fail-fast supervision that checks the on-disk contract, not the agent's self-report.
-
-Skip koi for one-off edits, spikes with no verification bar, or work with no automatable sensors.
-
-## Two folders
-
-```
-.koi/                    project home — survives consolidate
-  sensors/                 atomic *.sh scripts = verification bar (durable)
-  sandbox.yml              optional isolation declaration (durable)
-  run/                     working folder — consolidate deletes ONLY this
-    config.yml             driver prefs (agent, model, recovery, …)
-    CONTEXT.md             execution contract (stable)
-    PLAN.md                strategy (stable)
-    METHOD.md              per-phase how-to (stable)
-    BACKLOG.md             living position + phase list
-    phases/                one plan per phase (append-only)
-```
-
-The **project home** (`.koi/`) holds sensors and sandbox config. The **working folder** (`.koi/run/`) holds plans, the backlog, and driver run prefs. The junji skill owns the markdown convention. The driver owns `config.yml`, `ledger.jsonl`, and artifacts like `FEEDBACK.md`.
+**Junji-prepared work with Yokai:** run `yokai` in the prepared repository. Interactive startup handles
+missing settings and reviewed gate preparation, then offers to start. Saved settings carry across
+efforts. [Add Yokai](/koi/docs/quickstart#add-yokai-to-a-prepared-project).
 
 ```mermaid
 flowchart LR
-  accTitle: Durable project home and removable run state
-  accDescr: The project home keeps sensors and sandbox configuration across efforts. Each effort has plans and progress in the run folder. Consolidate removes only the run folder.
-  home[".koi/ project home"] --> checks["Sensors and sandbox configuration"]
-  home --> run[".koi/run/ current effort"]
-  run --> state["Plans, backlog, driver records"]
-  run --> finish["consolidate removes run/ only"]
-  checks --> retained["Keep for the next effort"]
+  accTitle: Two ways to execute a prepared Junji project
+  accDescr: Junji prepares repository files. A human may continue with Junji or use optional Yokai automation. Both update shared progress and obey verification and human gates.
+  J["Junji skill"] --> P["Prepared .koi/run/ files"]
+  P --> M["Manual Junji next"]
+  P --> Y["Optional Yokai execution"]
+  M --> V["Verify and commit"]
+  Y --> V
 ```
 
-The project home survives the end of an effort. Start the next effort with the same sensors and sandbox configuration.
+The filesystem is durable memory. A new session reads CONTEXT, METHOD and BACKLOG to recover the
+binding facts, execution protocol and position. Yokai can consume these files without the skill installed.
+It does not accept a raw goal or replace Junji's planning work.
 
-## Six terms
+## What survives an effort
 
-| Term | Meaning |
-|------|---------|
-| **Phase** | One coherent, independently-verifiable unit of work in the backlog |
-| **Sensor** | One script `.koi/sensors/<name>.sh` — single concern, `exit 0` means pass |
-| **Gate** | Aggregate verdict: green iff every sensor passes (filename order, fail-fast). Not a file on disk |
-| **Contract** | After a phase: backlog `[done]`, new commit, gate green, clean tree — verified by yokai, never self-report |
-| **Project home** | Durable `.koi/` (`sensors/`, `sandbox.yml`) — survives `consolidate` |
-| **Working folder** | Volatile `.koi/run/` — plans, backlog, driver prefs; `consolidate` deletes only this |
+`.koi/run/` contains method documents, optional effort overrides, sessions, recovery and accounting.
+`consolidate` removes the entire folder after all phases finish and the human authorizes the collapse.
+The rest of `.koi/` survives: reusable Yokai settings, optional sensors, reviewed gate and sandbox recipe.
 
-Never weaken a sensor to make the gate pass. Flag irreversible steps with `[gated]`. Bare `yokai` pre-authorizes them. `yokai --guarded` halts instead.
+Both paths preserve human gates, dependency order and standing directives. Importing a plan or reviewing
+sensors never approves gated actions. [Project home](/koi/docs/project-home).
 
-## How the pieces fit
+## Continue reading
 
-```mermaid
-flowchart TD
-  accTitle: How koi's pieces fit
-  accDescr: A human or agent uses junji to prepare shared project files and sensors. Junji Next can execute a phase directly, or yokai can drive phases unattended. Both rely on the on-disk contract rather than an agent's self-report.
-  user["You — human or agent"] --> junji["junji verbs — plan, refine, next"]
-  junji --> files[".koi/run/ — shared plans and state"]
-  junji --> sensors[".koi/sensors/ — durable verification scripts"]
-  files --> direct["junji next — one phase"]
-  files --> driver["yokai — unattended driver"]
-  driver --> acts["Plan → Build → Seal"]
-  direct --> check["On-disk contract: done, commit, green gate, clean tree"]
-  acts --> check
-  sensors --> check
-  check -->|Miss with recovery enabled| recovery["yokai recovery — Repair / Diagnose / Fix"]
-  recovery -->|Re-verify| check
-```
-
-junji is the method. It plans one phase and can execute it through `next` in a single agent session. yokai loops phases unattended and checks the contract after each one. You can stop at junji, or add yokai later. Both read the same `.koi/run/` files.
-
-Bare `yokai` loops until halt or completion. It pre-authorizes gated phases. Use `yokai --guarded` when you want a non-interactive stop before each gated phase.
-
-## Where to go next
-
-| Goal | Start here |
-|------|------------|
-| Install and run your first project | [Quickstart](/koi/docs/quickstart) |
-| Learn the junji method verb by verb | [junji hub](/junji/docs) → [Guide](/junji/docs/guide) |
-| Install or invoke the agent skills | [junji skills reference](/junji/docs/skills) |
-| Run phases unattended | [yokai hub](/yokai/docs) → [Run](/yokai/docs/run) |
-| Copy a verification script | [Recipes](/yokai/recipes) |
-| Wire the verification bar | [Sensors](/yokai/docs/sensors) |
-| Run inside a Linux VM sandbox | [Sandbox overview](/yokai/docs/sandbox) |
-| Understand Plan → Build → Seal | [Build](/yokai/docs/build) |
-| Understand recovery | [Recovery](/yokai/docs/recovery) |
-| Deep glossaries and ADRs | [Reference glossaries](/koi/docs/glossary) and [decision records](/koi/docs/decisions) |
-
-Precise driver vocabulary: [yokai CONTEXT.md](https://github.com/getkoi/koi/blob/main/crates/yokai/CONTEXT.md). Method vocabulary: [junji CONTEXT.md](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md).
+- [Quickstart](/koi/docs/quickstart): method first, optional automation.
+- [Junji guide](/junji/docs/guide): all ten verbs.
+- [Yokai run guide](/yokai/docs/run): runtime and diagnostics.
+- [Settings and migration](/yokai/docs/configuration): durable preferences and effort differences.
+- [Migration from the Koi CLI](/koi/docs/cli): preserve existing work.
+- [Sensors](/yokai/docs/sensors) and [sandbox](/yokai/docs/sandbox): optional runtime infrastructure.

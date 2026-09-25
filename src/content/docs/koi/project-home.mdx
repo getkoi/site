@@ -7,12 +7,26 @@ kind: reference
 order: 30
 ---
 
-The durable project home belongs to koi. [junji](/junji/docs) writes the working plan; [yokai](/yokai/docs/configuration) uses run settings.
+The public `.koi/` convention separates reusable project infrastructure from one effort's state.
+Junji creates its own folders and copies its own templates. Yokai is optional.
 
-## Project home vs working folder
+```text
+.koi/
+  yokai.yml?              # reusable settings, sandbox and gate fingerprints
+  sensors/*.sh            # optional for Junji, reviewed executable gate for Yokai
+  Dockerfile.sandbox?     # separate image recipe
+  sandbox-setup.sh?       # optional once-per-sandbox hook
+  run/
+    CONTEXT.md            # facts, verification commands, standing directives
+    METHOD.md             # copied execution protocol
+    PLAN.md               # rationale
+    BACKLOG.md            # ordered phases, progress, human gates
+    phases/               # phase plans and outcomes
+    yokai.yml?            # reviewed phase assessments and effort differences
+    ledger.jsonl          # runtime accounting, with sessions/recovery alongside
+```
 
-**Project home** is `.koi/` at the repo root. It is durable and survives `/junji consolidate`.
-
-**Working folder** is `.koi/run/`. It holds volatile junji and driver scaffolding, and `consolidate` removes only this subtree (`git rm -r .koi/run/`).
-
-The full tree lives on [Start here](/koi/docs#two-folders). Framework ADR: [0004: project home vs run](https://github.com/getkoi/koi/blob/main/docs/adr/0004-project-home-and-run-working-folder.md). Use `--working-folder` to point at the volatile folder (default `.koi/run`).
+`consolidate` removes all of `.koi/run/` after producing the repo-native deliverable. Everything else
+under `.koi/` survives. The next effort inherits reusable settings, needs fresh phase assessments and starts fresh accounting.
+These are versioned project files. Neither path needs private Yokai source to understand the method
+handoff. [Settings](/yokai/docs/configuration) · [Migration](/koi/docs/cli)

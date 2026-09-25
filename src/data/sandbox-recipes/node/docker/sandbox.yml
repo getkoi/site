@@ -1,5 +1,0 @@
-# .koi/sandbox.yml — docker backend, node stack
-enabled: true
-backend: docker
-image: koi-myproj-sandbox  # tag built from .koi/Dockerfile.sandbox
-# name: yokai-myproj

@@ -7,77 +7,57 @@ kind: reference
 order: 10
 ---
 
-First set up the repository using the [koi cheatsheet](/koi/docs/cheatsheet).
+Prepare a project with `/junji begin → plan → refine`, then run Yokai. It consumes the copied
+repository documents; the execution machine does not need the Junji skill installed.
 
-## Doctor & run
+## Run and inspect
 
-Before launching Yokai, finish `/junji plan` and `/junji refine` in your coding agent. The run needs a populated backlog and working sensors.
+Bare `yokai` opens missing preparation or enters the cockpit. Press **p** to reopen the wizard;
+while a phase runs, preparation waits for its boundary. Review sensors, edit phase rows and manage
+the environment there. `/yokai` helper operations remain available.
 
 ```bash
-koi doctor
-koi doctor --probe
-yokai          # or: yokai --once
-yokai --guarded
-yokai --host   # force host even if sandbox enabled
-yokai --headless
+yokai --once          # guided missing setup, review checks, then offer to start
+yokai                 # reuse settings and continue
+yokai doctor --probe  # optional diagnostics
+yokai --headless      # requires saved settings and a reviewed gate and current assessments; never onboards
+yokai --host          # bypass configured sandbox for this launch
 yokai --max-cost 5.00
 yokai --max-iters 3
-yokai --theme hiru   # yoru | hiru | terminal  (yoi and asa alias to yoru)
+yokai --theme hiru
+yokai --allow-gated   # explicit human-gate authorization; standing directives still apply
 ```
 
 ```bash
-# develop without installing (repo root)
-cargo run -p koi -- doctor --probe
-cargo run -p yokai --
+# Existing legacy configuration:
+yokai migrate
+# Develop from the framework checkout:
+cargo run -p yokai -- doctor --probe
 ```
-## Sensors
 
-Verification bar scripts are in `.koi/sensors/` and are not duplicated here.
-See [sensors](/yokai/docs/sensors) and [recipes](/yokai/recipes).
+## Sensors and settings
+
+Reusable settings live in `.koi/yokai.yml`, with reviewed phase assessments and effort differences in `.koi/run/yokai.yml`.
+[Configuration](/yokai/docs/configuration) explains nested inheritance and reviewed phase assessments.
 
 ```bash
-# smoke one script (driver runs all via bash, sorted by filename)
 bash .koi/sensors/30-cargo-test.sh
 ```
-## Sandbox: Apple
+
+Changing a script or the verification bar requires another interactive review. A valid failing
+check remains intact. [Sensors](/yokai/docs/sensors) · [Recipes](/yokai/recipes).
+
+## Sandbox
+
+Run `yokai` to select the backend and image. Build the repo-owned recipe:
 
 ```bash
+# Apple:
 container system start
-koi setup --sandbox on --backend apple --agent opencode
-koi init                # agent: opencode
-container build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
-# ensure .koi/sandbox.yml image: matches
-koi doctor --probe
-yokai
-# first time: auth inside the VM
-container exec -it yokai-<repo> opencode   # then /connect
+container build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
+# Docker:
+docker build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
 ```
 
-```bash
-# recreate after image rebuild / agent change
-container stop yokai-<repo> && container rm yokai-<repo>
-yokai
-```
-
-Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch#apple-container).
-## Sandbox: Docker sbx
-
-```bash
-# Docker Desktop must be running (docker.sock present)
-sbx login
-koi setup --sandbox on --backend docker --agent opencode
-koi init                # agent: opencode
-docker build -f .koi/Dockerfile.sandbox -t koi-<repo>-sandbox .
-# ensure .koi/sandbox.yml image: matches
-# optional: sbx secret set -g openai   # or anthropic / openrouter / …
-koi doctor --probe
-yokai
-```
-
-```bash
-# recreate after image rebuild
-sbx rm yokai-<repo>       # exact flag/name: see sbx --help
-yokai
-```
-
-Walkthrough: [Launch a sandbox](/yokai/docs/sandbox/launch#docker-sandboxes).
+Set the matching `sandbox.image` in `.koi/yokai.yml`. Recreate an existing named sandbox after
+rebuilding its image. [Sandbox launch](/yokai/docs/sandbox/launch).

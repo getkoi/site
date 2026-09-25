@@ -1,21 +1,13 @@
 import { Button } from "@astryxdesign/core/Button";
 import { AppLink } from "../AppLink";
 
-const fullRun = `npx skills add getkoi/koi
-./install.sh
+const fullRun = `npx skills add getkoi/koi --skill junji
 
-# in your project repository
-koi setup --yes --sandbox off
-koi init
-
-# in your coding agent
+# in your coding agent, from your project
 /junji begin
 /junji plan
 /junji refine
-
-# back in the shell
-koi doctor --probe
-yokai --once`;
+/junji next`;
 
 export default function FirstRun() {
   return (
@@ -27,8 +19,8 @@ export default function FirstRun() {
             <h2 id="first-run-title">Give koi one phase.</h2>
           </div>
           <span>
-            Install the method and CLIs, prepare the repository, probe the agent, then
-            let yokai drive exactly one phase.
+            Install Junji and work through one phase in your coding agent.
+            Add Yokai whenever you want automated execution.
           </span>
         </header>
 
@@ -38,28 +30,28 @@ export default function FirstRun() {
               <span>01</span>
               <div>
                 <b>Install</b>
-                <small>skills + two CLIs</small>
+                <small>the free Junji skill</small>
               </div>
             </li>
             <li>
               <span>02</span>
               <div>
                 <b>Prepare</b>
-                <small>project home + phases</small>
+                <small>context + phases</small>
               </div>
             </li>
             <li>
               <span>03</span>
               <div>
-                <b>Probe</b>
-                <small>structure + agent auth</small>
+                <b>Verify</b>
+                <small>document runnable checks</small>
               </div>
             </li>
             <li>
               <span>04</span>
               <div>
-                <b>Drive once</b>
-                <small>one phase, then exit</small>
+                <b>Execute</b>
+                <small>one phase with /junji next</small>
               </div>
             </li>
           </ol>
@@ -77,31 +69,7 @@ export default function FirstRun() {
               </button>
             </div>
             <pre>
-              <code>
-                <span>npx skills add getkoi/koi</span>
-                {"\n"}
-                <span>./install.sh</span>
-                {"\n\n"}
-                <i># in your project repository</i>
-                {"\n"}
-                <span>koi setup --yes --sandbox off</span>
-                {"\n"}
-                <span>koi init</span>
-                {"\n\n"}
-                <i># in your coding agent</i>
-                {"\n"}
-                <span>/junji begin</span>
-                {"\n"}
-                <span>/junji plan</span>
-                {"\n"}
-                <span>/junji refine</span>
-                {"\n\n"}
-                <i># back in the shell</i>
-                {"\n"}
-                <span>koi doctor --probe</span>
-                {"\n"}
-                <strong>yokai --once</strong>
-              </code>
+              <code>{fullRun}</code>
             </pre>
             <p className="koi-first-run__status" data-copy-status="" aria-live="polite"></p>
           </div>
@@ -109,10 +77,10 @@ export default function FirstRun() {
 
         <footer className="koi-first-run__actions">
           <div>
-            <b>Want the method only?</b>
+            <b>Ready to automate?</b>
             <span>
-              Stop after <code>npx skills add getkoi/koi</code> and drive phases with
-              <code>/junji next</code>.
+              Install Yokai with <code>./install.sh</code> from the framework checkout,
+              then run <code>yokai --once</code> in your prepared repository.
             </span>
           </div>
           <Button
@@ -126,9 +94,8 @@ export default function FirstRun() {
 
       <div className="koi-first-run__footnote reveal">
         <p>
-          <strong>One name, two scopes.</strong> koi is the product and
-          <code>koi</code> is its setup CLI. The CLI creates project-home files;
-          <code>yokai</code> drives prepared phases.
+          <strong>Two entry points.</strong> koi is the framework. Junji is its standalone
+          method; Yokai owns runtime setup, gate review and automated execution.
         </p>
         <p>
           <strong>Under the floor:</strong> tori is the shared ACP connector port used

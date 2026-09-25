@@ -18,16 +18,16 @@ Overview: [Sandboxing](/yokai/docs/sandbox). CLI flags: [Reference CLI](/yokai/d
 yokai --host
 ```
 
-When `.koi/sandbox.yml` has `enabled: true`, `--host` skips the sandbox launcher and runs the
+When the `sandbox` mapping in `.koi/yokai.yml` has `enabled: true`, `--host` skips the sandbox launcher and runs the
 supervisor on the host ([ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md),
 [ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md)).
 Use it for debugging, or when sandbox tooling is unavailable.
 
-`--host` is a per-run launch flag. It is never written to `config.yml` or `sandbox.yml`.
+`--host` is a per-run launch flag. It is never written to `yokai.yml`.
 
 Alternatives:
 
-- Set `enabled: false` in `.koi/sandbox.yml` for a durable host-first project.
+- Set `enabled: false` in the `sandbox` mapping in `.koi/yokai.yml` for a durable host-first project.
 - Fix the backend CLI (`sbx login`, `container system start`) instead of permanently forcing host.
 
 ## Inner supervisor env
@@ -80,7 +80,6 @@ Before exec, the launcher ensures Linux ELFs exist on the host, then copies them
 
 ```
 ${KOI_DATA_DIR:-$HOME/.local/share/koi}/bin/yokai-linux-<arch>
-${KOI_DATA_DIR:-$HOME/.local/share/koi}/bin/koi-linux-<arch>
 ```
 
 `<arch>` is `aarch64` or `x86_64` (matches `uname -m`, with `arm64` mapped to `aarch64`).
@@ -101,7 +100,7 @@ Override: `KOI_LINUX_BUILD_BACKEND=docker|sbx|container`. Data dir override: `KO
 
 ## Host doctor vs in-VM checks
 
-`koi doctor` structural checks run on the host when sandbox is enabled and the process is not
+`yokai doctor` structural checks run on the host when sandbox is enabled and the process is not
 already inner (`YOKAI_SANDBOX_INNER` unset):
 
 | Check | Host doctor | Notes |
@@ -114,7 +113,7 @@ already inner (`YOKAI_SANDBOX_INNER` unset):
 | `sandbox Dockerfile` | ✓ / ⚠ | Missing file warns; image may still work |
 | `sandbox setup` | ✓ | If `.koi/sandbox-setup.sh` exists |
 
-With **`koi doctor --probe`** additionally:
+With **`yokai doctor --probe`** additionally:
 
 | Check | Where | Notes |
 |-------|-------|-------|
@@ -146,7 +145,7 @@ tooling parity and co-location, not containment.
 
 ## Related
 
-- [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml)
+- [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml)
 - [Launch](/yokai/docs/sandbox/launch)
 - [Troubleshooting](/yokai/docs/troubleshooting)
 - [yokai run](/yokai/docs/run): supervisor loop on host or inner

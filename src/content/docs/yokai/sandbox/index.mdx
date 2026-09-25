@@ -7,7 +7,7 @@ kind: hub
 order: 10
 ---
 
-Run Yokai in a Linux VM when your project needs a reproducible environment. Enable the sandbox in `.koi/sandbox.yml` and declare the image to use. Yokai creates or reuses the named VM, copies the Linux harness binaries, runs the optional setup hook once, and starts the supervisor inside it.
+Run Yokai in a Linux VM when your project needs a reproducible environment. Enable the sandbox in the `sandbox` mapping in `.koi/yokai.yml` and declare the image to use. Yokai creates or reuses the named VM, copies the Linux harness binaries, runs the optional setup hook once, and starts the supervisor inside it.
 
 <details>
 <summary>How the launcher starts the supervisor</summary>
@@ -16,9 +16,9 @@ The host uses the declared OCI `image:` and copies Linux `yokai` and `koi` binar
 
 </details>
 
-The repository owns the OCI image (coding agent + gate tools baked in via `.koi/Dockerfile.sandbox`). koi does not ship a framework image catalog. Copy-ready `sandbox.yml` + `Dockerfile.sandbox` pairs live at [/yokai/recipes](/yokai/recipes#sandboxes).
+The repository owns the OCI image (coding agent + gate tools baked in via `.koi/Dockerfile.sandbox`). koi does not ship a framework image catalog. Copy-ready `yokai.yml` + `Dockerfile.sandbox` pairs live at [/yokai/recipes](/yokai/recipes#sandboxes).
 
-Sandbox files live in **project home** and survive `/junji consolidate`. Driver prefs stay in `.koi/run/config.yml`. There is no `sandbox:` block there. Layout: [Start here](/koi/docs).
+Sandbox files live in **project home** and survive `/junji consolidate`. Driver prefs stay in `.koi/yokai.yml`. There is no `sandbox:` block there. Layout: [Start here](/koi/docs).
 
 ```mermaid
 flowchart LR
@@ -32,7 +32,7 @@ flowchart LR
 
   repo -->|"build + tag"| image
   host -->|"ensure from image:"| vm
-  host -->|"copy yokai-linux / koi-linux"| vm
+  host -->|"copy yokai-linux"| vm
   vm --> inner
 ```
 
@@ -62,7 +62,7 @@ Use sandbox mode for a reproducible Linux gate environment and co-located agent 
 | Doc | Topic |
 |-----|--------|
 | [Launch](/yokai/docs/sandbox/launch) | Enable, build, first run, recreate (Apple and Docker) |
-| [sandbox.yml and image](/yokai/docs/sandbox/sandbox-yml) | Declaration fields, Dockerfile USER rules, agent bake |
+| [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml) | Declaration fields, Dockerfile USER rules, agent bake |
 | [Host & escape](/yokai/docs/sandbox/host-and-escape) | `--host`, setup marker, mount, artifacts |
 | [Troubleshooting](/yokai/docs/troubleshooting) | Symptom → fix |
 | [Quickstart](/koi/docs/quickstart) | Host-first first run |
