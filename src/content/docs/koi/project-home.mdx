@@ -12,9 +12,8 @@ Junji creates its own folders and copies its own templates. Yokai is optional.
 
 ```text
 .koi/
-  yokai.yml?              # reusable runtime and sandbox settings
+  yokai.yml?              # reusable settings, sandbox and gate fingerprints
   sensors/*.sh            # optional for Junji, reviewed executable gate for Yokai
-  gate-review.yml?         # exact reviewed bar and script contents
   Dockerfile.sandbox?     # separate image recipe
   sandbox-setup.sh?       # optional once-per-sandbox hook
   run/
@@ -23,11 +22,11 @@ Junji creates its own folders and copies its own templates. Yokai is optional.
     PLAN.md               # rationale
     BACKLOG.md            # ordered phases, progress, human gates
     phases/               # phase plans and outcomes
-    yokai.yml?            # optional effort differences and phase execution overrides
+    yokai.yml?            # reviewed phase assessments and effort differences
     ledger.jsonl          # runtime accounting, with sessions/recovery alongside
 ```
 
 `consolidate` removes all of `.koi/run/` after producing the repo-native deliverable. Everything else
-under `.koi/` survives. The next effort inherits reusable settings and starts fresh accounting.
+under `.koi/` survives. The next effort inherits reusable settings, needs fresh phase assessments and starts fresh accounting.
 These are versioned project files. Neither path needs private Yokai source to understand the method
 handoff. [Settings](/yokai/docs/configuration) · [Migration](/koi/docs/cli)

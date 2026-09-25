@@ -17,7 +17,7 @@ Add one shell script per check under `.koi/sensors/`. Each script passes when it
 └── 40-coverage.sh
 ```
 
-Interactive `yokai` asks its configured agent to propose sensors from CONTEXT and existing project checks. It validates shell syntax and shows the exact scripts and bar for human review before writing them. The optional [yokai skill](/junji/docs/skills) can help author checks; installation is not required. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
+Interactive `yokai` asks its configured agent to propose sensors from CONTEXT and existing project checks. It identifies real command sources and coverage, reports missing required checks, and shows exact commands before smoke-running temporary scripts in the selected environment. Only final approval saves the gate. The optional [yokai skill](/yokai/docs/skill) can help author checks; installation is not required. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
 
 Junji by itself runs the commands documented in CONTEXT. Sensor files are a Yokai execution requirement.
 
@@ -43,11 +43,11 @@ bash .koi/sensors/30-cargo-test.sh
 
 ## Review and changes
 
-Approval records the exact bar and scripts in `.koi/gate-review.yml`. A changed script or verification section requires another interactive review. Headless startup never creates defaults or approves scripts. Readiness runs checks in the configured execution environment, including the sandbox when enabled. A failing check stays intact; fix the failure instead of lowering the bar.
+Approval records compact fingerprints of the bar and scripts under `gate_review` in `.koi/yokai.yml`; it does not duplicate their contents. A changed script or verification section requires another interactive review. Headless startup never creates defaults or approves scripts. Readiness runs checks in the configured execution environment, including the sandbox when enabled. A genuine product-check failure stays intact. Script defects and missing prerequisites require repair before saving. Explicit removals of wrong-scope, duplicate or obsolete checks require reasons and review. Missing required checks are separate work, not permission to invent passing sensors.
 
 ## Sacred rule
 
-Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/junji/docs/skills) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
+Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/yokai/docs/skill) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
 
 ## Where to go next
 

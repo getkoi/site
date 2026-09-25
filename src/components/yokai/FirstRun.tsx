@@ -49,7 +49,7 @@ npx skills add getkoi/koi --skill junji`}
             <span>03</span>
             <div>
               <h3>Review setup, then drive once</h3>
-              <p>Interactive startup guides setup, reviews sensors and offers to start.</p>
+              <p>Interactive startup guides setup, reviews sensors and phase assessments, and offers to start.</p>
               <pre>
                 <code>
                   {`yokai --once`}

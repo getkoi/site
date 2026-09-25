@@ -13,9 +13,9 @@ Use swarms to run independent work items in parallel within one phase. Yokai spl
 
 Use `yokai configure` to allow swarms and choose a worker cap, or edit the `swarm` settings in [configuration](/yokai/docs/configuration). Swarms are off when omitted. The default worker cap is 8.
 
-Both conditions must hold: `swarm.enabled` is true and the current phase has a `[swarm]` tag. Junji `refine` writes a `[plain]` or `[swarm]` strategy on each phase heading.
+Both conditions must hold: `swarm.enabled` is true and the reviewed phase assessment selects `strategy: swarm` in `.koi/run/yokai.yml`. Use `/yokai assess` to propose the mapping and interactive `yokai assess` to review it. Plain is the default proposal; swarm needs independently mergeable work with clear ownership. Keep execution choices out of plan Markdown and ordinary headings.
 
-A `[plain]` phase or an older heading without a strategy stays plain. If a phase says `[swarm]` but swarms are disabled, Yokai reports that and runs plain. Token savings disables swarms. There is no `--swarm` flag, and `/junji next` does not fan out workers.
+A phase assessed as `plain` stays plain. If an assessment selects `swarm` but swarms are disabled, Yokai reports that and runs plain. Token savings disables swarms. There is no `--swarm` flag, and `/junji next` does not fan out workers.
 
 ## Follow the work
 

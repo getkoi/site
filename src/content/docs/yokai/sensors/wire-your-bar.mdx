@@ -1,67 +1,76 @@
 ---
 title: "Wire your verification bar"
 navLabel: Wire your bar
-description: "Survey the repo, pick atomic scripts, order by filename, smoke-run, and mirror into CONTEXT."
+description: "Reuse real commands, review coverage, smoke temporary scripts, then approve the gate."
 section: sensors
 kind: how-to
 order: 20
 ---
 
-Interactive `yokai` can propose these scripts through its configured agent and record human review. This guide is for manually authoring or changing the checks. After changes, run `yokai` to reconcile the verification bar; do not edit `.koi/gate-review.yml` yourself.
+Run interactive `yokai sensors`, or use the optional `/yokai sensors` helper to prepare proposals.
+The executable uses the same sensor policy without requiring installed skills. Junji's CONTEXT
+verification bar defines requirements; actual project commands provide the checks.
 
+## Establish coverage
 
-Use this page when you are setting up or updating **`.koi/sensors/`**. Sensors are **observe-only**. Setup (install deps, seed audit DBs, bake toolchains into the sandbox image) must finish before the gate runs.
+Inspect repository instructions, CI workflows, package scripts, tool configuration and tests.
+For each sensor, show its source path and command, the requirement it covers, its working directory
+and prerequisites. Reference commands that actually exist. Recipes are examples, not evidence that
+a project has the corresponding check.
 
-## Prerequisites
+Report a missing required check as a gap and propose implementing it separately. A gap blocks saving
+a complete gate. Do not substitute grep assertions, inline test programs or always-pass scripts.
+Commit conventions normally belong to commit review or an existing commit-range check; do not test
+all repository history or fail an unborn repository. Human approval and setup remain separate.
 
-- A real stack survey: package manager, fmt/lint/typecheck, unit/integration/E2E tests, coverage: the project's actual gates, not a bespoke growing assertion script.
-- `.koi/sensors/` at project-home root (durable; survives `consolidate`). `yokai configure` creates it with a README pointer; the scripts are yours to author.
-- Optional: `.koi/run/CONTEXT.md` for prose lockstep (yokai skill mirrors scripts there).
+## Review, smoke, approve
 
-## Workflow
+1. Propose one atomic `.sh` wrapper per concern, retaining existing checks unless a concrete defect,
+   duplicate or obsolete requirement justifies replacement or removal. Show reasons explicitly.
+2. Review exact commands, coverage and removals before running anything.
+3. Smoke-run temporary copies of every proposed script in the selected host or sandbox environment.
+   Report every result, even after a failure.
+4. Fix shell defects, wrong working directories and missing prerequisites through a new proposal.
+   Preserve genuine product-check failures; approval does not turn them green.
+5. Approve the results and save the reviewed gate. Declining review leaves existing sensors intact.
 
-1. **List concerns**: one atomic check each (never a monolithic `gate.sh`).
-2. **Prefix order**: `NN-name.sh` when fmt must precede test, or audits after build artifacts exist.
-3. **Copy recipes** from [/yokai/recipes](/yokai/recipes). Tune thresholds via env vars or project config, not by weakening scripts.
-4. **Write** under `.koi/sensors/` only after agreement (yokai skill: do not overwrite existing scripts without an explicit ask).
-5. **Mirror** the same list into `CONTEXT.md › Verification bar`.
-6. **Smoke-run** each script from repo root: `bash .koi/sensors/<name>.sh`.
+Yokai preserves replaced or removed originals in unique hidden `.before-review-*` backups. An
+omitted sensor cannot silently disappear. Failure alone is never a reason to weaken or remove one.
 
-## Suggested filename order (template)
+## Wrapper contract
 
-| Order | Example | Concern |
-| --- | --- | --- |
-| 05 | `05-package-manager-present.sh` | Toolchain present (no install) |
-| 10–20 | `10-fmt.sh`, `20-lint.sh` | Static analysis |
-| 30 | `30-typecheck.sh` | Types |
-| 40 | `40-unit-test.sh` | Fast tests |
-| 45 | `45-coverage.sh` | Coverage floor |
-| 50+ | `50-audit-offline.sh` | Security (offline / local DB) |
-
-## Minimal scaffold
+Yokai supplies the repository root as cwd to both temporary and saved scripts. Do not derive it
+from `$0`, `BASH_SOURCE` or the script directory: temporary copies live at a different depth.
+For an existing `package.json` test command:
 
 ```bash
-mkdir -p .koi/sensors
-# copy a script from /yokai/recipes into .koi/sensors/NN-name.sh
-bash .koi/sensors/NN-name.sh
+#!/usr/bin/env bash
+set -euo pipefail
+# Source: package.json scripts.test; covers unit tests.
+exec npm test
 ```
 
-## What exit 0 proves (aggregate)
+Use an explicit `cd path/to/subproject` only when the source command requires it. Keep scripts
+compatible with the selected shell: macOS host Bash may be 3.2, which lacks `${value,,}` and
+associative arrays. Syntax validation alone does not prove the command works.
 
-Every script that exits 0 yields a passing sensor, so yokai may proceed. One red script names itself in the TUI (filename stem). Fix that concern, then re-run the gate.
+Checks observe and fail. They must not install dependencies, fetch advisory databases, run fixes,
+rewrite snapshots or configuration, commit or push. Bake prerequisites into the sandbox image or
+prepare the host before smoke review. Do not add a clean-tree sensor; normal implementation and
+temporary review files legitimately make the tree dirty.
 
-## Tuning
+Prefix names such as `10-fmt.sh`, `20-lint.sh` and `30-unit-test.sh` when order matters. The regular
+runtime gate is fail-fast; preparation collects all smoke results.
 
-- Split slow checks (E2E) from fast ones; order matters because of fail-fast.
-- Keep generated artifacts **gitignored**; sensors may write coverage output to ignored paths only.
-- Wire real stack gates (fmt/lint/typecheck/tests). Do not invent a growing custom assertion script the judge can keep punching holes in.
+## Review metadata
 
-## Sandbox tool requirements
+Yokai stores versioned bar and script fingerprints under `gate_review` in `.koi/yokai.yml`.
+Changing checks or verification requirements requires review again. Never hand-edit fingerprints.
+For the legacy `.koi/gate-review.yml`, `yokai migrate` converts only an exact matching receipt;
+stale receipts stay available for reconciliation. See [migration](/yokai/docs/configuration#migrate-an-existing-installation).
 
-Bake every CLI the bar invokes into **`.koi/Dockerfile.sandbox`** (or host PATH for `--host`). A missing toolchain yields a red sensor with a clear message, not an install inside the script.
+## Next
 
-## Official links
-
-- [yokai SKILL.md](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md)
-- [junji CONTEXT.md — Sensor](https://github.com/getkoi/koi/blob/main/skills/junji/CONTEXT.md)
-- [Sensor template](https://github.com/getkoi/koi/blob/main/skills/junji/templates/sensors/sensor.template.sh)
+- [Sensor semantics](/yokai/docs/sensors)
+- [Example recipes](/yokai/recipes)
+- [Helper skill](/yokai/docs/skill)

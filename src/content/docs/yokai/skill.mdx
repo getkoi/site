@@ -1,25 +1,54 @@
 ---
 title: yokai helper skill
 navLabel: Helper skill
-description: "Wire atomic sensors and a sandbox image recipe for the driver."
+description: "Prepare real sensor checks, assess phase weights and modes, and build sandbox recipes."
 section: sensors
 kind: how-to
 order: 15
 ---
 
-This helper is optional: Yokai can prepare and review its own gate without it. Install it with `npx skills add getkoi/koi --skill yokai`. Its source is [`skills/yokai/SKILL.md`](https://github.com/getkoi/koi/blob/main/skills/yokai/SKILL.md). Ask your coding agent to wire sensors or prepare a sandbox image. This helper does not run phases; the [yokai driver](/yokai/docs/run) does that.
+One optional helper has three operations. Install it with `npx skills add getkoi/koi --skill yokai`.
+Its [policy references](https://github.com/getkoi/koi/tree/main/skills/yokai/references) are also bundled
+into the executable, so the execution machine does not need installed skills. The helper prepares
+execution; Junji remains the method and the [driver](/yokai/docs/run) runs phases.
 
-## Sensor workflow
+```text
+/yokai sensors
+/yokai assess
+/yokai sandbox
+```
 
-1. Survey the repository for real formatting, lint, test, and build commands.
-2. Propose one atomic script per concern, with a filename prefix when order matters.
-3. Write `.koi/sensors/*.sh` after agreement, preserving existing scripts.
-4. Mirror the verification bar into `.koi/run/CONTEXT.md` and smoke-run each script from the repo root.
+## Sensors
 
-Never weaken a failing sensor just to turn the gate green. See [sensor semantics](/yokai/docs/sensors), [wire your bar](/yokai/docs/sensors/wire-your-bar), and [copy-ready recipes](/yokai/recipes).
+Inspect the verification bar, CI, package scripts and existing checks. Propose thin wrappers with
+real source commands, coverage and prerequisites. Report missing required checks as separate work;
+do not invent passing assertions or unrelated historical-commit checks. A justified removal needs
+a specific reason and human approval. A failing product check is never a removal reason.
 
-## Sandbox image
+Review commands first, smoke-run temporary copies in the selected environment, then approve saving.
+Scripts rely on the repository-root working directory, not their file location. Shell defects and
+missing prerequisites need repair; genuine check failures stay intact and keep readiness red.
+Run interactive `yokai sensors` to record compact gate fingerprints in `.koi/yokai.yml`.
+See [wire your bar](/yokai/docs/sensors/wire-your-bar).
 
-The skill can prepare `.koi/Dockerfile.sandbox` for the selected backend. Apple installs the harness under `/usr/local/bin` and ends as root; Docker uses a writable harness path under `/home/agent/.local/bin` with the `agent` user. After changing the image, rebuild and recreate the named sandbox. See [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml).
+## Assess
 
-Interactive `yokai` owns runtime setup and sensor review. After helper edits, run it to reconcile the reviewed bar. The helper must not author the gate receipt.
+Propose each unfinished BACKLOG phase's tier (`low`, `medium`, `high`, `ultra`), strategy (`plain`,
+`swarm`) and short reason in `.koi/run/yokai.yml`. Use plain by default; swarm requires independently
+mergeable work. Keep runtime choices out of plan Markdown. Show existing choices for review.
+
+Interactive `yokai assess` approves the mapping and stamps scope fingerprints. New or materially
+changed phases need review; status-only progress does not. Headless execution stops on missing or
+stale assessments. The helper may save human-approved proposed values but must never fabricate
+fingerprints. See [phase assessment](/yokai/docs/configuration#phase-assessment).
+
+## Sandbox
+
+Prepare `.koi/Dockerfile.sandbox` for the selected backend and the actual checks' prerequisites.
+Apple installs the harness under `/usr/local/bin` and normally ends as root; Docker uses a writable
+`/home/agent/.local/bin` with the `agent` user. Rebuild and recreate the named sandbox after changing
+the image. See [Sandbox settings and image](/yokai/docs/sandbox/sandbox-yml).
+
+Without the skill, `yokai guidance sensors`, `yokai guidance assess` and `yokai guidance sandbox`
+print the same policies. Interactive startup uses them for proposals. Setup and assessment never
+authorize human-gated phases or override standing directives.

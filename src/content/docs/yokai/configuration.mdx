@@ -7,7 +7,7 @@ kind: reference
 order: 30
 ---
 
-Precedence: explicit CLI flag → optional `.koi/run/yokai.yml` → durable `.koi/yokai.yml` → built-in default. Project layout: [Project home](/koi/docs/project-home). Sandbox declaration: [Sandbox settings](/yokai/docs/sandbox/sandbox-yml). Sensor scripts: [Sensors](/yokai/docs/sensors).
+Precedence: explicit CLI flag → `.koi/run/yokai.yml` → durable `.koi/yokai.yml` → built-in default. Project layout: [Project home](/koi/docs/project-home). Sandbox declaration: [Sandbox settings](/yokai/docs/sandbox/sandbox-yml). Sensor scripts: [Sensors](/yokai/docs/sensors).
 
 ## `.koi/yokai.yml`
 
@@ -45,7 +45,7 @@ coder. Separate plan, seal and recovery profiles are ignored in this mode;
 candidate until unavailable or overridden by an explicit launch pin.
 
 Review is required even with `build.judge: false`. Swarms are disabled even with
-`swarm.enabled: true` and `[swarm]` tags. Every role is instructed to avoid subagents
+`swarm.enabled: true` and swarm assessments. Every role is instructed to avoid subagents
 and delegation; current ACP adapters have no dedicated delegation switch.
 
 Continuation prompts reuse conversation context and reference the current phase spec
@@ -179,7 +179,7 @@ build:
   judge: true
 #   guides:
 #     - docs/style.md
-# swarm:                    # omit = off; [swarm] phases still need enabled
+# swarm:                    # omit = off; swarm assessments still need enabled
 #   enabled: true
 #   max_workers: 8          # item cap and concurrency
 ```
@@ -196,7 +196,7 @@ Optional `tier` lift per slot. Drop role-level `agent` / `model` / `effort`.
 
 | Slot | Omit ⇒ |
 |------|--------|
-| `plan`, `coder`, `judge`, `seal` | the phase override, then legacy tier tag, then medium |
+| `plan`, `coder`, `judge`, `seal` | the reviewed phase tier |
 | `repair`, `fix`, `triage` | **ultra** |
 
 Swarm adds no slot: split walks plan's band; workers and merge walk coder's; judge fan-out walks judge's.
@@ -211,15 +211,15 @@ Swarm adds no slot: split walks plan's band; workers and merge walk coder's; jud
 
 ### `swarm:` (ADR-0045, ADR-0047, ADR-0048)
 
-Optional fan-out inside Build (each iteration of a `[swarm]` phase). **Omit the block to leave it off.** `yokai configure` asks whether
-this run may honor `[swarm]` phases, plus the worker cap. Reconfiguration preserves fields the wizard does not expose.
+Optional fan-out inside Build (each iteration of a phase assessed as `swarm`). **Omit the block to leave it off.** `yokai configure` asks whether
+this run may honor swarm assessments, plus the worker cap. Reconfiguration preserves fields the wizard does not expose.
 
 | Field | Default when omitted |
 |-------|----------------------|
 | `enabled` | `false` (kill-switch; does not fan out `[plain]` phases) |
 | `max_workers` | `8` (item cap **and** concurrency) |
 
-Fan-out runs only when `enabled` is true **and** the phase override selects `swarm` (or a legacy heading has `[swarm]`). `[plain]`
+Fan-out runs only when `enabled` is true **and** the reviewed phase assessment selects `swarm`. `plain`
 (or a missing tag) stays a single coder. One work item skips the fan-out. There is no `--swarm` flag.
 ## `.koi/yokai.yml` `build:`
 
@@ -229,7 +229,7 @@ Plan → Build → Seal tuning for every phase. Written by `yokai configure`; ov
 |-------|----------------------|
 | `max_iters` | omitted = unlimited (`0` still means zero iterations) |
 | `judge` | `true` (advisory review each Build iteration) |
-| `judge_model` | **deprecated** — judge walks `roles.judge.tier` (else the phase tag); still parsed for old files |
+| `judge_model` | **deprecated** — judge walks `roles.judge.tier` (else the reviewed phase tier); still parsed for old files |
 | `guides` | `[]` — extra feedforward files for the coder |
 
 **Not configurable here:** the gate (authoritative sensors) and the judge's advisory-only role are junji's contract ([ADR-0006](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0006-tengu-self-correction-harness.md), superseded by [ADR-0039](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0039-yokai-owns-build-and-recovery.md)). Which candidate runs a turn comes from `tiers:` plus optional `roles.*.tier` ([ADR-0049](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0049-model-tiers.md)).
@@ -266,11 +266,11 @@ Copy `ledger.jsonl` and `sessions.jsonl` before `consolidate` if you want the au
 
 ## Files and precedence
 
-Settings resolve as built-in defaults → `.koi/yokai.yml` → optional `.koi/run/yokai.yml` → explicit
-CLI flags. Each mapping merges recursively, including roles, session options, sandbox settings and
-tier bands. Lists replace as a whole, preserving candidate order. `null` clears a value to its
-built-in default; `[]` deliberately clears a list such as `build.guides`. A supplied empty tier list
-is invalid. An omitted tier band inherits the lower layer, then the built-in candidate.
+Settings resolve as built-in defaults → `.koi/yokai.yml` → `.koi/run/yokai.yml` → explicit CLI flags.
+Each mapping merges recursively, including roles, session options, sandbox settings and tier bands.
+Lists replace as a whole, preserving candidate order. `null` clears a value to its built-in default;
+`[]` deliberately clears a list such as `build.guides`. A supplied empty tier list is invalid.
+An omitted tier band inherits the lower layer, then the built-in candidate.
 
 For example, durable settings:
 
@@ -291,7 +291,7 @@ sandbox:
   enabled: false
 ```
 
-Most efforts need no override file. A particular effort can supply only these differences:
+The effort file holds reviewed phase assessments and any effort-specific differences:
 
 ```yaml
 # .koi/run/yokai.yml
@@ -299,48 +299,87 @@ build:
   max_iters: 3
 phases:
   P2:
-    strategy: plain
     tier: high
+    strategy: plain
+    reason: Cross-module state migration with recovery invariants.
+    # reviewed_sha256 is added by Yokai after interactive review.
 ```
 
-This inherits the durable guide, timeouts and sandbox preferences. `yokai --max-iters 2` overrides
-the effort's iteration limit for that launch. `--token-savings` and `--no-token-savings` explicitly
-override saved token savings in either direction. `--agent`, `--model` and `--effort` pin the runtime
-candidate for the launch. Budgets (`--max-cost`, `--max-tokens`), `--once`, `--headless`, `--host`,
-`--allow-gated` and the theme flag remain launch choices.
+This example is a proposal until reviewed. It inherits durable guides, timeouts and sandbox
+preferences. `yokai --max-iters 2` overrides the iteration limit for that launch.
+`--token-savings` and `--no-token-savings` override saved token savings in either direction.
+`--agent`, `--model` and `--effort` pin the runtime candidate for the launch.
+Budgets (`--max-cost`, `--max-tokens`), `--once`, `--headless`, `--host`, `--allow-gated` and theme
+remain launch choices.
 
 Optional `tiers` defines `low`, `medium`, `high` and `ultra` ordered candidate lists, plus
 `retry_after_secs`. Candidate fields are `agent`, `model`, `effort`, `speed`. `roles.<role>.tier`
-can lift a role's tier; the roles are plan, coder, judge, seal, triage, repair and fix. Opaque ACP
-settings live under `session_options`. Recovery accepts a boolean or the existing legacy mapping.
-`build.judge_model` and other accepted legacy fields are preserved during migration and wizard edits.
-
-Phase overrides belong only to the effort file, keyed by existing phase ID. They override optional
-legacy heading annotations; absent values retain annotations or use plain/medium defaults. They
-never alter the headings, dependency order, status or `[gated]` marker. If you renumber a phase,
-review its override. Junji neither reads nor writes this configuration schema.
+can lift a role's tier; roles are plan, coder, judge, seal, triage, repair and fix.
+Opaque ACP settings live under `session_options`. Recovery accepts a boolean or its legacy mapping.
+Accepted legacy fields survive migration and wizard edits.
 
 The nested `sandbox` mapping accepts `enabled`, `backend` (`docker` or `apple`), `image`, `name`,
 `memory` and `cpus`. Enabled sandboxes require a repo-owned image. The Dockerfile and optional
 `sandbox-setup.sh` hook remain separate files. `--host` bypasses the sandbox for one invocation.
-Readiness runs in the selected execution environment. Sandbox re-entry does not repeat onboarding.
+Smoke checks and readiness run in the selected environment. Sandbox re-entry never onboards.
 
-## Gate review
+## Sensor preparation and review
 
-Yokai's configured agent reads CONTEXT and project checks in a read-only turn, then proposes JSON
-containing a rationale and atomic shell scripts. Review the complete verification bar and exact
-scripts before approving. Yokai validates shell syntax, keeps omitted existing sensors, and preserves
-replaced script originals as `.sh.before-review` files. Preserve an existing backup elsewhere before
-approving a second replacement of that script. No agent proposal can silently delete checks.
+Yokai reads the verification bar, repository instructions, CI and existing project checks in a
+read-only agent turn. Each proposed sensor identifies its source command, coverage and prerequisites.
+It wraps established commands; it does not invent assertions to satisfy prose. Missing required
+checks are reported as gaps and proposed as separate work. They block saving a complete gate.
+Commit conventions, historical commits, setup and manual approvals do not become unrelated sensors.
 
-`.koi/gate-review.yml` stores the reviewed verification section and script contents. Other CONTEXT
-sections can change without invalidating it. Changing the verification bar or a script requires human
-reconciliation; headless execution reports the mismatch. Do not author or edit the receipt yourself.
-Shell validity and a passing check are distinct: failing checks remain intact, with their output
-reported. Setup does not weaken the bar or approve gated phases. A prepared failing gate may be used
-by the normal Build loop to fix the underlying implementation, but no phase can complete while red.
+Review the exact commands before execution. Yokai validates shell syntax and smoke-runs temporary
+copies of every proposed sensor, using the normal executor from the repository root, on the host or
+configured sandbox. Scripts must rely on that cwd rather than derive the root from their file path.
+No sensors or review metadata are saved until the results receive final approval. Declining either
+review leaves existing sensors intact. Temporary script copies are removed after the review.
 
-## Migration
+All smoke results are reported, including failures. Obvious shell errors, unavailable executables
+and timeouts block saving; other failures require explicit classification during review. A legitimate
+product-check failure stays intact. Approving a correctly executing but red gate records its review;
+it does not make readiness green or allow a phase to complete. Missing dependencies belong in
+preparation, not in sensor scripts.
+
+Existing sensors cannot disappear by omission. Removing a wrong-scope, duplicate or obsolete check
+requires a specific reason shown during review. Failure alone is never a removal reason.
+Replaced and removed originals receive unique hidden `.before-review-*` backups in the sensor
+folder, which are not executed. Approval of setup never authorizes a human-gated phase.
+
+The durable `gate_review` mapping in `.koi/yokai.yml` contains `version: 1`, `bar_sha256` and a
+`scripts` mapping of filename to SHA-256. It stores no duplicate script bodies. Changing the
+verification section or adding, removing or editing a sensor invalidates review; unrelated CONTEXT
+sections do not. The driver rechecks this binding during execution. Do not hand-author fingerprints.
+
+## Phase assessment
+
+`/yokai assess` and interactive `yokai assess` propose a model-capability tier and Build strategy for
+each unfinished BACKLOG phase. Low fits mechanical edits; medium fits bounded implementation;
+high fits substantial cross-module reasoning; ultra is for unusually difficult, tightly coupled work.
+Use plain by default. Swarm needs independently mergeable work with clear ownership and integration
+checks; a long task alone is not enough. `swarm.enabled: false` or token savings still forces plain.
+
+Review the proposed `phases.<ID>.tier`, `strategy` and short `reason` in `.koi/run/yokai.yml`.
+Existing choices are shown and preserved unless scope justifies a change. Yokai adds a
+`reviewed_sha256` fingerprint after approval. Chat-assisted edits may propose values but must not
+forge that fingerprint. These runtime choices never belong in PLAN or phase-plan Markdown.
+Junji alone does not require the mapping. Reviewed YAML overrides optional legacy heading tags.
+
+Interactive setup proposes missing or stale assessments. New phases and changed phase scope require
+review; removed or renumbered IDs require explicit mapping cleanup. Fingerprints bind the phase
+title, gated flag, legacy annotations, backlog body, verification bar, any existing `Goal & scope`
+plan section, and the reviewed choices. Status-only progress, plan outcomes and carry-forward notes
+outside the phase block do not invalidate them. Creating or changing a plan's scope requires review
+on a later launch if that phase is still unfinished.
+
+Headless startup and sandbox re-entry stop on missing/stale assessments with instructions to run
+interactive `yokai assess`; they never choose defaults or stamp metadata. The supervisor checks
+scope again before starting the next phase. Assessment does not grant `[gated]` authorization;
+`--allow-gated` remains an explicit launch choice subject to standing directives.
+
+## Migrate an existing installation
 
 The Koi binary has been removed without a compatibility wrapper. Replace `koi setup` / `koi init`
 with interactive `yokai` or `yokai configure`, and `koi doctor` with `yokai doctor`.
@@ -350,11 +389,11 @@ yokai migrate
 ```
 
 This validates `.koi/run/config.yml` and `.koi/sandbox.yml`, moves reusable values to `.koi/yokai.yml`,
-and retains byte-for-byte originals as `config.yml.legacy` and `sandbox.yml.legacy`. New-only projects
-are already migrated. Unreadable files, malformed YAML and unknown settings are errors, not defaults.
+and retains byte-for-byte originals as `config.yml.legacy` and `sandbox.yml.legacy`.
+Unreadable files, malformed YAML and unknown settings are errors, not defaults.
 
-If legacy values conflict with durable or effort settings, migration lists the field paths and makes
-no changes. Reconcile the files manually or explicitly choose a side:
+If legacy settings conflict with durable or effort settings, migration lists the field paths and
+makes no settings changes. Reconcile them manually or explicitly choose a side:
 
 ```bash
 yokai migrate --prefer legacy
@@ -362,19 +401,22 @@ yokai migrate --prefer legacy
 yokai migrate --prefer new
 ```
 
-The choice resolves collisions only; other fields survive. Choosing legacy also resolves colliding
-effort values so the chosen value is effective. Writes are atomic per destination, originals stay
-recoverable until success, and retrying after interruption accepts identical backups. An existing
-different backup blocks migration rather than being overwritten. After success, review the settings
-and commit them with the project. Retain or archive the originals until satisfied.
+The choice resolves settings collisions only; other fields survive. Choosing legacy also resolves
+colliding effort values. Writes are atomic per destination; originals remain recoverable and retrying
+after interruption accepts identical backups. A different backup is never overwritten.
 
-Migration leaves active plans, customized METHOD/CONTEXT, phase progress and sensors unchanged. Old
-annotated headings still work. To adopt the simplified method in an active effort, compare current
-skill templates with your copies and merge the relevant prose deliberately, preserving standing
-directives and custom sections. `begin` never overwrites an active backlog or customized method.
-Fresh efforts automatically use the new templates.
+Migration then converts `.koi/gate-review.yml` into compact durable metadata only if the receipt
+exactly matches the current bar and scripts and does not conflict with existing metadata. It removes
+the old receipt after a successful write. A stale or conflicting receipt is retained and reported;
+`--prefer` cannot approve changed checks. Reconcile through `yokai sensors`. Ordinary headless
+startup never migrates; interactive startup offers migration. Review and commit the resulting files.
 
-`consolidate` still removes all of `.koi/run/`: effort overrides, session handles, ledgers, recovery,
-and budget accounting. It preserves everything else under `.koi/`. The next effort inherits reusable
-settings but starts new accounting. Junji's free workflow and this convention do not depend on private
-Yokai implementation code; distribution and licensing changes are follow-up work.
+Migration leaves active plans, customized METHOD/CONTEXT, progress and sensors unchanged. It does
+not manufacture phase assessments; run interactive `yokai assess` for an existing effort.
+To adopt new method templates, merge relevant prose deliberately, preserving custom sections and
+standing directives. `begin` never overwrites an active backlog or customized method.
+
+`consolidate` removes all of `.koi/run/`: assessments, effort differences, session handles, ledgers,
+recovery and budget accounting. It preserves everything else under `.koi/`. The next effort inherits
+reusable settings but needs its own phase assessment and starts new accounting. Junji's free workflow
+and this convention do not depend on private Yokai implementation code; licensing changes are separate.

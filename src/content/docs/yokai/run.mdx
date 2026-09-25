@@ -15,6 +15,7 @@ Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **
 - Junji-prepared METHOD, CONTEXT and BACKLOG; no installed method skill is needed to execute
 - `[todo]` (or in-flight) phases in `.koi/run/BACKLOG.md`
 - Interactive startup reviews missing or changed sensors; headless runs require already-reviewed scripts
+- Reviewed phase assessments in `.koi/run/yokai.yml`; run interactive `yokai assess` after scope changes
 
 ## Outcome
 
@@ -53,7 +54,7 @@ yokai --agent claude --model opus --effort high
 ```
 
 These flags **pin** this launch: yokai composes one candidate and does not walk `tiers:`. Omit them
-to walk the phase's band (role lift, else ultra for repair/fix/triage, else the BACKLOG tag). Unknown
+to walk the phase's band (role lift, else ultra for repair/fix/triage, else the reviewed phase assessment). Unknown
 model or effort ⇒ notice (ADR-0033), not a skip. Session-open failure (`unreachable` / `limited` /
 `unstable`) records a skip row and tries the next candidate for that same turn. Mid-turn death stays
 interrupt / reattach. All candidates skipped → Halt.
@@ -148,7 +149,7 @@ sandbox:
   # cpus: 4             # apple only
 ```
 
-Reusable settings and the `sandbox` mapping live in `.koi/yokai.yml`. Optional `.koi/run/yokai.yml` overrides individual fields for one effort.
+Reusable settings and the `sandbox` mapping live in `.koi/yokai.yml`. `.koi/run/yokai.yml` holds reviewed phase assessments and any effort-specific overrides.
 
 After rebuilding the image or changing agent, **recreate** the named sandbox.
 
@@ -183,6 +184,7 @@ Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/yokai/docs/tui)).
 | Symptom | Fix |
 |---------|-----|
 | preflight ✗ on launch | run `yokai doctor --probe` |
+| missing or stale phase assessment | run interactive `yokai assess`; status-only progress does not require reassessment |
 | every phase gate red | fix the underlying failing check; review intentional sensor changes interactively |
 | halt at [gated] | expected by default; review the phase and explicitly use `--allow-gated` if authorized |
 | `cost ceiling reached` | raise or omit `--max-cost` / `--max-tokens` |

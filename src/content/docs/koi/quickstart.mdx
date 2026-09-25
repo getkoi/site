@@ -72,10 +72,12 @@ yokai configure    # interactive runtime and sandbox settings
 ```
 
 Bare Yokai halts at `[gated]` phases. `--allow-gated` explicitly authorizes them for one invocation;
-standing directives still apply. Configuration, gate review and plan import do not grant that approval.
+standing directives still apply. Configuration, assessments, gate review and plan import do not grant that approval.
 
 `--headless` and noninteractive startup never prompt or write setup defaults. Prepare and review the
-gate interactively first. Changed verification commands or scripts require another review.
+gate and phase assessments interactively first. Changed verification commands or scripts require
+`yokai sensors`; new or changed phase scope requires `yokai assess`. Status-only progress keeps
+assessments valid. Sensor commands are reviewed before temporary smoke checks and final approval.
 
 Settings persist in `.koi/yokai.yml`; `.koi/run/yokai.yml` is an optional differences file.
 Consolidation removes effort overrides, sessions and accounting but preserves reusable settings,
@@ -84,5 +86,6 @@ sensors and sandbox artifacts. See [configuration](/yokai/docs/configuration).
 ## Existing installations
 
 There is no replacement Koi binary. Run `yokai migrate` for legacy configuration, then `yokai` to review
-the gate. Migration preserves active plans, customized method documents, progress and sensors.
+the gate and phase assessments. Matching legacy receipts become compact gate fingerprints in durable
+settings; stale receipts require review. Migration preserves active plans, customized method documents, progress and sensors.
 [Migration details](/koi/docs/cli).

@@ -16,8 +16,10 @@ repository documents; the execution machine does not need the Junji skill instal
 yokai --once          # guided missing setup, review checks, then offer to start
 yokai                 # reuse settings and continue
 yokai doctor --probe  # optional diagnostics
+yokai sensors          # review commands, smoke temporary scripts, approve gate
+yokai assess           # review per-phase tiers and strategies in effort YAML
 yokai configure       # optional interactive settings editor
-yokai --headless      # requires saved settings and a reviewed gate; never onboards
+yokai --headless      # requires saved settings and a reviewed gate and current assessments; never onboards
 yokai --host          # bypass configured sandbox for this launch
 yokai --max-cost 5.00
 yokai --max-iters 3
@@ -34,8 +36,8 @@ cargo run -p yokai -- doctor --probe
 
 ## Sensors and settings
 
-Reusable settings live in `.koi/yokai.yml`, with optional differences in `.koi/run/yokai.yml`.
-[Configuration](/yokai/docs/configuration) explains nested inheritance and phase overrides.
+Reusable settings live in `.koi/yokai.yml`, with reviewed phase assessments and effort differences in `.koi/run/yokai.yml`.
+[Configuration](/yokai/docs/configuration) explains nested inheritance and reviewed phase assessments.
 
 ```bash
 bash .koi/sensors/30-cargo-test.sh
