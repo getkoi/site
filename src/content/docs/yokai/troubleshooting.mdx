@@ -13,8 +13,7 @@ Start with `yokai doctor --probe` at the repo root. Setup problems: [koi trouble
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| assessed choices but no recorded review | mapping exists without fingerprints | run interactive `yokai assess`, decline agent-proposed revisions, review current scope and approve the existing mapping |
-| missing/stale phase assessment | phase added, scope or choices changed | run interactive `yokai assess`; keep runtime choices in effort YAML, not plan Markdown |
+| missing/incomplete phase assessment | a phase lacks tier, strategy or reason | approve and save choices through `/yokai assess` or interactive `yokai assess`; complete mappings need no runtime approval receipt |
 | gate review changed or missing | bar/scripts differ, or legacy receipt needs migration | run `yokai migrate` for exact matching legacy receipts; otherwise use `yokai sensors`. Existing scripts support direct review without agent generation |
 | sensor smoke defect | shell syntax, cwd or prerequisite is wrong | repair the proposal/environment and review again; preserve genuine product failures |
 | every phase **gate red** | empty/missing `.koi/sensors/` or failing script | missing folder → `yokai sensors`; review real checks; run each with `bash` and fix the reported failure; [sensors](/yokai/docs/sensors) |

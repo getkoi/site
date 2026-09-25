@@ -75,9 +75,9 @@ Bare Yokai halts at `[gated]` phases. `--allow-gated` explicitly authorizes them
 standing directives still apply. Configuration, assessments, gate review and plan import do not grant that approval.
 
 `--headless` and noninteractive startup never prompt or write setup defaults. Prepare and review the
-gate and phase assessments interactively first. Changed verification commands or scripts require
-`yokai sensors`; new or changed phase scope requires `yokai assess`. Status-only progress keeps
-assessments valid. Sensor commands are reviewed before temporary smoke checks and final approval.
+gate interactively and save phase choices approved through the helper or CLI. Assessment YAML
+requires no second approval or fingerprint. Changed verification commands or scripts require
+`yokai sensors`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks and final approval.
 
 Settings persist in `.koi/yokai.yml`; `.koi/run/yokai.yml` is an optional differences file.
 Consolidation removes effort overrides, sessions and accounting but preserves reusable settings,

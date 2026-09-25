@@ -302,10 +302,9 @@ phases:
     tier: high
     strategy: plain
     reason: Cross-module state migration with recovery invariants.
-    # reviewed_sha256 is added by Yokai after interactive review.
 ```
 
-This example is a proposal until reviewed. It inherits durable guides, timeouts and sandbox
+Save these choices after human approval through the helper or CLI. It inherits durable guides, timeouts and sandbox
 preferences. `yokai --max-iters 2` overrides the iteration limit for that launch.
 `--token-savings` and `--no-token-savings` override saved token savings in either direction.
 `--agent`, `--model` and `--effort` pin the runtime candidate for the launch.
@@ -367,29 +366,21 @@ high fits substantial cross-module reasoning; ultra is for unusually difficult, 
 Use plain by default. Swarm needs independently mergeable work with clear ownership and integration
 checks; a long task alone is not enough. `swarm.enabled: false` or token savings still forces plain.
 
-Review the proposed `phases.<ID>.tier`, `strategy` and short `reason` in `.koi/run/yokai.yml`.
-Existing choices are shown and preserved unless scope justifies a change. Yokai adds a
-`reviewed_sha256` fingerprint after approval. Chat-assisted edits may propose values but must not
-forge that fingerprint. These runtime choices never belong in PLAN or phase-plan Markdown.
-Junji alone does not require the mapping. Reviewed YAML overrides optional legacy heading tags.
+Review `phases.<ID>.tier`, `strategy` and a short `reason` before saving `.koi/run/yokai.yml`.
+Approval through the helper skill is sufficient: complete saved choices are authoritative. Startup
+does not request a second approval, agent proposal or assessment fingerprint. Junji alone does not
+require the mapping. YAML choices override optional legacy heading tags and stay out of plan Markdown.
 
-If every unfinished phase already has a tier, strategy and nonempty reason, decline the offer for
-agent-proposed revisions to review that mapping directly against current scope. Final approval
-records fingerprints without changing the choices. A helper-written mapping without fingerprints
-is assessed but awaiting recorded review, not stale. A fingerprint mismatch is reported separately
-as stale scope or choices. Neither case requires regeneration; incomplete mappings still need work.
+Interactive setup proposes missing or incomplete assessments. Existing complete choices remain in
+use after status, plan or scope edits. Reconsider them with `/yokai assess` or explicit `yokai assess`
+when scope changes warrant different choices; Yokai does not infer staleness from hashes. Explicit
+CLI assessment can review existing values without an agent and preserves unrelated settings.
+New phases need complete entries; removed or renumbered IDs require mapping cleanup.
 
-Interactive setup proposes missing or stale assessments. New phases and changed phase scope require
-review; removed or renumbered IDs require explicit mapping cleanup. Fingerprints bind the phase
-title, gated flag, legacy annotations, backlog body, verification bar, any existing `Goal & scope`
-plan section, and the reviewed choices. Status-only progress, plan outcomes and carry-forward notes
-outside the phase block do not invalidate them. Creating or changing a plan's scope requires review
-on a later launch if that phase is still unfinished.
-
-Headless startup and sandbox re-entry stop on missing/stale assessments with instructions to run
-interactive `yokai assess`; they never choose defaults or stamp metadata. The supervisor checks
-scope again before starting the next phase. Assessment does not grant `[gated]` authorization;
-`--allow-gated` remains an explicit launch choice subject to standing directives.
+Headless startup and sandbox re-entry stop only for invalid, missing or incomplete mappings, never
+for missing assessment approval metadata. Old `reviewed_sha256` fields are accepted but ignored and
+omitted on explicit assessment saves; startup does not rewrite them. Assessment never authorizes
+`[gated]` work: `--allow-gated` remains a separate launch choice subject to standing directives.
 
 ## Migrate an existing installation
 

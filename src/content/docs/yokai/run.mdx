@@ -15,7 +15,7 @@ Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **
 - Junji-prepared METHOD, CONTEXT and BACKLOG; no installed method skill is needed to execute
 - `[todo]` (or in-flight) phases in `.koi/run/BACKLOG.md`
 - Interactive startup reviews missing or changed sensors; headless runs require already-reviewed scripts
-- Reviewed phase assessments in `.koi/run/yokai.yml`; run interactive `yokai assess` after scope changes
+- Complete phase assessments in `.koi/run/yokai.yml`; approval through the helper is sufficient
 
 ## Outcome
 
@@ -184,7 +184,7 @@ Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/yokai/docs/tui)).
 | Symptom | Fix |
 |---------|-----|
 | preflight ✗ on launch | run `yokai doctor --probe` |
-| missing or stale phase assessment | run interactive `yokai assess`; status-only progress does not require reassessment |
+| missing or incomplete phase assessment | save approved tier, strategy and reason through the helper or CLI; no fingerprint is required |
 | every phase gate red | fix the underlying failing check; review intentional sensor changes interactively |
 | halt at [gated] | expected by default; review the phase and explicitly use `--allow-gated` if authorized |
 | `cost ceiling reached` | raise or omit `--max-cost` / `--max-tokens` |
