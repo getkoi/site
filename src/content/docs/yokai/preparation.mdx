@@ -12,28 +12,36 @@ this wizard. Use **Prepare** (`p`) in the cockpit to reopen it. While a phase ru
 queued until the phase finishes. The `/yokai` helper skill remains an alternative.
 
 
-The wizard starts at the first step needing attention. Approved runtime settings, environment
-settings, sensor gates and phase mappings are separate saved checkpoints. Exit discards unapproved
-proposals; the next launch resumes from saved state. Tab or the numbered sidebar navigates steps.
-Keyboard shortcuts have matching mouse actions, and `t` cycles terminal, yoru and hiru themes.
+The wizard shows one active step and moves forward automatically. Approved steps are skipped.
+Enter selects the highlighted button; Tab or left/right arrows move between buttons. Up/down and
+Page Up/Page Down scroll review content; in Details, up/down selects a script or phase. Buttons are
+also clickable. Escape closes Details first, cancels active work, or exits from an idle main screen.
+Approved checkpoints survive exit; unapproved proposals are discarded.
 
-- **Runtime:** edit agents, model bands, permissions and limits; confirm to save.
-- **Environment:** edit host/sandbox settings, review or edit the repository Dockerfile, explicitly
-  build/rebuild and check readiness. Build replaces the named sandbox after confirmation.
-- **Sensors:** review existing scripts or choose Generate. Inspect sources, coverage, removals and
-  diffs; request a textual revision or open the selected script in `$VISUAL`/`$EDITOR`. Approve exact
-  commands for temporary smoke checks, review every result, then approve the complete gate.
-- **Phase assessment:** Generate a proposal or edit each row's tier, plain/swarm strategy and reason.
-  Existing choices remain available for review. Approve the full mapping in effort YAML.
-- **Readiness:** check tools and the executable gate in the selected environment, then choose
-  Start run or Save and exit. Genuine failing checks keep readiness red.
+- **Runtime:** confirm a short agent/model and host/sandbox summary. Use Change for these choices;
+  Advanced holds model bands, permissions and limits. Existing settings are preserved. Changing the
+  summary's agent/model replaces all four candidate lists; use Advanced for individual bands.
+- **Environment:** readiness is inspected automatically. If a sandbox needs repair, Yokai proposes a
+  repository-backed Dockerfile. Review it, then choose **Approve and build** to save it, build the
+  image and replace the named sandbox. Builds never start without that approval.
+- **Sensors:** existing scripts open for review; missing scripts are generated automatically. Review
+  the exact scripts and sources, then choose **Approve and test**. Yokai smoke-runs temporary copies
+  and saves the entire gate automatically only when every check passes. Request changes revises the
+  proposal; Details includes diffs, exclusions and external editing. Failed checks remain open.
+- **Phase assessment:** missing choices are proposed automatically. Review phase, tier, strategy and
+  reason together, then **Approve and continue**. Details lets you edit individual rows.
+- **Readiness:** checks run automatically. Successful smoke results from this preparation session are
+  reused only while the product tree, scripts, verification bar and environment remain unchanged.
+  Other preflight checks still run. Choose **Start run** or **Save and exit**; execution never starts
+  merely because preparation finished.
 
-Generate is always explicit and shows the selected agent/model. Generation, builds, environment
-checks and smoke runs show live output and Cancel inside the TUI. Errors leave the wizard open for
-retry, revision, editing or environment repair. An external editor temporarily owns the terminal;
-all other preparation stays in the TUI. Edits invalidate pending smoke results. Cancellation stops
-local process groups and drops temporary scripts; sandbox jobs detect removed shared job leases.
-Backend setup changes already made are not rolled back: check environment readiness again.
+The selected agent/model stays visible. Generation, builds and checks show live output and Cancel.
+A failed proposal gets one automatic read-only retry, then a specific error and recovery action.
+Script defects and coverage gaps block saving; genuine product failures require explicit review to
+save a failing gate and still block readiness. They are never automatically repaired or weakened.
+Edits invalidate smoke results. Cancellation stops local process groups and removes temporary
+scripts; sandbox jobs detect removed shared leases. Completed backend changes are not rolled back.
+An external editor temporarily owns the terminal; other preparation stays in the TUI.
 
 For a greenfield project, first use Junji to prepare scope, phases and runnable verification commands.
 If the repository lacks a required check, Yokai reports the gap. Add that real project check as

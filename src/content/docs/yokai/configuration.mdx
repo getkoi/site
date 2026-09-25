@@ -332,15 +332,15 @@ Commit conventions, historical commits, setup and manual approvals do not become
 
 If sensors already exist, the Sensors screen opens them for direct review without an agent turn.
 Inspect the existing scripts against the displayed bar, and confirm their command
-sources, coverage and prerequisites before smoke execution. Final approval records fingerprints
-without rewriting the scripts. Missing review metadata does not mean sensors are missing. Agent
+sources, coverage and prerequisites before choosing Approve and test. Passing smoke checks record
+fingerprints without rewriting unchanged scripts. Missing review metadata does not mean sensors are missing. Agent
 proposals remain available when checks need changes; headless startup still requires saved review.
 
 Review the exact commands before execution. Yokai validates shell syntax and smoke-runs temporary
 copies of every proposed sensor, from the repository root with captured output and process-group cancellation, on the host or
 configured sandbox. Scripts must rely on that cwd rather than derive the root from their file path.
-No sensors or review metadata are saved until the results receive final approval. Declining either
-review leaves existing sensors intact. Temporary script copies are removed after the review.
+Approve and test authorizes saving the complete reviewed gate if every check passes. Failures
+require review; no failing gate is saved automatically. Declining review leaves existing sensors intact. Temporary script copies are removed after the review.
 
 All smoke results are reported, including failures. Obvious shell errors, unavailable executables
 and timeouts block saving; other failures require explicit classification during review. A legitimate

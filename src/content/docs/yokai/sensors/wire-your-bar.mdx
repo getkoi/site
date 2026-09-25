@@ -11,9 +11,9 @@ Run interactive `yokai`, or use the optional `/yokai sensors` helper to prepare 
 The executable uses the same sensor policy without requiring installed skills. Junji's CONTEXT
 verification bar defines requirements; actual project commands provide the checks.
 
-When sensors already exist, the Sensors screen shows them for direct review. Generate is optional.
+When sensors already exist, the Sensors screen shows them for direct review. Missing sensors are generated automatically.
 Yokai shows the bar and exact scripts, asks you to confirm coverage and prerequisites, then follows
-the same smoke-and-approve flow. Missing fingerprints do not mean your scripts are missing.
+the same Approve and test flow. Missing fingerprints do not mean your scripts are missing.
 
 ## Establish coverage
 
@@ -27,16 +27,18 @@ a complete gate. Do not substitute grep assertions, inline test programs or alwa
 Commit conventions normally belong to commit review or an existing commit-range check; do not test
 all repository history or fail an unborn repository. Human approval and setup remain separate.
 
-## Review, smoke, approve
+## Approve and test
 
 1. Propose one atomic `.sh` wrapper per concern, retaining existing checks unless a concrete defect,
    duplicate or obsolete requirement justifies replacement or removal. Show reasons explicitly.
-2. Review exact commands, coverage and removals before running anything.
+2. Review exact commands, coverage and removals, then choose **Approve and test**. This authorizes
+   saving the whole gate only if every check passes.
 3. Smoke-run temporary copies of every proposed script in the selected host or sandbox environment.
    Report every result, even after a failure.
 4. Fix shell defects, wrong working directories and missing prerequisites through a new proposal.
    Preserve genuine product-check failures; approval does not turn them green.
-5. Approve the results and save the reviewed gate. Declining review leaves existing sensors intact.
+5. Passing checks save the complete gate automatically. Genuine failures need a separate explicit
+   decision to retain a failing gate. Declining review leaves existing sensors intact.
 
 Yokai preserves replaced or removed originals in unique hidden `.before-review-*` backups. An
 omitted sensor cannot silently disappear. Failure alone is never a reason to weaken or remove one.
@@ -70,7 +72,7 @@ runtime gate is fail-fast; preparation collects all smoke results.
 
 Yokai stores version-2 fingerprints of the bar, scripts and selected environment under `gate_review`
 in `.koi/yokai.yml`. The helper and wizard share this metadata. Changing checks or verification
-requirements requires review again. Changing environment requires re-smoke and final approval of
+requirements requires review again. Changing environment requires approval and re-smoke of
 existing scripts, without regeneration. Use the helper’s metadata calculator only after human
 approval; never refresh fingerprints to bypass review.
 For the legacy `.koi/gate-review.yml`, `yokai migrate` converts only an exact matching receipt;

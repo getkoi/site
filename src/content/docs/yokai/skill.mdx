@@ -25,10 +25,11 @@ real source commands, coverage and prerequisites. Report missing required checks
 do not invent passing assertions or unrelated historical-commit checks. A justified removal needs
 a specific reason and human approval. A failing product check is never a removal reason.
 
-Review commands first, smoke-run temporary copies in the selected environment, then approve saving.
+Review commands first and approve testing plus saving if every check passes. Smoke-run temporary
+copies in the selected environment; failures require a separate review.
 Scripts rely on the repository-root working directory, not their file location. Shell defects and
 missing prerequisites need repair; genuine check failures stay intact and keep readiness red.
-After final approval, the helper saves shared version-2 gate metadata in `.koi/yokai.yml`.
+After approved successful checks, or explicit review of genuine product failures, the helper saves shared version-2 gate metadata in `.koi/yokai.yml`.
 Its bundled metadata calculator hashes the exact bar, scripts and selected environment. The wizard
 accepts unchanged approved metadata without repeating smoke or approval. Environment changes
 require fresh smoke checks on existing scripts, without regeneration.

@@ -17,7 +17,7 @@ Add one shell script per check under `.koi/sensors/`. Each script passes when it
 └── 40-coverage.sh
 ```
 
-Interactive `yokai` asks its configured agent to propose sensors from CONTEXT and existing project checks. It identifies real command sources and coverage, reports missing required checks, and shows exact commands before smoke-running temporary scripts in the selected environment. Only final approval saves the gate. The optional [yokai skill](/yokai/docs/skill) can help author checks; installation is not required. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
+Interactive `yokai` asks its configured agent to propose sensors from CONTEXT and existing project checks. It identifies real command sources and coverage, reports missing required checks, and shows exact commands before smoke-running temporary scripts in the selected environment. Approve and test authorizes saving the complete gate only if all checks pass; failures need separate review. The optional [yokai skill](/yokai/docs/skill) can help author checks; installation is not required. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
 
 Existing sensors do not need an agent-generated replacement. If only review metadata is missing,
 decline the proposal to change them and review the current scripts directly. Confirm coverage,

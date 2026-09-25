@@ -54,9 +54,10 @@ The installer builds only Yokai. Install and log in to a supported coding agent;
 yokai --once
 ```
 
-Interactive startup guides missing runtime and sandbox preferences. Choose Generate when you want the configured agent to read Junji’s
-verification bar and propose executable checks. Review the exact scripts before accepting. Yokai
-validates them, checks readiness, and offers to start the phase. Later runs reuse saved settings.
+Interactive startup shows only the preparation that needs attention. Missing sensors are generated
+automatically from Junji’s bar and real project commands; existing sensors open for review.
+Choose Approve and test to run the exact scripts and save the gate if they all pass. Yokai then
+assesses missing phase choices, checks readiness and offers Start run. Later runs reuse saved settings.
 A failing check stays intact and is reported; setup never weakens it to get a green result.
 
 Yokai reads the repository's METHOD, CONTEXT, backlog and phase plans. The execution machine does not
@@ -77,7 +78,7 @@ standing directives still apply. Configuration, assessments, gate review and pla
 `--headless` and noninteractive startup never prompt or write setup defaults. Prepare and review the
 gate interactively and save phase choices approved through the helper or wizard. Assessment YAML
 requires no second approval or fingerprint. Changed verification commands or scripts require
-`yokai`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks and final approval.
+`yokai`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks; approval to save is conditional on passing results.
 
 Settings persist in `.koi/yokai.yml`; `.koi/run/yokai.yml` is an optional differences file.
 Consolidation removes effort overrides, sessions and accounting but preserves reusable settings,
