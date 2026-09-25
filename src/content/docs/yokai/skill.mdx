@@ -37,7 +37,10 @@ Propose each unfinished BACKLOG phase's tier (`low`, `medium`, `high`, `ultra`),
 `swarm`) and short reason in `.koi/run/yokai.yml`. Use plain by default; swarm requires independently
 mergeable work. Keep runtime choices out of plan Markdown. Show existing choices for review.
 
-Interactive `yokai assess` approves the mapping and stamps scope fingerprints. New or materially
+Interactive `yokai assess` approves the mapping and stamps scope fingerprints. If the helper already
+wrote complete choices, decline agent-proposed revisions and approve those choices against the
+shown scope directly. No extra agent turn is required; the helper's mapping is assessed but awaiting
+recorded review until then. New or materially
 changed phases need review; status-only progress does not. Headless execution stops on missing or
 stale assessments. The helper may save human-approved proposed values but must never fabricate
 fingerprints. See [phase assessment](/yokai/docs/configuration#phase-assessment).
