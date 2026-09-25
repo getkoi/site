@@ -19,6 +19,10 @@ Add one shell script per check under `.koi/sensors/`. Each script passes when it
 
 Interactive `yokai` asks its configured agent to propose sensors from CONTEXT and existing project checks. It identifies real command sources and coverage, reports missing required checks, and shows exact commands before smoke-running temporary scripts in the selected environment. Only final approval saves the gate. The optional [yokai skill](/yokai/docs/skill) can help author checks; installation is not required. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
 
+Existing sensors do not need an agent-generated replacement. If only review metadata is missing,
+decline the proposal to change them and review the current scripts directly. Confirm coverage,
+approve temporary smoke execution, then approve saving their fingerprints.
+
 Junji by itself runs the commands documented in CONTEXT. Sensor files are a Yokai execution requirement.
 
 Layout and terms: [Start here](/koi/docs).

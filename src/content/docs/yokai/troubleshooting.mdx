@@ -14,7 +14,7 @@ Start with `yokai doctor --probe` at the repo root. Setup problems: [koi trouble
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | missing/stale phase assessment | phase added, scope or choices changed | run interactive `yokai assess`; keep runtime choices in effort YAML, not plan Markdown |
-| gate review changed or missing | bar/scripts differ, or legacy receipt needs migration | run `yokai migrate` for exact matching legacy receipts; otherwise review through `yokai sensors` |
+| gate review changed or missing | bar/scripts differ, or legacy receipt needs migration | run `yokai migrate` for exact matching legacy receipts; otherwise use `yokai sensors`. Existing scripts support direct review without agent generation |
 | sensor smoke defect | shell syntax, cwd or prerequisite is wrong | repair the proposal/environment and review again; preserve genuine product failures |
 | every phase **gate red** | empty/missing `.koi/sensors/` or failing script | missing folder → `yokai sensors`; review real checks; run each with `bash` and fix the reported failure; [sensors](/yokai/docs/sensors) |
 | **gate red after Seal** though Build looked green | supervisor re-ran sensors; Seal changed product, or a sensor flaked | HALT names the sensor; BACKLOG is unmarked so relaunch retries the same phase; investigate the reported failure and fix its cause |

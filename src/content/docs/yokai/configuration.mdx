@@ -331,6 +331,12 @@ It wraps established commands; it does not invent assertions to satisfy prose. M
 checks are reported as gaps and proposed as separate work. They block saving a complete gate.
 Commit conventions, historical commits, setup and manual approvals do not become unrelated sensors.
 
+If sensors already exist, Yokai offers direct review without an agent turn. Decline the offer to
+propose changes, inspect the existing scripts against the displayed bar, and confirm their command
+sources, coverage and prerequisites before smoke execution. Final approval records fingerprints
+without rewriting the scripts. Missing review metadata does not mean sensors are missing. Agent
+proposals remain available when checks need changes; headless startup still requires saved review.
+
 Review the exact commands before execution. Yokai validates shell syntax and smoke-runs temporary
 copies of every proposed sensor, using the normal executor from the repository root, on the host or
 configured sandbox. Scripts must rely on that cwd rather than derive the root from their file path.
