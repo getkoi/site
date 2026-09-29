@@ -9,7 +9,7 @@ order: 40
 
 The default interface is a **read-only cockpit**: it monitors the supervisor, but it does not pace
 phases. Launch with bare `yokai`; use `--headless` or a non-TTY stdout for plain text.
-Use `yokai setup` for explicit configuration before a run, or **Setup** (`p`) from the cockpit.
+Use `yokai setup` for explicit configuration before a run, or **Setup** (`p`) from a stopped cockpit.
 
 **Font:** use a crisp monospace font, such as SF Mono on macOS. The TUI draws into the cell grid and
 cannot load fonts.
@@ -27,6 +27,12 @@ cannot load fonts.
 
 **Agent stream** is ephemeral and bounded per phase. Durable per-turn history is
 `sessions.jsonl` and the **Sessions** view.
+
+Spacious terminals show connected Plan, Build, and Seal cards above live activity. Build shows the
+iteration or worker count; recovery gets a dedicated status panel. Narrow terminals stack the phase
+summary above the stream. Activity labels distinguish received output, reasoning, tool calls, and file
+edits. A tool label means the latest observed call, not proof that the tool is still running.
+Unreported cost and token totals show a dash.
 
 In token savings mode, multiple turn rows can share a session. Phase headers count
 distinct sessions and use each session's latest reported cost. Rows show short,
@@ -77,6 +83,10 @@ visibility only; the 30-minute turn timeout is still the only adapter kill.
 **Deliverable view keys** (when focused): `↑`/`↓` tree or patch scroll, `Tab` toggle tree/patch,
 `←`/`→` patch horizontal scroll, `Enter` open file patch, `Esc` back to tree focus.
 
+**Sessions view keys:** `↑`/`↓`, Page Up/Page Down, or the wheel scroll history; End returns to live.
+On taller terminals, `←`/`→` selects a recorded turn for the inspector below the history.
+Deliverables show verification status separately from the existence of a commit.
+
 ## Themes (`t` / Theme chip)
 
 Two pastel **hours** (ADR-0052): **yoru** (night) and **hiru** (day), after
@@ -101,7 +111,7 @@ flag.
 | any key (splash) | skip intro to cockpit |
 | `w` | cycle view (Cockpit / Sessions / Deliverable) |
 | `t` | cycle theme |
-| `p` | open setup at the next phase boundary; saved checkpoints are reused |
+| `p` | open setup while stopped; saved checkpoints are reused |
 | `x` | abort the in-flight phase while **Live**: kills the agent and parks the run (**STOPPED**) |
 | `r` | resume a **STOPPED** run (same on-disk worklog pickup; no confirm) |
 | `q` / `Esc` | quit confirm (then `y` confirm, `n` cancel) |
