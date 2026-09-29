@@ -71,5 +71,17 @@ Directory: [`crates/yokai/docs/adr/`](https://github.com/getkoi/koi/tree/main/cr
 [Authoritative assessment YAML](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0055-authoritative-assessment-mapping.md) removes assessment fingerprints and duplicate runtime approval. Complete skill-approved mappings are immediately usable by the driver.
 
 [Preparation wizard](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0056-tui-preparation-wizard.md)
-puts all interactive preparation under bare `yokai` and the cockpit Prepare control. The helper and
+puts interactive preparation in one shared wizard. The helper and
 wizard share [environment-bound gate approval](https://github.com/getkoi/koi/blob/main/docs/adr/0010-shared-environment-bound-gate-review.md).
+
+[Discoverable setup](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0059-discoverable-project-setup.md)
+adds `yokai setup`, runtime configuration before a method plan, and list/detail review panes.
+It shares one preparation engine with startup and the cockpit's Setup control.
+
+[Explicit assessment review](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0060-explicit-assessment-review.md)
+requires approval for new and edited assessments in both paces and gives setup a compact current-step
+layout with consistent keyboard, focus, and click controls.
+
+[Setup timeline and final review](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0061-setup-timeline-and-final-review.md)
+adds the model-style choice, clickable steps, and visible background activity. Every preparation
+visit ends with Start run, Back, or Save and exit. Already prepared bare launches still execute directly.

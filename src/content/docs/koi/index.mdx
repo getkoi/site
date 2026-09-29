@@ -17,8 +17,8 @@ There is no Koi executable and no shared bootstrap layer to install.
 to implement, run the documented verification commands and commit each phase. Sensor scripts and runtime
 model choices are optional. [Start with Junji](/koi/docs/quickstart#junji-alone).
 
-**Junji-prepared work with Yokai:** run `yokai` in the prepared repository. Interactive startup handles
-missing settings and reviewed gate preparation, then offers to start. Saved settings carry across
+**Junji-prepared work with Yokai:** run `yokai setup` to choose a runtime and review checks, then
+choose Start run or Save and exit. Later `yokai` launches start directly. Saved settings carry across
 efforts. [Add Yokai](/koi/docs/quickstart#add-yokai-to-a-prepared-project).
 
 ```mermaid
@@ -48,6 +48,8 @@ sensors never approves gated actions. [Project home](/koi/docs/project-home).
 ## Continue reading
 
 - [Quickstart](/koi/docs/quickstart): method first, optional automation.
+- [Greenfield walkthrough](/koi/docs/greenfield): build a TypeScript app from an empty repository.
+- [Models and tiers](/yokai/docs/models): choose a starting model and tune capability bands.
 - [Junji guide](/junji/docs/guide): all ten verbs.
 - [Yokai run guide](/yokai/docs/run): runtime and diagnostics.
 - [Settings and migration](/yokai/docs/configuration): durable preferences and effort differences.

@@ -10,6 +10,8 @@ order: 20
 <span id="outcome"></span>
 
 Start with the free Junji method. Add Yokai when you want automated execution of a prepared project.
+Starting with an empty repository? Follow the [greenfield walkthrough](/koi/docs/greenfield) to build
+a TypeScript task app, including configuration and real checks.
 
 ## Junji alone
 
@@ -51,13 +53,17 @@ The installer builds only Yokai. Install and log in to a supported coding agent;
 [agent login](/yokai/docs/cli#agent-login). Return to your prepared project:
 
 ```bash
-yokai --once
+yokai setup --once
 ```
 
-Interactive startup shows only the preparation that needs attention. Missing sensors are generated
+Choose **One model** or **Use tiers**, configure the agent/models, then select the host or a sandbox.
+The [model guide](/yokai/docs/models) offers starting recommendations. Missing sensors are generated
 automatically from Junji’s bar and real project commands; existing sensors open for review.
 Choose Approve and test to run the exact scripts and save the gate if they all pass. Yokai then
-assesses missing phase choices, checks readiness and offers Start run. Later runs reuse saved settings.
+proposes missing phase choices. Review them and choose **Approve and continue**. After readiness
+passes, setup offers **Start run** or **Save and exit**.
+Every preparation visit ends at the final review. Use the timeline to revisit earlier steps before
+choosing Start run. Later bare `yokai` launches reuse approved settings and execute directly.
 A failing check stays intact and is reported; setup never weakens it to get a green result.
 
 Yokai reads the repository's METHOD, CONTEXT, backlog and phase plans. The execution machine does not
@@ -67,18 +73,19 @@ need the Junji skill installed. Yokai does not take raw goals or arbitrary plans
 
 ```bash
 yokai                 # reuse settings and continue
+yokai setup           # reopen configuration and review
 # Optional read-only diagnostics:
 yokai doctor --probe
 ```
 
-Use **Prepare** (`p`) in the cockpit to reopen the [wizard](/yokai/docs/preparation);
+Use **Setup** (`p`) in the cockpit to reopen the [wizard](/yokai/docs/preparation);
 it waits for the current phase to finish. Bare Yokai halts at `[gated]` phases. `--allow-gated` explicitly authorizes them for one invocation;
 standing directives still apply. Configuration, assessments, gate review and plan import do not grant that approval.
 
 `--headless` and noninteractive startup never prompt or write setup defaults. Prepare and review the
 gate interactively and save phase choices approved through the helper or wizard. Assessment YAML
 requires no second approval or fingerprint. Changed verification commands or scripts require
-`yokai`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks; approval to save is conditional on passing results.
+`yokai setup`; reconsider phase choices when scope changes warrant it. Sensor commands are reviewed before temporary smoke checks; approval to save is conditional on passing results.
 
 Settings persist in `.koi/yokai.yml`; `.koi/run/yokai.yml` is an optional differences file.
 Consolidation removes effort overrides, sessions and accounting but preserves reusable settings,

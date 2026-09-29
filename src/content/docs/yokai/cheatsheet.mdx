@@ -12,12 +12,13 @@ repository documents; the execution machine does not need the Junji skill instal
 
 ## Run and inspect
 
-Bare `yokai` opens missing preparation or enters the cockpit. Press **p** to reopen the wizard;
+Bare `yokai` prepares missing inputs and starts when ready. Use `yokai setup` or press **p** in the cockpit to open setup;
 while a phase runs, preparation waits for its boundary. Review sensors, edit phase rows and manage
 the environment there. `/yokai` helper operations remain available.
 
 ```bash
-yokai --once          # guided missing setup, review checks, then offer to start
+yokai setup --once    # configure, review checks, then offer to start one phase
+yokai setup           # reopen settings; choose Start run or Save and exit
 yokai                 # reuse settings and continue
 yokai doctor --probe  # optional diagnostics
 yokai --headless      # requires saved settings and a reviewed gate and current assessments; never onboards
@@ -49,7 +50,8 @@ check remains intact. [Sensors](/yokai/docs/sensors) · [Recipes](/yokai/recipes
 
 ## Sandbox
 
-Run `yokai` to select the backend and image. Build the repo-owned recipe:
+Run `yokai setup` to select the backend and image. Review the proposed Dockerfile and choose
+**Approve and build**, or build the repo-owned recipe manually:
 
 ```bash
 # Apple:

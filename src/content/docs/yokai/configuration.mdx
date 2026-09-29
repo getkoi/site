@@ -7,11 +7,18 @@ kind: reference
 order: 30
 ---
 
+Open `yokai setup` and choose **One model** or **Use tiers**, then configure models and the environment.
+**Tiers** opens individual bands; **Details → More settings** holds fallback lists, permissions, and
+limits. See the [setup guide](/yokai/docs/preparation) and [model recommendations](/yokai/docs/models).
+
 Precedence: explicit CLI flag → `.koi/run/yokai.yml` → durable `.koi/yokai.yml` → built-in default. Project layout: [Project home](/koi/docs/project-home). Sandbox declaration: [Sandbox settings](/yokai/docs/sandbox/sandbox-yml). Sensor scripts: [Sensors](/yokai/docs/sensors).
 
 ## `.koi/yokai.yml`
 
 Reusable driver settings (including the nested `sandbox` block). Written by `yokai`; read by `yokai` and `yokai doctor`.
+
+`model_mode: single|tiers` remembers the setup style. Older settings infer it from their bands;
+candidate lists remain authoritative for execution.
 
 | Field | Values | Default when omitted |
 |-------|--------|----------------------|
@@ -207,7 +214,7 @@ Swarm adds no slot: split walks plan's band; workers and merge walk coder's; jud
 | Unknown role key | hard error (`deny_unknown_fields`) |
 | Permission / timeouts / `session_options` | run-global |
 
-`yokai` **Advanced: per-role tier lifts** is opt-in. The cockpit shows the active Agent · Model; a notice when the chosen candidate is not first in the list.
+Per-role tier lifts are opt-in under **Details → More settings**. The cockpit shows the active Agent · Model and a notice when the chosen candidate is not first in the list.
 
 ### `swarm:` (ADR-0045, ADR-0047, ADR-0048)
 
@@ -376,10 +383,11 @@ Approval through the helper skill is sufficient: complete saved choices are auth
 does not request a second approval, agent proposal or assessment fingerprint. Junji alone does not
 require the mapping. YAML choices override optional legacy heading tags and stay out of plan Markdown.
 
-Interactive setup proposes missing or incomplete assessments. Existing complete choices remain in
-use after status, plan or scope edits. Reconsider them with `/yokai assess` or the cockpit’s Prepare menu
+Interactive setup proposes missing or incomplete assessments. New and edited choices wait for
+**Approve and continue**. Existing complete choices remain in
+use after status, plan or scope edits. Reconsider them with `/yokai assess` or **Review phases** in setup
 when scope changes warrant different choices; Yokai does not infer staleness from hashes. Explicit
-CLI assessment can review existing values without an agent and preserves unrelated settings.
+setup review can inspect existing values without an agent and preserves unrelated settings.
 New phases need complete entries; removed or renumbered IDs require mapping cleanup.
 
 Headless startup and sandbox re-entry stop only for invalid, missing or incomplete mappings, never
@@ -390,7 +398,7 @@ omitted on explicit assessment saves; startup does not rewrite them. Assessment 
 ## Migrate an existing installation
 
 The Koi binary has been removed without a compatibility wrapper. Replace `koi setup` / `koi init`
-with interactive `yokai`, and `koi doctor` with `yokai doctor`.
+with `yokai setup`, and `koi doctor` with `yokai doctor`.
 
 ```bash
 yokai migrate

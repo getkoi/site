@@ -12,7 +12,7 @@ Run Yokai in a Linux VM when your project needs a reproducible environment. Enab
 <details>
 <summary>How the launcher starts the supervisor</summary>
 
-The host uses the declared OCI `image:` and copies Linux `yokai` and `koi` binaries into the VM. It runs `.koi/sandbox-setup.sh` once when present. The inner supervisor receives `YOKAI_SANDBOX_INNER=1` so it does not launch another sandbox. See [ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md) and [ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md).
+The host uses the declared OCI `image:` and copies the Linux `yokai` binary into the VM. It runs `.koi/sandbox-setup.sh` once when present. The inner supervisor receives `YOKAI_SANDBOX_INNER=1` so it does not launch another sandbox. See [ADR-0024](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0024-apple-container-sandbox-backend.md) and [ADR-0027](https://github.com/getkoi/koi/blob/main/crates/yokai/docs/adr/0027-repo-owned-sandbox-image.md).
 
 </details>
 

@@ -1,0 +1,323 @@
+---
+title: Build a project from scratch
+navLabel: Greenfield walkthrough
+description: "Build a TypeScript task app from an empty repository: configure Yokai, plan with Junji, bootstrap real checks, verify phases, and consolidate."
+section: guide
+kind: tutorial
+order: 25
+---
+
+Build **Daylist**, a small task app with React, Vite, and TypeScript. You will start with an empty
+repository and finish with a working app, verified commits, and a durable project spec.
+
+The app adds, completes, filters, and deletes tasks. It keeps tasks in local storage, works with a
+keyboard, and handles empty input and invalid stored data. It needs no server or account.
+
+## The route
+
+1. Configure one agent and model with `yokai setup`.
+2. Use Junji to define the app and its phases.
+3. Run the bootstrap phase with `/junji next` to establish real project checks.
+4. Let Yokai review those checks and drive the remaining phases.
+5. Inspect the result and consolidate the effort.
+
+**Terminal** blocks run in your shell. **Coding agent** blocks are messages to your agent.
+Junji commands work in the agent that has the skill installed; they are not shell commands.
+
+## 1. Install the tools
+
+You need Git, a current Rust toolchain for the Yokai installer, Node.js 24 LTS with npm, and a
+supported coding agent. Install and sign in to Claude Code, Codex, Cursor CLI, or OpenCode using
+the [agent login guide](/yokai/docs/cli#agent-login).
+
+**Terminal — install Yokai in a separate tools directory:**
+
+```bash
+git clone https://github.com/getkoi/koi.git koi-tools
+cd koi-tools
+./install.sh
+cd ..
+```
+
+Make sure `~/.cargo/bin` is on your `PATH`. Confirm the installation:
+
+```bash
+yokai --help
+node --version
+npm --version
+```
+
+Create your app repository and install the method skill:
+
+```bash
+mkdir daylist
+cd daylist
+git init
+npx skills add getkoi/koi --skill junji
+```
+
+Open your coding agent in this directory. If it was already open when you installed the skill,
+reload its skills or restart it.
+
+## 2. Configure once
+
+**Terminal — inside `daylist`:**
+
+```bash
+yokai setup
+```
+
+Choose **One model**, then **Agent** (`a`) and **Model** (`m`). Type to search the agent's model menu, or select **Agent
+default**. Set **Environment** (`e`) to **Host** for this walkthrough. Up/down moves between fields,
+left/right changes simple choices, and Enter selects. You can also click each field.
+One model is enough; the [model guide](/yokai/docs/models)
+offers balanced and cost-conscious tier mappings for later.
+
+Choose **Save settings**, then **Save and exit**. Yokai saves `.koi/yokai.yml` and shows the Junji
+handoff. The repository does not have a method plan or executable checks yet, so there is no run to start.
+
+For example, choosing Claude Code and its Sonnet alias produces runtime preferences equivalent to:
+
+```yaml
+# .koi/yokai.yml — relevant settings, not the complete generated file
+agent: claude
+model: sonnet
+sandbox:
+  enabled: false
+```
+
+Use the model ID your agent actually offers. Yokai may also write explicit tier lists when you
+change the simple agent/model selection. Those lists use the same chosen model initially.
+
+<details>
+<summary>Prefer a sandbox?</summary>
+
+Select Docker sandbox or Apple sandbox in setup and choose a project image name. Runtime-only
+setup saves that choice. Once Junji's project files exist, Yokai can inspect the environment and
+propose a Dockerfile. **Approve and build** saves the reviewed recipe, builds the image, and replaces
+the named sandbox.
+
+The image must include Node, npm, the selected coding agent, and the tools used by your checks.
+Install project dependencies in that environment before reviewing sensors. Keep dependency installation
+out of sensor scripts. Follow [sandbox setup](/yokai/docs/sandbox) and the [Node recipes](/yokai/recipes).
+Changing environments requires a fresh smoke review of the existing checks.
+
+</details>
+
+## 3. Define the project with Junji
+
+**Coding agent:**
+
+```text
+/junji begin
+```
+
+Junji creates `.koi/run/` and records what exists. An empty app has no build, lint, or test commands
+yet; the survey should say so. Your saved Yokai preferences remain in the durable project home.
+
+**Coding agent:**
+
+```text
+/junji plan Build Daylist, a local-first task app using React, Vite, TypeScript,
+and npm. Users can add, complete, filter, and delete tasks. Persist tasks in
+localStorage. Reject blank titles, recover from invalid stored data, and support
+keyboard navigation with labeled controls and visible focus.
+
+Keep the interface compact and readable at phone and desktop widths. Establish
+the design before implementation. No backend, login, sync, or deployment.
+
+The first phase must bootstrap the app and meaningful checks. Preserve .git,
+.koi, and installed skills when scaffolding into this nonempty directory.
+Use ESLint, TypeScript, Vitest, and React Testing Library. Tests must run once,
+not watch. Do not use --passWithNoTests or placeholder passing tests.
+
+Record these target verification commands from the repository root:
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+
+Record that the bootstrap phase establishes these commands; they do not exist
+yet. Every command must pass before that phase is complete. Later phases must
+keep the full bar green. The final deliverable is specs/daylist.md plus README
+instructions for development, checks, and the app's storage behavior.
+```
+
+Answer Junji's questions and review the resulting plan. It should pin task behavior, storage
+recovery, keyboard interactions, design, and verification. Planning creates documents; the bootstrap
+phase creates the application and its commands.
+
+**Coding agent:**
+
+```text
+/junji refine
+```
+
+Ask for a backlog along these lines if the proposed split is too broad:
+
+- **P0 — Bootstrap:** app shell, toolchain, four real check commands, and a test that renders the
+  heading and labeled task input.
+- **P1 — Task behavior:** add, complete, delete, and filter; tests for blank input and each state change.
+- **P2 — Persistence:** local storage, reload behavior, and recovery from malformed data; tests for
+  valid, missing, and invalid stored values.
+- **P3 — Finish:** responsive layout, keyboard and focus review, remaining regression tests, and README.
+
+Check that each phase has a clear completion condition. Keep human visual review explicit where
+automated checks cannot prove the design. Runtime tiers belong in Yokai's YAML, not in this backlog.
+
+## 4. Bootstrap the real checks
+
+**Coding agent:**
+
+```text
+/junji next
+```
+
+Junji implements only P0, runs the full verification bar, and commits it. The resulting `package.json`
+should expose scripts equivalent to:
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc -b --pretty false",
+    "test": "vitest run",
+    "build": "vite build"
+  }
+}
+```
+
+The app needs the corresponding dependencies, TypeScript project files, ESLint configuration, and
+Vitest DOM setup. Junji supplies these during P0. The initial test must assert real app behavior,
+such as the accessible heading and task input. Later phases add tests as their behavior appears.
+
+**Terminal — confirm the bootstrap:**
+
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+git log -1 --oneline
+git status --short
+```
+
+**Checkpoint:** all four commands pass, P0 is marked done, and the bootstrap commit exists. If a
+command fails, return to the agent and fix P0 before handing the remaining work to Yokai. There is
+no bootstrap exemption from verification.
+
+## 5. Review checks and launch one phase
+
+**Terminal:**
+
+```bash
+yokai setup --once
+```
+
+The saved model style and runtime are prefilled. Confirm **One model**, then choose **Save and continue**. Yokai inspects the selected environment
+and proposes sensors backed by your actual package scripts.
+
+Select each sensor row to inspect its exact script, source, coverage, and prerequisites. Use
+**Review notes** for the verification bar, gaps, and exclusions. A lint sensor should be a small
+wrapper like this:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec npm run lint
+```
+
+Yokai runs sensors from the repository root. A sensor should invoke an established check, rather
+than install dependencies, implement missing tests, or return success unconditionally.
+
+Choose **Approve and test**. Yokai runs temporary copies in the selected environment and saves the
+whole reviewed gate only if all checks pass. Missing checks and failed commands stay visible.
+
+Next, **Review phases** shows the proposed tier, strategy, and reason for each remaining phase.
+Select each row to review it; use **Details** to edit choices. For Daylist, start with `plain`;
+these phases share the same app and state model. Choose **Approve and continue** to save the
+assessments and check readiness. New or edited assessments always require this confirmation.
+
+At **Review and start**, review all four summaries. Click a summary or timeline step to go back;
+viewing preserves your choices. A small Kitsune and elapsed time show when work is running, with
+output under Details. Choose **Start run** when ready. Because you launched with `--once`, Yokai drives
+one remaining phase and then stops advancing. You can also choose **Save and exit** and start later.
+
+After preparation, the project has:
+
+```text
+.koi/
+  yokai.yml                 reusable runtime and reviewed gate metadata
+  sensors/                  wrappers for the four project commands
+  run/
+    CONTEXT.md              facts, prerequisites, and verification bar
+    PLAN.md                  agreed scope and design
+    METHOD.md                the project method
+    BACKLOG.md               phases and current progress
+    phases/                  phase plans and outcomes as work runs
+    yokai.yml                phase tiers, strategies, and reasons
+```
+
+## 6. Inspect, then continue
+
+Yokai runs Plan → Build → Seal and verifies the result on disk. A phase counts as done only when
+the gate passes, the backlog advances, a new commit exists, and the contract-attributed paths are clean.
+
+Use the cockpit's **View** control to inspect Sessions and Deliverable. After exiting, check:
+
+```bash
+git log -2 --oneline
+git show --stat HEAD
+npm run test
+```
+
+Continue the remaining phases:
+
+```bash
+yokai
+```
+
+A prepared project enters the cockpit directly. **Setup** (`p`) is always available in the footer;
+while a phase runs, it queues configuration until the phase boundary. You can also exit and use
+`yokai setup` from your terminal.
+
+<details>
+<summary>What if a check fails or the run stops?</summary>
+
+- **During setup:** select the failing sensor and read its output. Fix a script or environment
+  defect, then review and test again. A genuine application failure needs a product fix; keep its check.
+- **During Build:** Yokai records feedback and can run correction or recovery work within the
+  configured limits. Inspect the failure before changing those limits.
+- **After pressing Stop:** use Resume (`r`) when the cockpit offers it.
+- **After closing the terminal:** relaunch `yokai` in the same repository. It reads the current
+  working folder and resumes according to the recorded phase state.
+- **At a human-gated phase:** review the requested action first. Setup does not authorize it.
+  Follow the project's standing directives and [run controls](/yokai/docs/run).
+
+Use `yokai doctor --probe` to diagnose tools and agent access. See [troubleshooting](/yokai/docs/troubleshooting)
+for specific startup and recovery failures.
+
+</details>
+
+## 7. Check the app and consolidate
+
+Once all phases are done, run `npm run dev` and open the URL Vite prints. Add a task, complete it,
+filter it, reload the page, and delete it. Repeat the main path with the keyboard and check a narrow
+viewport. Complete any recorded human review.
+
+If the result needs more work, use `/junji iterate` with a concrete request. It adds phases; then
+return to `yokai setup` to assess the new work before execution.
+
+When the result is complete, exit Yokai and return to your coding agent:
+
+```text
+/junji consolidate
+```
+
+Review and confirm the proposed consolidation. Junji writes `specs/daylist.md`, checks that the
+deliverable matches the completed work, and removes `.koi/run/` in a commit. The durable settings,
+sensors, and optional sandbox recipe remain under `.koi/` for the next effort.
+
+**Finished:** a working app, passing checks, a commit per verified phase, a README, and a project
+spec. For the next effort, start with `/junji begin`; reuse the saved runtime and review changed checks.

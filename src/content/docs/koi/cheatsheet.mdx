@@ -29,11 +29,9 @@ optional. Human gates, dependency order and standing directives remain binding.
 From the framework checkout, `./install.sh` installs Yokai. Then, in the Junji-prepared project:
 
 ```bash
-yokai --once            # guided missing setup, review gate, offer to run one phase
+yokai setup --once      # configure, review, then choose to run one phase
 yokai                   # later runs reuse settings
-yokai          # review commands, smoke temporary scripts, approve gate
-yokai           # review per-phase tiers and strategies in effort YAML
-yokai    # interactive runtime and sandbox settings
+yokai setup             # revisit the timeline and final review
 yokai doctor --probe    # optional diagnostics
 yokai migrate           # existing legacy settings only
 ```
@@ -42,4 +40,4 @@ Reusable settings: `.koi/yokai.yml`. Optional effort differences: `.koi/run/yoka
 Headless startup never prompts or authors setup. Bare runs halt at human-gated phases; explicit
 `--allow-gated` authorizes them for that invocation without overriding standing directives.
 
-[Quickstart](/koi/docs/quickstart) · [Configuration](/yokai/docs/configuration)
+[Quickstart](/koi/docs/quickstart) · [Greenfield walkthrough](/koi/docs/greenfield) · [Configuration](/yokai/docs/configuration)

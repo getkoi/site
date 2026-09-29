@@ -11,8 +11,8 @@ export default function FirstRun() {
             <h2 id="first-run-title">Run one phase. Then decide what to automate.</h2>
           </div>
           <p>
-            Run Yokai in a prepared project. Review its proposed checks, choose
-            the runtime, then drive one phase and inspect the commit.
+            Choose an agent and model, review the project's checks,
+            then drive one phase and inspect the commit.
           </p>
         </header>
 
@@ -49,10 +49,10 @@ npx skills add getkoi/koi --skill junji`}
             <span>03</span>
             <div>
               <h3>Review setup, then drive once</h3>
-              <p>Interactive startup guides setup, reviews sensors and phase assessments, and offers to start.</p>
+              <p>Setup guides configuration and check review. Choose Start run when ready, or Save and exit.</p>
               <pre>
                 <code>
-                  {`yokai --once`}
+                  {`yokai setup --once`}
                 </code>
               </pre>
             </div>
@@ -62,7 +62,7 @@ npx skills add getkoi/koi --skill junji`}
         <div className="first-run__footer">
           <div>
             <b>No yokai login.</b>
-            <span>Your credentials stay with Claude, Cursor, or OpenCode.</span>
+            <span>Your credentials stay with Claude, Codex, Cursor, or OpenCode.</span>
           </div>
           <div className="first-run__actions">
             <Button
@@ -71,8 +71,11 @@ npx skills add getkoi/koi --skill junji`}
               variant="notch"
               size="md"
             />
-            <AppLink href="/yokai/docs/run">
-              Read the run reference <span aria-hidden="true">→</span>
+            <AppLink href="/yokai/docs/models">
+              Choose models and tiers <span aria-hidden="true">→</span>
+            </AppLink>
+            <AppLink href="/koi/docs/greenfield">
+              Start an app from scratch <span aria-hidden="true">→</span>
             </AppLink>
           </div>
         </div>

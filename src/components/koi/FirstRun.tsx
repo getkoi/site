@@ -80,7 +80,7 @@ export default function FirstRun() {
             <b>Ready to automate?</b>
             <span>
               Install Yokai with <code>./install.sh</code> from the framework checkout,
-              then run <code>yokai --once</code> in your prepared repository.
+              then run <code>yokai setup --once</code> in your prepared repository.
             </span>
           </div>
           <Button
@@ -96,6 +96,11 @@ export default function FirstRun() {
         <p>
           <strong>Two entry points.</strong> koi is the framework. Junji is its standalone
           method; Yokai owns runtime setup, gate review and automated execution.
+        </p>
+        <p>
+          <strong>Starting from scratch?</strong>{" "}
+          <AppLink href="/koi/docs/greenfield">Build a TypeScript task app</AppLink>,
+          from an empty repository through setup and verified phases.
         </p>
         <p>
           <strong>Under the floor:</strong> tori is the shared ACP connector port used

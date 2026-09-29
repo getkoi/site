@@ -255,7 +255,10 @@ When a decision moves, update both: rationale in PLAN, binding fact in CONTEXT.
 
 ## Running unattended
 
-Optionally install **Yokai** and run `yokai` from the prepared repository. Interactive startup configures runtime preferences, proposes sensors for review, checks readiness and offers to start. Execution does not require an installed Junji skill. Once prepared, Yokai loops through authorized phases:
+Optionally install **Yokai** and run `yokai setup` from the prepared repository. Choose a runtime,
+review proposed sensors, and choose Start run after readiness passes. Later bare `yokai` launches
+start automatically when ready. Execution does not require an installed Junji skill. Once prepared,
+Yokai loops through authorized phases:
 
 ```mermaid
 flowchart TD

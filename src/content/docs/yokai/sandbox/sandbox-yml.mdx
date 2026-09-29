@@ -73,9 +73,13 @@ Per-run escape: `yokai --host`. That flag is not stored in this file.
 
 ## Dockerfile.sandbox
 
-When sandboxing is enabled, `yokai` creates `.koi/Dockerfile.sandbox` if it is missing. The recipe matches the backend and includes the agents configured in the wizard and the candidates in `tiers:`. A configuration with several agents includes an install block for each.
+Choose the backend and image in `yokai setup`. Once the method files exist, Yokai inspects the
+environment and proposes a repository-backed `.koi/Dockerfile.sandbox` if repair is needed.
+The recipe should include the selected agents and the actual checks' prerequisites.
 
-Setup preserves existing Dockerfiles. It does not build the image or create `sandbox-setup.sh`.
+Review the recipe, then choose **Approve and build** to save it, build the image, and replace the
+named sandbox. Existing Dockerfiles are review inputs; they change only after approval.
+Environment changes require fresh smoke checks of the existing gate.
 
 Suggested local tag: `koi-<repo-basename>-sandbox` (must match `image:`).
 
@@ -117,7 +121,7 @@ When `yokai.yml` `tiers:` lists more than one Agent, the scaffold emits every ma
 ### Minimal shape
 
 ```dockerfile
-# .koi/Dockerfile.sandbox — edit freely; setup will not overwrite.
+# .koi/Dockerfile.sandbox — repository-owned and reviewed before rebuilding.
 FROM docker/sandbox-templates:shell-docker   # or a stack base for apple
 
 USER root

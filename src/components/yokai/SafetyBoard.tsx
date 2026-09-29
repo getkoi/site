@@ -75,7 +75,7 @@ export default function SafetyBoard() {
             Declare a container or Apple boundary in the project home. yokai
             launches the agent there; the same files and sensors decide the result.
           </p>
-          <code>yokai configure</code>
+          <code>yokai setup</code>
         </article>
         <article>
           <span aria-hidden="true">03</span>

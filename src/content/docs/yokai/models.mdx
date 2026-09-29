@@ -1,0 +1,190 @@
+---
+title: Choose models and tiers
+navLabel: Models and tiers
+description: "Start with one model, then choose a balanced or cost-conscious tier mapping for your project."
+section: guide
+kind: how-to
+order: 17
+---
+
+**Start with one capable coding model.** Open `yokai setup`, choose your agent, and use **Choose
+model** to search its available models. Save that choice and run one bounded phase before tuning tiers.
+
+For daily implementation, our starting suggestions are **Claude Sonnet 5.5** or **GPT-6 Sol**.
+For tightly coupled or ambiguous work, start with **Claude Opus 5.5** or **GPT-6 Astra** instead.
+These are practical starting points, not a benchmark ranking.
+
+**Recommendations checked September 28, 2026.** Provider names below come from the linked model
+documentation. Availability and the exact model IDs exposed over ACP depend on your agent, account,
+provider, and project. The setup picker is the source for the ID Yokai will send.
+
+## What each tier means
+
+A tier describes the capability a phase needs. It is not a fixed price, model, or reasoning effort.
+All four tiers may use the same model while you learn the workflow.
+
+- **Low:** mechanical edits with clear acceptance criteria, such as renaming a field or updating
+  established documentation. Try **Claude Haiku 4.5** or **GPT-6 Luna**. Promote the phase if the work
+  turns out to require design or broad reasoning.
+- **Medium:** bounded implementation with good tests, such as Daylist's add, complete, and filter
+  behavior. Start with **Claude Sonnet 5.5** or **GPT-6 Sol** at its default effort.
+- **High:** cross-module changes, migrations, unfamiliar code, or subtle invariants. Start with
+  **Claude Opus 5.5** or **GPT-6 Astra**. Use a stronger review tier when defects would be hard to detect.
+- **Ultra:** unusually difficult diagnosis or tightly coupled work where another failed attempt
+  would be costly. Try **Claude Fable 5.1** when your agent offers it, or **GPT-6 Astra** with a higher
+  supported reasoning effort. Opus remains a useful choice when Fable is unavailable.
+
+Yokai's `ultra` tier is a candidate band. It does not enable an agent's similarly named Ultra mode
+or turn on swarms. Choose `plain` unless a phase has independently mergeable work and suitable checks.
+
+## A balanced Claude configuration
+
+Claude Code supports the `haiku`, `sonnet`, and `opus` aliases. They follow the versions available
+through your provider; they do not pin the versions named above. Confirm that your ACP adapter
+offers each alias in setup. Use its exact advertised IDs when they differ.
+
+```yaml
+# .koi/yokai.yml — merge these keys into your existing settings
+agent: claude
+model: sonnet
+tiers:
+  low:
+    - agent: claude
+      model: haiku
+  medium:
+    - agent: claude
+      model: sonnet
+  high:
+    - agent: claude
+      model: opus
+  ultra:
+    - agent: claude
+      model: opus
+roles:
+  judge:
+    tier: high
+```
+
+This keeps routine work on Sonnet, uses Haiku for mechanical phases, and sends harder phases and
+reviews to Opus. Once a difficult phase provides evidence that Opus is insufficient, consider a
+Fable candidate for `ultra`, using the ID shown in your picker.
+
+## A balanced Codex configuration
+
+The current Codex guide recommends Luna for focused tasks, Sol for everyday and complex coding,
+and Astra for the hardest work. If your Codex ACP menu offers these IDs:
+
+```yaml
+# .koi/yokai.yml
+agent: codex
+model: gpt-6-sol
+tiers:
+  low:
+    - agent: codex
+      model: gpt-6-luna
+  medium:
+    - agent: codex
+      model: gpt-6-sol
+  high:
+    - agent: codex
+      model: gpt-6-astra
+  ultra:
+    - agent: codex
+      model: gpt-6-astra
+roles:
+  judge:
+    tier: high
+```
+
+Leave effort unset for the first run. Increase it for a specific candidate only after checking the
+options your adapter exposes. Higher effort generally takes longer and uses more tokens; it does
+not change the phase's acceptance criteria.
+
+## OpenCode and Cursor
+
+**OpenCode** uses provider-qualified IDs. Select a model from the setup picker, or inspect `/models`
+inside OpenCode in the same project. For a standard Anthropic connection that offers this ID,
+one-model setup can use:
+
+```yaml
+agent: opencode
+model: anthropic/claude-sonnet-5-5
+```
+
+For tiers, use the same candidate-list structure above with `agent: opencode` and the full IDs from
+your menu. For example, use your available Haiku, Sonnet, Opus, and Fable entries for the four bands.
+An OpenAI connection can use its available Luna, Sol, and Astra entries instead. Provider aliases
+and model variants are project-specific; copy the advertised reference rather than constructing one.
+
+**Cursor CLI** also supplies the model menu through ACP. **Composer 2.5** is a cost-conscious option
+to evaluate for bounded implementation; **Claude Sonnet 5.5** and **Claude Opus 5.5** are useful
+medium/high candidates when your account offers them. Cursor's display names and model IDs can
+differ. Start with its configured default, then select exact IDs through setup:
+
+```yaml
+agent: cursor
+# Omit model to use the agent's default.
+```
+
+A provider's website listing a model does not establish that your installed CLI adapter exposes it.
+If the picker cannot load, check the agent's login, press F5 to retry, or use its default. A custom
+model ID still has to be accepted by the agent's ACP model selector.
+
+## Spend less where the work supports it
+
+Keep **medium** on a reliable general coding model. Use **low** only for genuinely mechanical phases.
+Promote difficult work rather than spending many correction turns on an underpowered model.
+
+For a smaller budget, omit the `roles.judge` override so reviews inherit the phase tier. Keep the
+judge enabled while evaluating a model. Reserve higher-effort candidates for high and ultra work.
+Fast service modes can cost more; the name does not imply a cheaper model.
+
+Run one phase with a launch budget while evaluating a mapping:
+
+```bash
+yokai --once --max-cost 5
+```
+
+Cost reporting depends on the agent. Use `--max-tokens` when cost is unavailable. Limits are checked
+before further work; an in-flight turn can exceed its remaining budget. Inspect Sessions and the
+run ledger for actual usage, check failures, and correction turns.
+
+## Phase choices and role choices
+
+Reusable model candidates belong in `.koi/yokai.yml`. An effort's assessed phases belong in
+`.koi/run/yokai.yml`:
+
+```yaml
+# .koi/run/yokai.yml — example after reviewing this phase
+phases:
+  P2:
+    tier: high
+    strategy: plain
+    reason: Storage recovery touches shared state and reload behavior.
+```
+
+Use the **Phases** timeline step to inspect these choices. Plan, coder, judge, and seal normally
+inherit the phase tier. Repair, fix, and triage default to ultra. `roles.<role>.tier` changes that
+selection. [Token savings](/yokai/docs/sessions) uses the coder and judge profiles and ignores separate
+plan, seal, and recovery profiles.
+
+Each tier can list several candidates in preference order. Yokai tries the next candidate when a
+turn cannot open because the preferred one is unreachable, limited, or unstable. A failing test is
+product feedback, not a reason to walk to a different candidate. Every fallback should still be
+capable of the tier's work.
+
+Choose **Use tiers** at setup's first question, or open **Tiers**, to edit individual bands.
+**Details → More settings** also exposes ordered fallback lists. Saving **One model** applies that
+agent/model pair to all four bands. Explicit launch flags
+`--agent`, `--model`, and `--effort` pin that launch and bypass the candidate walk.
+
+## Sources and updates
+
+- [Anthropic model overview](https://platform.claude.com/docs/en/models/overview): current model names and positioning.
+- [Claude Code model configuration](https://code.claude.com/docs/en/model-config): aliases, provider differences, and effort.
+- [Codex models](https://developers.openai.com/codex/models): current coding models and reasoning guidance.
+- [Cursor models](https://cursor.com/docs/models): available families, Composer, and pricing modes.
+- [OpenCode V2 models](https://opencode.ai/v2/docs/models): project-scoped availability and model references.
+
+Recheck these sources when changing the recommendations. Validate the chosen IDs through the
+installed agent and run a representative phase before adopting a new mapping project-wide.
