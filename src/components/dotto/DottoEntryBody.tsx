@@ -97,7 +97,7 @@ export function DottoEntryBody({ id }: { id: string }) {
       return (
         <NativeFrame>
           <Text>
-            Inline <Code>koi doctor --probe</Code>.
+            Inline <Code>yokai doctor --probe</Code>.
           </Text>
         </NativeFrame>
       );

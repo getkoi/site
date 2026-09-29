@@ -30,7 +30,7 @@ export default function RunPrelude() {
             </div>
             <div>
               <span aria-hidden="true">├─</span>
-              <b>run/config.yml</b>
+              <b>yokai.yml</b>
               <small>driver preferences</small>
             </div>
             <div>

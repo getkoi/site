@@ -9,6 +9,7 @@ order: 40
 
 The default interface is a **read-only cockpit**: it monitors the supervisor, but it does not pace
 phases. Launch with bare `yokai`; use `--headless` or a non-TTY stdout for plain text.
+Use `yokai setup` for explicit configuration before a run, or **Setup** (`p`) from a stopped cockpit.
 
 **Font:** use a crisp monospace font, such as SF Mono on macOS. The TUI draws into the cell grid and
 cannot load fonts.
@@ -21,10 +22,17 @@ cannot load fonts.
 | Left | phase list + recent runs from ledger (outcome · cost) |
 | Gauge strip | live context-window occupancy (green → amber → red) |
 | Body | current **view** (below) |
+| Footer | Setup, stop/resume, View, theme, and Quit; shared across views |
 | Right (Cockpit) | **agent stream**: prose, tools, act banners (`Plan` / `Build` / `Seal`, iteration). During swarm fan-out this pane splits: **swarm roster** (each work item) \| focused worker stream |
 
 **Agent stream** is ephemeral and bounded per phase. Durable per-turn history is
 `sessions.jsonl` and the **Sessions** view.
+
+Spacious terminals show connected Plan, Build, and Seal cards above live activity. Build shows the
+iteration or worker count; recovery gets a dedicated status panel. Narrow terminals stack the phase
+summary above the stream. Activity labels distinguish received output, reasoning, tool calls, and file
+edits. A tool label means the latest observed call, not proof that the tool is still running.
+Unreported cost and token totals show a dash.
 
 In token savings mode, multiple turn rows can share a session. Phase headers count
 distinct sessions and use each session's latest reported cost. Rows show short,
@@ -43,8 +51,12 @@ Header `Σ` and ledger remain authoritative for cost.
 
 ### Phase rail
 
+The phase list shows tiers and strategies from the resolved effort YAML, falling back to legacy
+heading values only where no override exists. These are the same phase choices used by execution.
+Progress refreshes preserve them; changing launch settings requires restarting Yokai.
+
 Under the gauge, a thin strip of stations: `plan → coder → sensors → judge → seal → gate`. When the
-live phase actually fans out (`swarm.enabled` and `[swarm]`), the rail adds
+live phase actually fans out (`swarm.enabled` and the resolved phase strategy is `swarm`), the rail adds
 `split → workers → merge` (and `judge-split → judge-workers → judge-merge`). Later iterations replay
 those swarm stations. Recovery mutes the strip.
 While `workers` (or `judge-workers`) is the current station, the label is `workers 3/5` (still
@@ -71,6 +83,10 @@ visibility only; the 30-minute turn timeout is still the only adapter kill.
 **Deliverable view keys** (when focused): `↑`/`↓` tree or patch scroll, `Tab` toggle tree/patch,
 `←`/`→` patch horizontal scroll, `Enter` open file patch, `Esc` back to tree focus.
 
+**Sessions view keys:** `↑`/`↓`, Page Up/Page Down, or the wheel scroll history; End returns to live.
+On taller terminals, `←`/`→` selects a recorded turn for the inspector below the history.
+Deliverables show verification status separately from the existence of a commit.
+
 ## Themes (`t` / Theme chip)
 
 Two pastel **hours** (ADR-0052): **yoru** (night) and **hiru** (day), after
@@ -82,7 +98,7 @@ Theme chip to snap to the next entry (`terminal` → `yoru` → `hiru`).
 
 ## Controls
 
-Mouse clicks on **Theme**, **View**, **stop**, and **resume** chips are primary; keys are secondary
+Mouse clicks on **Setup**, **Theme**, **View**, **stop**, **resume**, and **Quit** chips are primary; keys are secondary
 hints. Stop shows only while the drive is Live; resume only while STOPPED. Contract **HALT** (gate
 red, stall, cost ceiling, gated-pending) has neither chip: `[r]` does not continue a broken
 contract. A fresh `yokai` after crash or power-off auto-continues; it does not wait for `[r]`.
@@ -95,6 +111,7 @@ flag.
 | any key (splash) | skip intro to cockpit |
 | `w` | cycle view (Cockpit / Sessions / Deliverable) |
 | `t` | cycle theme |
+| `p` | open setup while stopped; saved checkpoints are reused |
 | `x` | abort the in-flight phase while **Live**: kills the agent and parks the run (**STOPPED**) |
 | `r` | resume a **STOPPED** run (same on-disk worklog pickup; no confirm) |
 | `q` / `Esc` | quit confirm (then `y` confirm, `n` cancel) |

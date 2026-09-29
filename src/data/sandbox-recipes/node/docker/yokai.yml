@@ -1,0 +1,6 @@
+# .koi/yokai.yml — merge this mapping into existing settings
+sandbox:
+  enabled: true
+  backend: docker
+  image: koi-myproj-sandbox  # tag built from .koi/Dockerfile.sandbox
+  # name: yokai-myproj

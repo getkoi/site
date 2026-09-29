@@ -11,8 +11,8 @@ export default function FirstRun() {
             <h2 id="first-run-title">Run one phase. Then decide what to automate.</h2>
           </div>
           <p>
-            Start on the host with sandbox off. Preflight the agent and gate, drive
-            exactly one phase, then inspect the commit and cockpit.
+            Choose an agent and model, review the project's checks,
+            then drive one phase and inspect the commit.
           </p>
         </header>
 
@@ -21,11 +21,11 @@ export default function FirstRun() {
             <span>01</span>
             <div>
               <h3>Install once</h3>
-              <p>Install the CLIs from the koi repository and add the junji skill.</p>
+              <p>Install Yokai from the koi checkout. Add Junji to prepare a new project.</p>
               <pre>
                 <code>
                   {`./install.sh
-npx skills add getkoi/koi`}
+npx skills add getkoi/koi --skill junji`}
                 </code>
               </pre>
             </div>
@@ -34,13 +34,10 @@ npx skills add getkoi/koi`}
             <span>02</span>
             <div>
               <h3>Prepare the project</h3>
-              <p>Create project-home files, run preferences, and a phased plan.</p>
+              <p>Skip this step if the project already has a prepared Junji working folder.</p>
               <pre>
                 <code>
-                  {`koi setup --yes --sandbox off
-koi init
-
-# in your coding agent
+                  {`# in your coding agent
 /junji begin
 /junji plan
 /junji refine`}
@@ -51,12 +48,11 @@ koi init
           <li>
             <span>03</span>
             <div>
-              <h3>Preflight, then drive once</h3>
-              <p>Fix any failed probe before giving the driver a phase.</p>
+              <h3>Review setup, then drive once</h3>
+              <p>Setup guides configuration and check review. Choose Start run when ready, or Save and exit.</p>
               <pre>
                 <code>
-                  {`koi doctor --probe
-yokai --once`}
+                  {`yokai setup --once`}
                 </code>
               </pre>
             </div>
@@ -66,7 +62,7 @@ yokai --once`}
         <div className="first-run__footer">
           <div>
             <b>No yokai login.</b>
-            <span>Your credentials stay with Claude, Cursor, or OpenCode.</span>
+            <span>Your credentials stay with Claude, Codex, Cursor, or OpenCode.</span>
           </div>
           <div className="first-run__actions">
             <Button
@@ -75,8 +71,11 @@ yokai --once`}
               variant="notch"
               size="md"
             />
-            <AppLink href="/yokai/docs/run">
-              Read the run reference <span aria-hidden="true">→</span>
+            <AppLink href="/yokai/docs/models">
+              Choose models and tiers <span aria-hidden="true">→</span>
+            </AppLink>
+            <AppLink href="/koi/docs/greenfield">
+              Start an app from scratch <span aria-hidden="true">→</span>
             </AppLink>
           </div>
         </div>

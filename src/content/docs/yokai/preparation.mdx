@@ -1,0 +1,87 @@
+---
+title: Set up your project
+navLabel: Setup
+description: "Choose an agent and model, review checks, and prepare phases in one setup screen."
+section: guide
+kind: how-to
+order: 15
+---
+
+Run `yokai setup` to open configuration at any time. It uses the same preparation screen as startup
+and the cockpit's **Setup** control (`p`) while stopped. Active execution shows run controls instead.
+The `/yokai` helper skill remains an alternative.
+
+```bash
+yokai setup         # configure, then choose Start run or Save and exit
+yokai setup --once  # start at most one phase after review
+yokai               # prepare missing inputs, or run directly if already prepared
+```
+
+## Choose a runtime
+
+First choose **One model** or **Use tiers**. The saved choice is prefilled. One model uses the same
+agent/model for every phase; tiers exposes Low, Medium, High, and Ultra. Select a band to edit it.
+Choose **Agent** (`a`), **Model** (`m`), and **Environment** (`e`). Uppercase keys
+also work; `i` edits a sandbox image. One agent and model are
+enough to start. The searchable model picker loads the agent's ACP menu without sending a prompt.
+It also offers **Agent default**, a custom ID, and F5 to retry discovery. Sign in to your agent first.
+
+**Tiers** opens the four bands. **Model style** returns to the first choice.
+**Details → More settings** exposes fallback candidates, permissions, and limits, keeping your draft.
+Saving One model applies that pair to all four tiers. Unedited settings remain intact. See [Models and tiers](/yokai/docs/models)
+for named recommendations and [Configuration](/yokai/docs/configuration) for YAML details.
+
+In a new Git repository, setup can save `.koi/yokai.yml` before a Junji plan exists. It then shows
+the next Junji commands. Use `/junji begin → plan → refine`, followed by `/junji next` for a bootstrap
+phase if real project checks do not exist yet. Return to `yokai setup` after those checks pass.
+The [greenfield walkthrough](/koi/docs/greenfield) covers this entire path.
+
+## Review preparation
+
+The clickable vertical timeline shows Configuration, Environment, Checks, Phases, and Review and
+start. Each step shows its status. Click a visited or completed step, or press `1`–`5`, to inspect it.
+Viewing preserves drafts and does not restart work. Every preparation visit ends with a final review
+and an explicit choice to start or exit. Already prepared bare launches still execute directly.
+
+- **Environment:** readiness is inspected automatically. If a sandbox needs repair, Yokai proposes a
+  repository-backed Dockerfile. Review it, then choose **Approve and build** to save it, build the
+  image, and replace the named sandbox. Builds require that approval.
+- **Sensors:** existing scripts open for review; missing scripts are generated automatically. Review
+  each row's exact script, source, coverage, and prerequisites. **Review notes** contains the bar,
+  gaps, and exclusions. Choose **Approve and test** to smoke-run temporary copies and save the whole
+  gate only if every check passes. **Request changes** revises the proposal; **Details** adds diffs
+  and script editing. Failed checks remain open with per-script output.
+- **Review phases:** missing assessments are proposed automatically. Select each phase to review its
+  tier, strategy, and reason, then choose **Approve and continue**. New and edited choices wait for
+   this approval. **Details** lets you edit choices and inspect the full scope.
+  Previously approved, complete mappings need no second approval.
+- **Review and start:** readiness checks run automatically. Successful smoke results from this preparation session are
+  reused only while the product tree, scripts, verification bar, and environment remain unchanged.
+   Other preflight checks still run. Review the configuration, environment, check results, and phase
+   choices. Each summary links back to its step. Choose **Start run**, **Back**, or **Save and exit**.
+
+## Controls and recovery
+
+Up/down moves through configuration fields and actions; left/right changes simple agent and
+environment choices. Enter opens a picker or activates a button. Tab also moves focus. In review,
+up/down selects a script or phase; Page Up/Page Down scrolls its inspector. Wide terminals show the list and inspector
+side by side; compact terminals stack them. Rows, fields, and action buttons are clickable.
+
+Escape closes a picker or Details, returns from a tier editor or job preview, cancels active work,
+or exits from the main screen. Approved checkpoints survive exit; unapproved drafts belong to the
+current visit. Details holds paths, theme, permissions, and limits. Runtime fields show draft values.
+
+Generation, builds, and checks show a small animated Kitsune, elapsed time, and a clear activity
+message. Smoke progress names the running check and its position. Details reveals captured output.
+`YOKAI_REDUCED_MOTION=1` keeps the Kitsune static while time and messages update. You can inspect
+another step while work continues; **Edit (cancel work)** stops the job before opening that step.
+Cancellation preserves the pre-job draft. Environment changes retain commands and require fresh smoke.
+A failed proposal gets one automatic read-only retry, then a specific error and recovery action.
+Script defects and coverage gaps block saving; genuine product failures require explicit review to
+save a failing gate and still block readiness. They are never automatically repaired or weakened.
+Edits invalidate smoke results. Cancellation stops local process groups and removes temporary
+scripts; sandbox jobs detect removed shared leases. Completed backend changes are not rolled back.
+An external editor temporarily owns the terminal; other preparation stays in the TUI.
+
+If the repository lacks a required check, Yokai reports the gap. Add that real project check as
+separate work, then return to Sensors. It never invents a passing script to finish the wizard.

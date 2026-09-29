@@ -96,7 +96,7 @@ function sandboxRecipes(): Recipe[] {
         agent: agent.id,
         title: `${stack.label} sandbox — ${launcher} · ${agent.id}`,
         summary: `${stack.bases[launcher]} ${agent.note}`,
-        target: ".koi/sandbox.yml + .koi/Dockerfile.sandbox",
+        target: ".koi/yokai.yml + .koi/Dockerfile.sandbox",
         outcome:
           `A repo-owned ${stack.label} Linux image configured for ${agent.id} on the ${launcher} sandbox backend.`,
         requirements: [
@@ -113,13 +113,13 @@ function sandboxRecipes(): Recipe[] {
               launcher === "docker" ? "docker" : "container"
             } build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .`,
           },
-          { label: "probe sandbox", command: "koi doctor --probe" },
+          { label: "probe sandbox", command: "yokai doctor --probe" },
         ],
         files: [
           {
-            path: `${stack.id}/${launcher}/sandbox.yml`,
+            path: `${stack.id}/${launcher}/yokai.yml`,
             lang: "yaml",
-            label: "sandbox.yml",
+            label: "yokai.yml",
           },
           {
             path: `${stack.id}/${launcher}/${agent.id}/Dockerfile.sandbox`,

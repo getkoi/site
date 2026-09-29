@@ -20,11 +20,11 @@ export default function Adoption() {
               <p>project home</p>
               <h3>Put the verification bar beside the code.</h3>
               <span>
-                <code>koi setup</code> creates the durable home for sensors and
-                optional sandbox files.
+                <code>/junji begin</code> creates the working folder. Planning records
+                runnable verification commands in CONTEXT.
               </span>
             </div>
-            <b>koi CLI</b>
+            <b>junji</b>
           </li>
           <li>
             <span className="koi-adoption__number">02</span>
@@ -44,8 +44,8 @@ export default function Adoption() {
               <p>measured execution</p>
               <h3>Let fresh agent turns work through the phases.</h3>
               <span>
-                yokai starts the turns and checks the repository. Your coding agent
-                still plans and writes the product code.
+                Optionally run yokai to configure runtime preferences, review its
+                proposed sensors and start the agent turns.
               </span>
             </div>
             <b>yokai + agent</b>
@@ -81,8 +81,8 @@ export default function Adoption() {
           <p>POSITION ALREADY EXISTS</p>
           <h3>Point yokai at the prepared folder.</h3>
           <span>
-            If <code>.koi/run/</code> and the sensors already match the contract,
-            preflight them and start the driver.
+            Run <code>yokai</code> in a prepared project. It guides missing setup
+            and reuses reviewed checks on later runs.
           </span>
           <AppLink href="/yokai">
             Meet the driver <span aria-hidden="true">→</span>

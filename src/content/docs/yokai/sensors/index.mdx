@@ -17,7 +17,13 @@ Add one shell script per check under `.koi/sensors/`. Each script passes when it
 └── 40-coverage.sh
 ```
 
-`koi setup` scaffolds the folder with a README pointer only. It never adds an executable sensor. Write the scripts with the [yokai skill](/junji/docs/skills) or `/junji plan`. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
+Interactive `yokai` asks its configured agent to propose sensors from CONTEXT and existing project checks. It identifies real command sources and coverage, reports missing required checks, and shows exact commands before smoke-running temporary scripts in the selected environment. Approve and test authorizes saving the complete gate only if all checks pass; failures need separate review. The optional [yokai skill](/yokai/docs/skill) can help author checks; installation is not required. Copy-ready scripts live at [/yokai/recipes](/yokai/recipes).
+
+Existing sensors do not need an agent-generated replacement. If only review metadata is missing,
+decline the proposal to change them and review the current scripts directly. Confirm coverage,
+approve temporary smoke execution, then approve saving their fingerprints.
+
+Junji by itself runs the commands documented in CONTEXT. Sensor files are a Yokai execution requirement.
 
 Layout and terms: [Start here](/koi/docs).
 
@@ -25,7 +31,7 @@ Layout and terms: [Start here](/koi/docs).
 
 Yokai runs regular `*.sh` files in filename order from the repository root. It invokes each with `bash <path>` and stops at the first failure. The TUI names the failed script without its `.sh` extension; the run records that stem as `failed_sensor`.
 
-If the folder is missing or contains no scripts, Yokai stops before starting the first phase's agent turn. `koi doctor` reports a warning.
+If the folder is missing or contains no scripts, Yokai stops before starting the first phase's agent turn. `yokai doctor` reports a failure.
 
 Every script uses `set -euo pipefail`. Sensors observe and fail only. They do not install dependencies, perform network I/O, run `--fix`, or rewrite tracked config. Put installs, lockfile generation, and advisory DB seeding in setup prose (sandbox image, human prep), not inside the sensor.
 
@@ -39,9 +45,13 @@ Run a sensor the same way the driver does:
 bash .koi/sensors/30-cargo-test.sh
 ```
 
+## Review and changes
+
+Approval records compact version-2 fingerprints of the bar, scripts and selected environment under `gate_review` in `.koi/yokai.yml`; it does not duplicate their contents. A changed script or verification section requires another review. Environment changes require re-smoke of existing scripts, without regeneration. Unchanged skill-approved metadata needs no duplicate wizard approval. Headless startup never creates defaults or approves scripts. Readiness runs checks in the configured execution environment, including the sandbox when enabled. A genuine product-check failure stays intact. Script defects and missing prerequisites require repair before saving. Explicit removals of wrong-scope, duplicate or obsolete checks require reasons and review. Missing required checks are separate work, not permission to invent passing sensors.
+
 ## Sacred rule
 
-Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/junji/docs/skills) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
+Never weaken a sensor to make it pass. Fix the root cause, or halt for a human. The [yokai skill](/yokai/docs/skill) wires bars and keeps `.koi/run/CONTEXT.md › Verification bar` in lockstep.
 
 ## Where to go next
 

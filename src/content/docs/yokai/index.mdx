@@ -9,7 +9,7 @@ order: 10
 
 Yokai runs your prepared phases through a coding agent and verifies the results on disk. [Junji](/junji/docs) prepares the project plan and backlog. Yokai writes each phase’s implementation plan, runs it, and shows progress in a terminal UI. The driver owns the prompts for Plan, Build, Seal, and recovery. See [Build](/yokai/docs/build).
 
-koi is the setup CLI (`setup`, `init`, `doctor`). yokai is the runner. First green run: [Quickstart](/koi/docs/quickstart). Layout and terms: [Start here](/koi/docs).
+Yokai owns its setup, diagnostics and runtime. Junji alone needs no executable. First green run: [Quickstart](/koi/docs/quickstart). Layout and terms: [Start here](/koi/docs).
 
 ## Choose your next step
 
@@ -19,17 +19,17 @@ Read [Sessions](/yokai/docs/sessions) to understand fresh context, token savings
 
 ## What it does
 
-Every phase runs Plan → Build → Seal. After each phase the driver checks the contract on disk: the phase is marked `[done]`, there is a new commit, the gate is green, and the tree is clean. It never trusts the agent's self-report. The driver halts fail-fast for a red gate, stall, gated phase under `--guarded`, cost ceiling, or completion.
+Every phase runs Plan → Build → Seal. After each phase the driver checks the contract on disk: the phase is marked `[done]`, there is a new commit, the gate is green, and the tree is clean. It never trusts the agent's self-report. The driver halts fail-fast for a red gate, stall, gated phase without explicit authorization, cost ceiling, or completion.
 
 ## yokai driver vs yokai skill
 
 | | **yokai driver** (binary) | **yokai skill** (coding agent) |
 |---|---------------------------|--------------------------------|
 | Runs phases | yes — unattended supervisor | no — not a junji verb |
-| Owns | config, ledger, TUI, contract checks | atomic `.koi/sensors/*.sh`, sandbox image recipe |
+| Owns | settings, reviewed gate, ledger, TUI, contract checks | sensor, assessment and sandbox operations |
 | Invoke | `yokai` from repo root | in your agent when wiring the verification bar |
 
-Use the skill to survey the repo and propose sensors. Use the driver to execute phases. See [sensors](/yokai/docs/sensors) and [wire your bar](/yokai/docs/sensors/wire-your-bar).
+Interactive Yokai proposes real sensor wrappers, smoke-runs them after command review, and saves automatically when all checks pass under Approve and test. It also reviews phase tier/strategy assessments in effort YAML. The helper skill is optional. See [sensors](/yokai/docs/sensors) and [wire your bar](/yokai/docs/sensors/wire-your-bar).
 
 ## When to use it
 

@@ -37,7 +37,7 @@ flowchart TD
   budget -->|No| fail["Return not-converged verdict"]
 ```
 
-**Budget:** `max_iters` (omit in `config.yml` for unlimited; `--max-iters` still a positive cap). Exhaustion without convergence means `not-converged`. `0` still means zero iterations.
+**Budget:** `max_iters` (omit in `yokai.yml` for unlimited; `--max-iters` still a positive cap). Exhaustion without convergence means `not-converged`. `0` still means zero iterations.
 
 ## Sensors
 
@@ -101,7 +101,7 @@ flowchart TD
 
 On convergence, yokai deletes `FEEDBACK.md` before Seal so it is not committed. `verdict.converged` is an **input** to the contract, not a substitute for `[done]` + commit + gate + clean tree.
 
-Tune Build in `.koi/run/config.yml`:
+Tune Build in `.koi/yokai.yml`:
 
 ```yaml
 build:

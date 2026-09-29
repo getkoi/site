@@ -56,7 +56,7 @@ export default function Hero() {
             </div>
             <div className="recipes-hero__shelf">
               <span>02</span>
-              <strong>.koi/sandbox.yml</strong>
+              <strong>.koi/yokai.yml</strong>
               <i>BACKEND</i>
             </div>
             <div className="recipes-hero__shelf">

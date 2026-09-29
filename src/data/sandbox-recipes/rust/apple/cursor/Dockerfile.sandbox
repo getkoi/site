@@ -1,7 +1,7 @@
 # .koi/Dockerfile.sandbox — rust stack, apple backend
 #
 #   container build -f .koi/Dockerfile.sandbox -t koi-myproj-sandbox .
-#   # ensure .koi/sandbox.yml: image: koi-myproj-sandbox
+#   # ensure .koi/yokai.yml: sandbox.image: koi-myproj-sandbox
 # After rebuilding, recreate the named sandbox (container rm).
 
 FROM rust:1-bookworm

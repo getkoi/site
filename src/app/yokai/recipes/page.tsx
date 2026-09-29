@@ -6,7 +6,7 @@ import "@/styles/recipes.css";
 export const metadata: Metadata = {
   title: "recipes — project-home sensors and sandbox pairs",
   description:
-    "Find, inspect, and copy atomic sensor scripts or configure a matched sandbox.yml and Dockerfile.sandbox pair for your koi project home.",
+    "Find, inspect, and copy atomic sensor scripts or configure a matched yokai.yml and Dockerfile.sandbox pair for your koi project home.",
 };
 
 export default function RecipesPage() {
