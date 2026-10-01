@@ -25,7 +25,7 @@ export default function FirstRun() {
               <pre>
                 <code>
                   {`./install.sh
-npx skills add getkoi/koi --skill junji`}
+npx skills add getkoi/junji`}
                 </code>
               </pre>
             </div>

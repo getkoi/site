@@ -1,7 +1,7 @@
 import { Button } from "@astryxdesign/core/Button";
 import { AppLink } from "../AppLink";
 
-const fullRun = `npx skills add getkoi/koi --skill junji
+const fullRun = `npx skills add getkoi/junji
 
 # in your coding agent, from your project
 /junji begin
