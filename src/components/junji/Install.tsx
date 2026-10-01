@@ -32,13 +32,13 @@ export default function Install() {
               </div>
               <div className="command-line">
                 <code className="mono">
-                  <span aria-hidden="true">$</span> npx skills add getkoi/koi
+                  <span aria-hidden="true">$</span> npx skills add getkoi/junji
                 </code>
                 <button
                   className="copy dither-button mono"
                   type="button"
-                  data-cmd="npx skills add getkoi/koi"
-                  aria-label="Copy: npx skills add getkoi/koi"
+                  data-cmd="npx skills add getkoi/junji"
+                  aria-label="Copy: npx skills add getkoi/junji"
                 >
                   copy
                 </button>
@@ -79,7 +79,7 @@ export default function Install() {
               <AppLink href="/junji/docs/guide">Read the full Junji guide</AppLink>
               <AppLink href="/yokai/docs/sensors">Wire project sensors</AppLink>
               <AppLink href="/yokai/docs">Install the yokai driver</AppLink>
-              <AppLink href="https://github.com/getkoi/koi">Open the repository</AppLink>
+              <AppLink href="https://github.com/getkoi/junji">Open the repository</AppLink>
             </nav>
           </div>
           <p className="install__status mono" data-copy-status="" aria-live="polite"></p>
