@@ -99,9 +99,9 @@ export const dottoTheme = {
     "--text-display-3-weight": "var(--font-weight-normal)",
     "--text-display-3-leading": "1.2571",
     "--radius-none": "0px",
-    "--radius-inner": "2px",
-    "--radius-element": "4px",
-    "--radius-container": "8px",
+    "--radius-inner": "6px",
+    "--radius-element": "8px",
+    "--radius-container": "12px",
     "--radius-page": "12px",
     "--radius-chat": "8px",
     "--radius-full": "9999px",
@@ -132,7 +132,7 @@ export const dottoTheme = {
     "--size-element-sm": "36px",
     "--size-element-md": "44px",
     "--size-element-lg": "44px",
-    "--border-width": "2px",
+    "--border-width": "1px",
     "--focus-outline-width": "2px",
     "--focus-outline-style": "solid",
     "--focus-outline-color": "var(--color-accent)",
@@ -284,9 +284,9 @@ export const dottoTheme = {
     },
     "button": {
       "base": {
-        "borderRadius": "4px",
+        "borderRadius": "var(--radius-element)",
         "fontWeight": "500",
-        "borderWidth": "2px",
+        "borderWidth": "1px",
         "borderStyle": "solid",
         "boxShadow": "none",
         "--button-focus-offset": "2px"
@@ -336,9 +336,9 @@ export const dottoTheme = {
     },
     "card": {
       "base": {
-        "borderRadius": "4px",
+        "borderRadius": "var(--radius-container)",
         "boxShadow": "none",
-        "borderWidth": "2px",
+        "borderWidth": "1px",
         "borderStyle": "solid",
         "borderColor": "color-mix(in srgb, var(--color-text-primary) 18%, transparent)",
         "backgroundColor": "var(--color-background-card)"
@@ -364,21 +364,21 @@ export const dottoTheme = {
     },
     "banner": {
       "base": {
-        "borderRadius": "4px",
+        "borderRadius": "var(--radius-container)",
         "boxShadow": "none"
       }
     },
     "text-input": {
       "base": {
-        "borderRadius": "4px",
-        "borderWidth": "2px"
+        "borderRadius": "var(--radius-element)",
+        "borderWidth": "1px"
       }
     },
     "tooltip": {
       "base": {
-        "borderRadius": "4px",
+        "borderRadius": "var(--radius-element)",
         "boxShadow": "none",
-        "borderWidth": "2px",
+        "borderWidth": "1px",
         "borderStyle": "solid"
       }
     }
@@ -468,7 +468,7 @@ export const dottoTheme = {
       "contrast": "standard"
     },
     "radius": {
-      "base": 4,
+      "base": 8,
       "multiplier": 0.5
     },
     "motion": {

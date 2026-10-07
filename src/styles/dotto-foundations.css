@@ -43,22 +43,8 @@
 .found__swatch i {
   display: block;
   height: 44px;
-  border: 2px solid var(--btn-line);
-  border-radius: 0;
-  clip-path: polygon(
-    0 var(--notch),
-    var(--notch) var(--notch),
-    var(--notch) 0,
-    calc(100% - var(--notch)) 0,
-    calc(100% - var(--notch)) var(--notch),
-    100% var(--notch),
-    100% calc(100% - var(--notch)),
-    calc(100% - var(--notch)) calc(100% - var(--notch)),
-    calc(100% - var(--notch)) 100%,
-    var(--notch) 100%,
-    var(--notch) calc(100% - var(--notch)),
-    0 calc(100% - var(--notch))
-  );
+  border: 1px solid var(--btn-line);
+  border-radius: var(--radius-element);
 }
 .found__swatch code {
   color: var(--bone);

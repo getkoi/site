@@ -4,8 +4,8 @@
     border-color: var(--btn-line);
     background: var(--obsidian);
     padding: 4px 8px;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     color: var(--bone);
   }
 
@@ -18,16 +18,16 @@
     gap: 12px;
     padding: 10px 14px;
     background: color-mix(in srgb, var(--charcoal) 55%, transparent);
-    font-family: var(--font-mono);
-    font-size: 0.84rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
     color: var(--fog);
     text-align: left;
     cursor: pointer;
   }
 
   [data-slot="drawer-title"] {
-    font-family: var(--font-mono);
-    font-size: 0.84rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
     color: var(--bone);
   }
 
@@ -38,8 +38,8 @@
     align-items: center;
     justify-content: center;
     background: transparent;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     color: var(--fog);
     cursor: pointer;
   }
@@ -117,11 +117,11 @@
     align-items: center;
     gap: 8px;
     padding: 6px 8px;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     background: transparent;
     color: var(--fog);
-    font-family: var(--font-mono);
-    font-size: 0.84rem;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
     text-align: left;
     cursor: pointer;
   }
@@ -180,14 +180,14 @@
   [data-slot="combobox-item"] span {
     margin-top: 2px;
     color: var(--fog);
-    font-size: 0.7rem;
+    font-size: 0.875rem;
   }
 
   [data-slot="combobox-empty"] {
     margin: 0;
     padding: 9px 10px;
     color: var(--fog);
-    font: 0.76rem/1.4 var(--font-mono);
+    font: 0.875rem/1.5 var(--font-sans);
   }
 
   [data-slot="combobox-positioner"] {

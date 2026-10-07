@@ -1,5 +1,64 @@
 /* Docs leftovers: view transitions. Primitive styles live in dotto. */
 
+.docs-layout {
+  position: relative;
+  display: grid;
+  align-items: start;
+  gap: clamp(24px, 3vw, 40px);
+  width: 100%;
+  max-width: 1360px;
+  min-height: 50vh;
+  margin-inline: auto;
+  padding: clamp(24px, 3vw, 40px) var(--pad) 64px;
+}
+
+.docs-article {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: var(--reading-width);
+  margin-inline: auto;
+  font-size: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
+}
+
+.docs-title {
+  margin: 0 0 16px;
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  -webkit-font-smoothing: antialiased;
+}
+
+.docs-description {
+  margin: 0 0 32px;
+  color: var(--fog);
+  font-size: inherit;
+  line-height: 1.65;
+}
+
+.docs-layout [data-slot="toc"] {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .docs-layout {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 80rem) {
+  .docs-layout[data-has-toc="true"] {
+    grid-template-columns: 220px minmax(0, 1fr) 184px;
+  }
+
+  .docs-layout [data-slot="toc"] {
+    display: block;
+  }
+}
+
 ::view-transition-group(docs-content) {
   animation: none;
 }
@@ -51,7 +110,7 @@
   margin-block: 1.5rem;
   padding: 1rem 1.25rem;
   border: 1px solid var(--steel);
-  border-radius: 2px;
+  border-radius: var(--radius-container);
   background: var(--obsidian);
 }
 

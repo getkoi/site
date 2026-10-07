@@ -33,7 +33,7 @@ export const dottoTheme = defineTheme({
     },
   },
 
-  radius: { base: 4, multiplier: 0.5 },
+  radius: { base: 8, multiplier: 0.5 },
 
   motion: { fast: 160, medium: 240, slow: 520, ratio: 0.75 },
 
@@ -83,12 +83,12 @@ export const dottoTheme = defineTheme({
     "--size-element-sm": "36px",
     "--size-element-md": "44px",
     "--size-element-lg": "44px",
-    "--radius-inner": "2px",
-    "--radius-element": "4px",
-    "--radius-container": "8px",
+    "--radius-inner": "6px",
+    "--radius-element": "8px",
+    "--radius-container": "12px",
     "--radius-page": "12px",
     "--radius-chat": "8px",
-    "--border-width": "2px",
+    "--border-width": "1px",
     "--focus-outline-width": "2px",
     "--focus-outline-style": "solid",
     "--focus-outline-color": "var(--color-accent)",
@@ -124,9 +124,9 @@ export const dottoTheme = defineTheme({
   components: {
     button: {
       base: {
-        borderRadius: "4px",
+        borderRadius: "var(--radius-element)",
         fontWeight: "500",
-        borderWidth: "2px",
+        borderWidth: "1px",
         borderStyle: "solid",
         boxShadow: "none",
         "--button-focus-offset": "2px",
@@ -168,9 +168,9 @@ export const dottoTheme = defineTheme({
     },
     card: {
       base: {
-        borderRadius: "4px",
+        borderRadius: "var(--radius-container)",
         boxShadow: "none",
-        borderWidth: "2px",
+        borderWidth: "1px",
         borderStyle: "solid",
         borderColor:
           "color-mix(in srgb, var(--color-text-primary) 18%, transparent)",
@@ -196,7 +196,7 @@ export const dottoTheme = defineTheme({
       },
     },
     banner: {
-      base: { borderRadius: "4px", boxShadow: "none" },
+      base: { borderRadius: "var(--radius-container)", boxShadow: "none" },
     },
     text: {
       "type:display": {
@@ -207,15 +207,15 @@ export const dottoTheme = defineTheme({
     },
     "text-input": {
       base: {
-        borderRadius: "4px",
-        borderWidth: "2px",
+        borderRadius: "var(--radius-element)",
+        borderWidth: "1px",
       },
     },
     tooltip: {
       base: {
-        borderRadius: "4px",
+        borderRadius: "var(--radius-element)",
         boxShadow: "none",
-        borderWidth: "2px",
+        borderWidth: "1px",
         borderStyle: "solid",
       },
     },

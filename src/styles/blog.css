@@ -9,21 +9,6 @@
   );
 }
 
-.blog-page::before {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--steel) 6%, transparent) 1px,
-    transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--steel) 6%, transparent) 1px,
-    transparent 1px);
-  background-size: 32px 32px;
-  mask-image: linear-gradient(to bottom, black, transparent 72%);
-  content: "";
-  pointer-events: none;
-}
-
 .blog-atmosphere {
   position: absolute;
   z-index: 0;
@@ -122,20 +107,7 @@
   grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
   overflow: hidden;
   border: 1px solid var(--blog-rule);
-  clip-path: polygon(
-    0 12px,
-    12px 12px,
-    12px 0,
-    calc(100% - 12px) 0,
-    calc(100% - 12px) 12px,
-    100% 12px,
-    100% calc(100% - 12px),
-    calc(100% - 12px) calc(100% - 12px),
-    calc(100% - 12px) 100%,
-    12px 100%,
-    12px calc(100% - 12px),
-    0 calc(100% - 12px)
-  );
+  border-radius: var(--radius-container);
   background: var(--blog-well);
   box-shadow:
     inset 0 0 0 1px color-mix(in srgb, var(--bone) 4%, transparent),

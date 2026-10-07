@@ -43,13 +43,10 @@ export default async function DocPage({ params }: Props) {
   return (
     <DocsShell tool={tool as DocTool} current={entry.id} toc={toc}>
       <DocsBreadcrumbs items={breadcrumbs} />
-      <p className="mb-2.5 font-mono text-[0.78rem] tracking-[0.06em] text-accent before:mr-1 before:text-steel before:content-['//_']">
-        {entry.data.navLabel.toLowerCase()}
-      </p>
-      <h1 className="pixel mb-3.5 font-display text-[clamp(1.85rem,4vw,2.6rem)] leading-[1.12] tracking-normal text-bone [font-smooth:never] [-webkit-font-smoothing:none]">
+      <h1 className="docs-title">
         {entry.data.title}
       </h1>
-      <p className="mb-9 max-w-[60ch] text-[1.05rem] text-fog">{entry.data.description}</p>
+      <p className="docs-description">{entry.data.description}</p>
       <div data-slot="prose" className="docs-prose">{content}</div>
       <DocsPrevNext previous={neighbors.previous} next={neighbors.next} />
     </DocsShell>

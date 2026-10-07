@@ -9,7 +9,7 @@
     display: inline-flex;
     align-items: center;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.8125rem;
     letter-spacing: 0.02em;
     padding: 4px 10px;
     white-space: nowrap;
@@ -90,8 +90,8 @@
     margin: 0;
     padding: 44px 20px 18px;
     overflow-x: auto;
-    font-size: 0.84rem;
-    line-height: 1.55;
+    font-size: 0.9375rem;
+    line-height: 1.65;
     background: transparent;
     border: 0;
     box-shadow: none;
@@ -139,7 +139,7 @@
 
   [data-slot="table"] th {
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.02em;
     color: var(--fog);
@@ -151,14 +151,21 @@
   }
 
   [data-slot="prose"] {
-    max-width: 68ch;
+    max-width: var(--reading-width);
     color: var(--bone);
-    font-size: 1.0625rem;
+    font-size: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
     line-height: 1.75;
+    overflow-wrap: anywhere;
   }
 
   [data-slot="prose"] > :first-child {
     margin-top: 0;
+  }
+
+  /* Astryx resets individual text tags; let reading content inherit its scale. */
+  [data-slot="prose"] :is(p, li, ul, ol, blockquote) {
+    font-size: inherit;
+    line-height: inherit;
   }
 
   [data-slot="prose"] h1,
@@ -166,23 +173,22 @@
   [data-slot="prose"] h3,
   [data-slot="prose"] h4 {
     position: relative;
-    font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.02em;
     color: var(--bone);
-    -webkit-font-smoothing: none;
-    font-smooth: never;
+    -webkit-font-smoothing: antialiased;
   }
 
   [data-slot="prose"] h1 {
-    font-size: 1.55rem;
+    font-size: 2rem;
     margin: 0 0 0.85em;
   }
 
   [data-slot="prose"] h2 {
-    font-size: 1.55rem;
+    font-size: clamp(1.5rem, 1.35rem + 0.4vw, 1.75rem);
     line-height: 1.25;
-    margin: 1.5em 0 0.5em;
+    margin: 2em 0 0.65em;
     scroll-margin-top: 28px;
   }
 
@@ -193,7 +199,7 @@
   }
 
   [data-slot="prose"] h4 {
-    font-size: 1.05rem;
+    font-size: 1.125rem;
     margin: 1em 0 0.35em;
     color: var(--fog);
   }
@@ -248,7 +254,7 @@
     font-size: 0.88em;
     background: var(--charcoal);
     padding: 0.12em 0.4em;
-    border-radius: 3px;
+    border-radius: var(--radius-inner);
     color: var(--bone);
   }
 
@@ -257,8 +263,8 @@
     padding: 18px 20px;
     background: color-mix(in srgb, var(--void) 55%, var(--obsidian));
     overflow-x: auto;
-    font-size: 0.84rem;
-    line-height: 1.55;
+    font-size: 0.9375rem;
+    line-height: 1.65;
   }
 
   [data-slot="prose"] pre code {
@@ -281,6 +287,7 @@
 
   [data-slot="prose"] [data-slot="code-block"] pre {
     margin: 0;
+    padding-top: 56px;
   }
 
   [data-slot="prose"] [data-slot="alert"] p:last-child {
@@ -342,8 +349,8 @@
   }
 
   [data-slot="prose"] th {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: 0.02em;
     color: var(--fog);
@@ -358,9 +365,9 @@
     margin: 1.8em 0;
     padding: clamp(14px, 3vw, 24px);
     overflow: auto;
-    background:
-      repeating-linear-gradient(0deg, transparent 0 15px, var(--line) 16px),
-      var(--obsidian);
+    background: var(--obsidian);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-container);
     color: var(--bone);
   }
 
@@ -421,7 +428,7 @@
     min-height: 44px;
     padding: 8px 12px;
     border: 1px solid var(--steel);
-    border-radius: 2px;
+    border-radius: var(--radius-element);
     background: var(--charcoal);
     color: var(--bone);
     font: inherit;
@@ -485,7 +492,8 @@
     max-height: calc(100dvh - 32px);
     margin: auto;
     padding: 16px;
-    border: 2px solid var(--steel);
+    border: 1px solid var(--steel);
+    border-radius: var(--radius-container);
     background: var(--obsidian);
     color: var(--bone);
   }

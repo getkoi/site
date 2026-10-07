@@ -7,8 +7,8 @@
 
   [data-slot="field-label"],
   [data-slot="combobox-label"] {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
     color: var(--fog);
   }
 
@@ -20,8 +20,8 @@
     padding: 8px 12px;
     background: color-mix(in srgb, var(--charcoal) 55%, transparent);
     color: var(--bone);
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
     line-height: 1.4;
   }
 
@@ -36,8 +36,8 @@
   }
 
   [data-slot="field-description"] {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     color: var(--fog);
   }
 
