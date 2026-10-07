@@ -147,7 +147,7 @@ html[data-rail-collapsed="false"] .site-shell {
   padding: 0;
   margin: 0;
   gap: 10px;
-  border-radius: 2px;
+  border-radius: var(--radius-element);
   border: 1px solid transparent;
   background: transparent;
   color: var(--fog);
@@ -171,8 +171,8 @@ html[data-rail-collapsed="false"] .site-shell {
 }
 
 .icon-rail__name {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
   line-height: 1;
   letter-spacing: 0.02em;
   color: inherit;
@@ -186,7 +186,7 @@ html[data-rail-collapsed="false"] .site-shell {
   width: 44px;
   height: 44px;
   gap: 10px;
-  border-radius: 2px;
+  border-radius: var(--radius-element);
   border: 1px solid transparent;
   background: transparent;
   color: var(--fog);
@@ -214,9 +214,6 @@ html[data-rail-collapsed="false"] .site-shell {
   background: var(--accent-soft);
   border-color: var(--accent-line);
   color: var(--accent);
-  box-shadow:
-    inset 0 0 0 1px var(--accent-line),
-    3px 3px 0 color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 .icon-rail__img {
@@ -271,7 +268,7 @@ html[data-rail-collapsed="false"] .site-shell {
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 2px;
+  border-radius: var(--radius-element);
   border: 1px solid var(--line);
   background: var(--charcoal);
   color: var(--fog);
@@ -315,7 +312,7 @@ html[data-rail-collapsed="false"] .site-shell {
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: 2px;
+  border-radius: var(--radius-element);
   border: 1px solid transparent;
   color: var(--fog);
   text-decoration: none;
@@ -366,11 +363,11 @@ html[data-rail-collapsed="false"] .site-shell {
   align-items: center;
   justify-content: center;
   width: 44px;
-  height: 28px;
+  height: 44px;
   padding: 0;
   margin: 0;
   border: 1px solid var(--line-2);
-  border-radius: 2px;
+  border-radius: var(--radius-element);
   background: var(--charcoal);
   color: var(--fog);
   cursor: pointer;

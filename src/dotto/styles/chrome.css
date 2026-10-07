@@ -1,13 +1,5 @@
 @layer components {
-  /*
-    Shared pixel corner: one L-cut. Boxed chrome also uses 2px --btn-line.
-    --notch is 4px by default; sm chrome sets 2px.
-
-    Never `filter: drop-shadow` on text-bearing or translucent chrome.
-    Clip-path already punches alpha in the L-cut; a see-through fill makes
-    the filter reprint every glyph 2px off. Solid opaque buttons may still
-    take a hard offset because their fill is a sealed plate.
-  */
+  /* Shared chrome: readable controls with unclipped focus outlines. */
   [data-slot="button"],
   [data-slot="icon-button"],
   [data-slot="copy-button"],
@@ -37,21 +29,7 @@
   .astryx-text-input,
   .astryx-tooltip,
   .astryx-kbd {
-    border-radius: 0;
-    clip-path: polygon(
-      0 var(--notch),
-      var(--notch) var(--notch),
-      var(--notch) 0,
-      calc(100% - var(--notch)) 0,
-      calc(100% - var(--notch)) var(--notch),
-      100% var(--notch),
-      100% calc(100% - var(--notch)),
-      calc(100% - var(--notch)) calc(100% - var(--notch)),
-      calc(100% - var(--notch)) 100%,
-      var(--notch) 100%,
-      var(--notch) calc(100% - var(--notch)),
-      0 calc(100% - var(--notch))
-    );
+    border-radius: var(--radius-element);
   }
 
   [data-slot="button"],
@@ -81,7 +59,19 @@
   .astryx-text-input,
   .astryx-tooltip,
   .astryx-kbd {
-    border: 2px solid var(--btn-line);
+    border: 1px solid var(--btn-line);
+  }
+
+  [data-slot="panel"],
+  .panel,
+  [data-slot="alert"],
+  [data-slot="code-block"],
+  [data-slot="prev-next-link"],
+  [data-slot="prose"] pre,
+  .astryx-card,
+  .astryx-banner {
+    border-radius: var(--radius-container);
+    border-color: var(--line-2);
   }
 
   [data-slot="chip-label"],
@@ -93,6 +83,6 @@
   [data-slot="icon-button"][data-size="sm"],
   .astryx-button[data-size="sm"],
   .astryx-icon-button[data-size="sm"] {
-    --notch: 2px;
+    border-radius: var(--radius-inner);
   }
 }
