@@ -38,13 +38,14 @@ flowchart TD
   plan --> refine[refine]
   plan -->|Stress-test| grill[grill]
   grill --> plan
-  refine --> next["next — one phase"]
+  refine --> acceptance["Accept proposed split"]
+  acceptance --> next["next — one phase"]
   next --> done{"Every phase done?"}
   done -->|No| next
   done -->|Yes| choice{"More work?"}
   choice -->|No| consolidate[consolidate]
   choice -->|Yes| iterate[iterate]
-  iterate --> next
+  iterate --> acceptance
   begin -.-> research["research — optional, any time"]
   begin -.-> design["design — optional UI contract"]
   design -.-> plan
@@ -52,7 +53,7 @@ flowchart TD
 ```
 
 `begin` gathers facts only. Optional `research` and `design` gather cited notes and a visual contract.
-`plan` and `grill` think. Optional `brief` reports in chat what `[done]` phases shipped. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`.
+`plan` and `grill` think. Optional `brief` reports in chat what `[done]` phases shipped. `refine` proposes a split and waits for acceptance. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`.
 
 ---
 
@@ -159,13 +160,16 @@ Useful after some phases have landed. If nothing is `[done]`, it stops. Distinct
 
 **Steps:**
 
-1. `/junji refine`. First run decomposes; later runs split/merge/reorder a *live* list.
-2. Each phase is one **independently-verifiable** unit, ordered by dependency.
-3. Irreversible steps → prefix `[gated]`.
-4. Use ordinary status headings such as `### [todo] P0 - Title`, with dependencies and human gates. Runtime strategy and tier choices are optional Yokai settings.
-5. Write cards through validated board operations; the summary is generated. No code or phase plans yet.
+1. `/junji refine` proposes coherent, independently verifiable slices, ordered by dependency.
+2. Review their descriptions, temporary labels, dependencies, human gates and replacement reasons.
+3. Ask for fewer or broader slices freely. Proposals stay in BACKLOG.proposed.json; accepted cards,
+   permanent identities and retirement history remain unchanged while discussing the split.
+4. Explicitly accept the exact proposed split. The tool checks the reviewed board revision/content,
+   allocates IDs, preserves replaced accepted history and regenerates BACKLOG.md. No product code.
 
-**Verification:** Ordered, independently verifiable phases; `Next action: /junji next`.
+**Verification:** While awaiting acceptance, Next action stays `/junji refine`; execution pauses at
+its next phase boundary. After acceptance, the ordered cards are executable and Next action becomes
+`/junji next`. [Proposal commands and input format](/koi/docs/board).
 
 Once every phase is `[done]`, `refine` does not add work: use `iterate`.
 
@@ -215,7 +219,7 @@ Invoke: `/junji next` or "do the next task". The **yokai driver** splits this in
 
 1. `/junji iterate` with the request. Missing request → the skill asks in one line and stops.
 2. Reason, then **grill** until phase boundaries, dependencies, verification and human gates are settled.
-3. Write ordinary `[todo]` headings continuing `P{n+1}` and a full `phases/phase-NN-<slug>.md` for each. No runtime tags or product code are required.
+3. Save a candidate delta with temporary labels and wait for acceptance. Only then allocate new card IDs and write the matching phase-plan Markdown. No product code.
 4. Commit the working-folder artifacts, honoring standing overrides. `Next action: /junji next`.
 
 **Verification:** New `[todo]` phases with matching phase files; pointer is `/junji next`. Then `next` or `yokai` (yokai skips Plan because the files exist).

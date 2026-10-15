@@ -54,3 +54,7 @@ Standalone Junji uses `junji-board visibility` and the same Rust library without
 Uncertain creation can be reviewed with visibility resolve --input FILE, either binding an existing
 issue or authorizing retry after checking Jira. It never repeats uncertain creation automatically.
 Connection setup accepts additional field defaults needed by the selected board's filter.
+
+Backlog proposals never publish. Once the user accepts a split, existing adapter authorization
+publishes new accepted cards automatically. Previously accepted cards can continue reporting
+progress while a replacement proposal is under review.

@@ -19,6 +19,34 @@ Execution keeps todo, planning, building, sealing and done so interrupted work r
 External services see todo, active, done or explicitly blocked. Seal's done claim remains provisional
 until verification, required commit and clean-tree checks succeed. A remote Done cannot prove that.
 
+## Review the split first
+
+Begin creates an empty effort. Refine and iterate save a candidate backlog with temporary labels
+in `.koi/run/BACKLOG.proposed.json` and wait for your acceptance. Revising nine proposed slices
+into four creates no executable cards or retirement records. PLAN.md keeps strategy and rationale;
+BACKLOG.md continues to summarize accepted work.
+
+```bash
+junji-board propose --revision 1 --input candidate.json
+junji-board show-proposal
+junji-board accept-proposal --revision 2 --proposal PROPOSAL_ID
+# Cancel review while preserving accepted work:
+junji-board discard-proposal --revision 2 --proposal PROPOSAL_ID
+```
+
+Only acceptance assigns permanent phase IDs and applies the reviewed order, descriptions, dependencies
+and gates. Candidate input lists the complete `cards` order: keep accepted cards with
+`{"existing":"P0"}`, and describe new cards with `label`, `title`, `description`, optional `depends_on`
+and `gated`. Dependencies use existing IDs or temporary labels. Replaced unstarted cards need explicit
+`retire` entries with `phase_id` and accurate reasons; their complete original content remains in history.
+Wording-only corrections retain identity. Started/completed cards remain intact.
+
+Pending review lets an in-flight phase finish, then pauses before another starts. Proposed work
+never executes or publishes. Changes during review require a refreshed proposal and acceptance again;
+refresh with `propose --revision CURRENT --input .koi/run/BACKLOG.proposed.json`. Acceptance/discard
+removes the draft. An empty effort awaits acceptance rather than reporting completion. Existing boards
+remain accepted by default.
+
 ## Editing and browsing
 
 Standalone Junji uses the `junji-board` Rust binary; Yokai links the same board library and exposes
@@ -31,9 +59,10 @@ junji-board apply --revision 4 --input patch.json
 junji-board status P0 building --revision 5
 ```
 
-Read before editing. An apply patch contains effort fields, partial card updates keyed by phase_id,
-and optionally the complete card order. Validated operations preserve unrelated fields, reject stale
-revisions and regenerate `.koi/run/BACKLOG.md`. That Markdown file is read-only and never execution
+Read before editing. Apply patches contain effort fields and minimal card progress updates keyed
+by phase_id (status, plan, outcome or blocked). New cards and scope/shape changes require proposals;
+apply cannot bypass acceptance. Validated operations preserve unrelated fields, reject stale revisions
+and regenerate `.koi/run/BACKLOG.md`. That Markdown file is read-only and never execution
 input. A missing or edited summary cannot advance work; render repairs it from the board.
 
 ## Existing projects and history

@@ -4,6 +4,7 @@ export type TutorialStateId =
   | "empty"
   | "oriented"
   | "planned"
+  | "proposed"
   | "sequenced"
   | "gate-red"
   | "phase-one"
@@ -196,9 +197,9 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
         label: "/junji refine",
         hint: "Lay the sequence",
         valid: true,
-        next: "sequenced",
+        next: "proposed",
         feedback:
-          "Refine turns the plan into ordered, independently verifiable phase headings. It writes no product code.",
+          "Refine saves a candidate split with temporary labels and waits for acceptance. No executable cards exist yet.",
       },
       {
         id: "planned-next",
@@ -256,13 +257,56 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     },
   },
   {
+    id: "proposed",
+    chapter: "Review the split",
+    title: "A proposed backlog is still a draft",
+    prompt:
+      "Refine proposes token rules, the invite flow, and permissions checks. These three slices have temporary labels. Accept this split, or request changes before execution.",
+    result:
+      "BACKLOG.proposed.json holds the candidate split. board.json still has no executable cards or retired records.",
+    rule:
+      "Only acceptance assigns permanent phase IDs. Asking for fewer slices revises the proposal without creating execution history.",
+    choices: [
+      {
+        id: "proposed-accept",
+        kind: "move",
+        label: "Accept this split",
+        hint: "Create executable cards",
+        valid: true,
+        next: "sequenced",
+        feedback:
+          "Acceptance materializes exactly these three cards, resolves dependencies, and regenerates the accepted backlog summary.",
+      },
+      {
+        id: "proposed-next",
+        kind: "verb",
+        card: "next",
+        label: "/junji next",
+        hint: "Execute the draft",
+        valid: false,
+        feedback:
+          "The backlog is awaiting acceptance. Draft work cannot execute or publish.",
+      },
+    ],
+    triggered: [],
+    table: {
+      runExists: true,
+      files: ["CONTEXT.md", "board.json", "METHOD.md", "PLAN.md", "BACKLOG.proposed.json"],
+      nextAction: "/junji refine",
+      phases: [],
+      gate: "idle",
+      gateNote: "Waiting for backlog acceptance",
+      commits: 0,
+    },
+  },
+  {
     id: "sequenced",
     chapter: "Sequence ready",
     title: "Three small moves replace one large guess",
     prompt:
-      "board.json now has three phase headings. Each phase can be verified on its own. Which card may write product code?",
+      "board.json now has three accepted cards. Each phase can be verified on its own. Which card may write product code?",
     result:
-      "Refine changed markdown only. It did not create phase files and did not touch product code.",
+      "Accepting the refined split created the executable board. No product code or phase files have been written.",
     rule:
       "Next executes one phase from start to commit, then stops. If phases remain, Next action stays on next.",
     choices: [

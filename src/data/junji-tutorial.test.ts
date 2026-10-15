@@ -31,6 +31,7 @@ test("the main sample hand reaches a closed run", () => {
     "empty-begin",
     "oriented-plan",
     "planned-refine",
+    "proposed-accept",
     "sequenced-next",
     "gate-fix",
     "phase-one-next",
@@ -74,4 +75,14 @@ test("every active state has a legal move", () => {
       `${state.id} has no legal move`,
     );
   }
+});
+
+
+test("refinement cannot execute until the proposed split is accepted", () => {
+  const draft = tutorialStateById("proposed");
+  assert(draft.table.phases.length === 0, "drafts must not create executable cards");
+  assert(draft.table.files.includes("BACKLOG.proposed.json"), "the candidate split must survive context windows");
+  assert(!draft.choices.find((c) => c.card === "next")?.valid, "next cannot execute a draft");
+  const accepted = tutorialStateById(draft.choices.find((c) => c.id === "proposed-accept")!.next!);
+  assert(accepted.table.phases.length === 3, "acceptance materializes the reviewed cards");
 });

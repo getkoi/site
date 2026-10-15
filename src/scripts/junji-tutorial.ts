@@ -15,6 +15,7 @@ const activeSpineByState: Record<TutorialStateId, (typeof spineOrder)[number]> =
   empty: "begin",
   oriented: "plan",
   planned: "refine",
+  proposed: "refine",
   sequenced: "next",
   "gate-red": "next",
   "phase-one": "next",

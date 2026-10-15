@@ -85,7 +85,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     label: "write the position",
     title: "junji moves the plot into the repository.",
     body:
-      "The goal becomes a plan, an ordered backlog, and executable sensors under .koi/. A future session can read the same position without reconstructing it from chat.",
+      "The goal becomes a plan, a candidate backlog, and executable sensors under .koi/. Review the split before acceptance creates executable cards. A future session can read the saved position.",
     tone: "accent",
     window: "window 01 · 18%",
     position: ".koi/run/ prepared",
@@ -102,7 +102,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     label: "make it finite",
     title: "One risky port becomes four provable phases.",
     body:
-      "Each stone has a narrow job and its own sensor. The cutover is gated because traffic changes need a human decision. The next move is explicit.",
+      "The accepted split gives each stone a narrow job and its own sensor. The cutover is gated because traffic changes need a human decision. The next move is explicit.",
     tone: "amber",
     window: "window 01 · 31%",
     position: "phase 01 selected",

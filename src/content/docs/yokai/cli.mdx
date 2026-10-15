@@ -124,3 +124,7 @@ The mandatory local board is execution input; BACKLOG.md is generated read-only.
 migration for legacy efforts. Optional commands are visibility setup, login, discover, review,
 import, sync, status and resolve. Setup and reconciliation are interactive on the host; status is
 read-only. [Board](/koi/docs/board) · [Jira visibility](/yokai/docs/visibility)
+
+Shared board commands include propose, show-proposal, accept-proposal and discard-proposal through
+`yokai board` or standalone `junji-board`. Propose saves candidate work; acceptance names the exact
+proposal ID and reviewed board revision. Pending review pauses before the next phase.
