@@ -92,7 +92,7 @@ flowchart TD
   plan["Plan — write phase spec, then stop"] --> build["Build — implement and sense"]
   inputs["Phase spec, CONTEXT and METHOD guides, sensors and enabled judge"] -.-> build
   build --> verdict{"Converged?"}
-  verdict -->|Yes| seal["Seal — compact, update backlog, commit"]
+  verdict -->|Yes| seal["Seal — update board, outcome, commit"]
   seal --> check["Verify on-disk contract"]
   verdict -->|No| recovery{"Recovery enabled?"}
   recovery -->|Yes| diagnose["Diagnose — read FEEDBACK.md"]

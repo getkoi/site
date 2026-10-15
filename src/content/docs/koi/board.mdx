@@ -1,0 +1,47 @@
+---
+title: Local execution board
+navLabel: Board
+description: "One local execution contract for Junji and Yokai, with optional external publication."
+section: reference
+kind: reference
+order: 31
+---
+
+Every project has `.koi/board.json`. Junji owns this method contract; Yokai reads and updates it
+without needing installed skill files. The board works offline. [External publication](/yokai/docs/visibility)
+is optional.
+
+An effort contains ordered executable cards. A card is one independently verifiable phase, with
+stable identity, description, dependencies, human gate and execution status. Next action and
+carry-forward belong to the effort. Detailed plans and outcomes remain linked Markdown files.
+
+Execution keeps todo, planning, building, sealing and done so interrupted work resumes correctly.
+External services see todo, active, done or explicitly blocked. Seal's done claim remains provisional
+until verification, required commit and clean-tree checks succeed. A remote Done cannot prove that.
+
+## Editing and browsing
+
+Standalone Junji uses the `junji-board` Rust binary; Yokai links the same board library and exposes
+`yokai board` commands. Install only the standalone binary from a Koi checkout with
+`./install.sh --board-only`. Local operations require neither Python nor Yokai.
+
+```bash
+junji-board show
+junji-board apply --revision 4 --input patch.json
+junji-board status P0 building --revision 5
+```
+
+Read before editing. An apply patch contains effort fields, partial card updates keyed by phase_id,
+and optionally the complete card order. Validated operations preserve unrelated fields, reject stale
+revisions and regenerate `.koi/run/BACKLOG.md`. That Markdown file is read-only and never execution
+input. A missing or edited summary cannot advance work; render repairs it from the board.
+
+## Existing projects and history
+
+Use `yokai migrate` or the standalone helper's migrate operation explicitly. The original backlog
+is retained as BACKLOG.md.legacy, including custom prose and legacy tags. Conflicting source files
+require reconciliation rather than automatic replacement. Headless startup never migrates.
+
+Consolidation retains completed efforts, outcomes and archive references on the board, while removing
+only `.koi/run/` after producing the deliverable. A later begin creates a fresh effort and preserves
+project history, optional adapters and pending delivery receipts.

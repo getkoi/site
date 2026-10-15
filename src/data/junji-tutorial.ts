@@ -133,7 +133,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     result:
       "A new window can see what repository it opened and which verb comes next.",
     rule:
-      "The top line of BACKLOG.md is Next action. It is the turn marker for the method.",
+      "The top line of board.json is Next action. It is the turn marker for the method.",
     choices: [
       {
         id: "oriented-plan",
@@ -170,7 +170,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     triggered: [],
     table: {
       runExists: true,
-      files: ["CONTEXT.md", "BACKLOG.md", "METHOD.md"],
+      files: ["CONTEXT.md", "board.json", "METHOD.md"],
       nextAction: "/junji plan",
       phases: [],
       gate: "idle",
@@ -208,7 +208,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
         hint: "Play a phase",
         valid: false,
         feedback:
-          "The plan exists, but BACKLOG.md has no runnable phase yet. Refine must lay the sequence.",
+          "The plan exists, but board.json has no runnable phase yet. Refine must lay the sequence.",
       },
       {
         id: "planned-iterate",
@@ -242,7 +242,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
       runExists: true,
       files: [
         "CONTEXT.md",
-        "BACKLOG.md",
+        "board.json",
         "METHOD.md",
         "PLAN.md",
         "DESIGN.md",
@@ -260,7 +260,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     chapter: "Sequence ready",
     title: "Three small moves replace one large guess",
     prompt:
-      "BACKLOG.md now has three phase headings. Each phase can be verified on its own. Which card may write product code?",
+      "board.json now has three phase headings. Each phase can be verified on its own. Which card may write product code?",
     result:
       "Refine changed markdown only. It did not create phase files and did not touch product code.",
     rule:
@@ -275,7 +275,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
         valid: true,
         next: "gate-red",
         feedback:
-          "Next reads CONTEXT.md and BACKLOG.md, does phase research, writes its phase plan, changes code, and runs every sensor.",
+          "Next reads CONTEXT.md and board.json, does phase research, writes its phase plan, changes code, and runs every sensor.",
       },
       {
         id: "sequenced-brief",
@@ -301,7 +301,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     triggered: [],
     table: {
       runExists: true,
-      files: ["CONTEXT.md", "BACKLOG.md", "METHOD.md", "PLAN.md", "DESIGN.md"],
+      files: ["CONTEXT.md", "board.json", "METHOD.md", "PLAN.md", "DESIGN.md"],
       nextAction: "/junji next",
       phases: phases("todo", "todo", "todo"),
       gate: "idle",
@@ -328,7 +328,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
         valid: true,
         next: "phase-one",
         feedback:
-          "The agent corrects the implementation, reruns the sensors, records the outcome, compacts BACKLOG.md, and creates one commit.",
+          "The agent corrects the implementation, reruns the sensors, records the outcome, records the board outcome, and creates one commit.",
       },
       {
         id: "gate-weaken",
@@ -354,7 +354,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
       runExists: true,
       files: [
         "CONTEXT.md",
-        "BACKLOG.md",
+        "board.json",
         "METHOD.md",
         "PLAN.md",
         "DESIGN.md",
@@ -374,7 +374,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     prompt:
       "Phase one is done and committed. You can inspect what shipped before continuing, or play the next execution turn.",
     result:
-      "The phase outcome, compacted backlog, and commit are on disk. A new context window can continue without a chat handoff.",
+      "The phase outcome, updated board, and commit are on disk. A new context window can continue without a chat handoff.",
     rule:
       "Brief reads completed outcomes and returns a report in chat. It writes nothing and does not move Next action.",
     choices: [
@@ -416,7 +416,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
       runExists: true,
       files: [
         "CONTEXT.md",
-        "BACKLOG.md",
+        "board.json",
         "METHOD.md",
         "PLAN.md",
         "DESIGN.md",
@@ -436,7 +436,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     prompt:
       "Brief has explained the completed work. The turn marker still points to the next execution phase.",
     result:
-      "The user got a plain product briefing in chat. BACKLOG.md and the phase list did not move.",
+      "The user got a plain product briefing in chat. board.json and the phase list did not move.",
     rule:
       "Research, design, grill, and brief are pointer-neutral side cards. They support the spine without becoming the next required verb.",
     choices: [
@@ -483,7 +483,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
       runExists: true,
       files: [
         "CONTEXT.md",
-        "BACKLOG.md",
+        "board.json",
         "METHOD.md",
         "PLAN.md",
         "DESIGN.md",
@@ -503,7 +503,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     prompt:
       "The invite and accept flow now has its own outcome and commit. The sequence row still has one open phase.",
     result:
-      "Next action stays on /junji next because BACKLOG.md still contains a runnable phase.",
+      "Next action stays on /junji next because board.json still contains a runnable phase.",
     rule:
       "Each play of next uses one fresh window and produces at most one completed phase commit.",
     choices: [
@@ -544,7 +544,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
       runExists: true,
       files: [
         "CONTEXT.md",
-        "BACKLOG.md",
+        "board.json",
         "METHOD.md",
         "PLAN.md",
         "DESIGN.md",
@@ -565,7 +565,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     prompt:
       "Every planned phase is done. This sample has no new request, so the correct finish is to produce the repository deliverable and clear the temporary working folder.",
     result:
-      "BACKLOG.md now points to consolidate. The three phase commits and durable sensors remain in the repository.",
+      "board.json now points to consolidate. The three phase commits and durable sensors remain in the repository.",
     rule:
       "Use iterate only when all phases are done and the user supplies a new request. Otherwise, consolidate the completed run.",
     choices: [
@@ -606,7 +606,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
       runExists: true,
       files: [
         "CONTEXT.md",
-        "BACKLOG.md",
+        "board.json",
         "METHOD.md",
         "PLAN.md",
         "DESIGN.md",

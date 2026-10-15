@@ -93,7 +93,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     commit: "planning files changed",
     nextAction: "/junji refine",
     phaseStatuses: ["todo", "todo", "todo", "gated"],
-    files: ["PLAN.md", "BACKLOG.md", "phases/", "sensors/*.sh"],
+    files: ["PLAN.md", "board.json", "phases/", "sensors/*.sh"],
     actors: ["junji"],
   },
   {
@@ -110,7 +110,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     commit: "HEAD unchanged",
     nextAction: "/junji next",
     phaseStatuses: ["active", "todo", "todo", "gated"],
-    files: ["BACKLOG.md", "phases/01-behavior.md", "10-contract-fixtures.sh"],
+    files: ["board.json", "phases/01-behavior.md", "10-contract-fixtures.sh"],
     actors: ["junji", "agent"],
   },
   {
@@ -127,7 +127,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     commit: "4f71d0a · behavior locked",
     nextAction: "resume from disk",
     phaseStatuses: ["done", "active", "todo", "gated"],
-    files: ["BACKLOG.md", "phases/02-read-routes.md", "CONTEXT.md"],
+    files: ["board.json", "phases/02-read-routes.md", "CONTEXT.md"],
     actors: ["junji", "agent"],
   },
   {
@@ -163,7 +163,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     nextAction: "phase 03 · writes + data",
     phaseStatuses: ["done", "done", "todo", "gated"],
     files: [
-      "BACKLOG.md · [done]",
+      "board.json · done",
       "git · a81c2e7",
       "gate · green",
       "tree · clean",

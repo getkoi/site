@@ -12,8 +12,8 @@ Run the supervisor from your repo root (where `.koi/` lives). Settings layer: **
 
 ## Prerequisites
 
-- Junji-prepared METHOD, CONTEXT and BACKLOG; no installed method skill is needed to execute
-- `[todo]` (or in-flight) phases in `.koi/run/BACKLOG.md`
+- Junji-prepared METHOD, CONTEXT and board; no installed method skill is needed to execute
+- todo (or in-flight) cards in `.koi/board.json`
 - Interactive startup reviews missing or changed sensors; headless runs require already-reviewed scripts
 - Complete phase assessments in `.koi/run/yokai.yml`; approval through the helper is sufficient
 
@@ -115,7 +115,7 @@ See [TUI](/yokai/docs/tui).
 
 After each phase the supervisor checks the **contract**:
 
-1. phase marked `[done]` in `BACKLOG.md`
+1. card has a provisional done claim in `board.json`, independently verified by the driver
 2. new commit (`HEAD` moved)
 3. gate green (every `.koi/sensors/*.sh` exit 0)
 4. clean working tree

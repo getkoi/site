@@ -16,14 +16,14 @@ A **phase** is one item in the backlog. It runs through Plan, Build, and Seal. B
 ```mermaid
 flowchart TD
   accTitle: Work inside one phase
-  accDescr: Plan writes the phase plan. Build repeats coding, sensors and enabled review until convergence. Seal updates the backlog and commits. Yokai then verifies the phase on disk.
+  accDescr: Plan writes the phase plan. Build repeats coding, sensors and enabled review until convergence. Seal updates the board and commits. Yokai then verifies the phase on disk.
   plan["Plan"] --> build["Build"]
   build -->|Correct and check again| build
   build -->|Converged| seal["Seal"]
   seal --> verify["Verify phase on disk"]
 ```
 
-Sensors are shell scripts. They do not open agent sessions. When enabled, review starts after the authoritative sensors pass. With review disabled, passing sensors can lead directly to Seal. Build convergence leads to Seal; the phase is complete only after Yokai verifies the backlog, commit, gate, and clean tree.
+Sensors are shell scripts. They do not open agent sessions. When enabled, review starts after the authoritative sensors pass. With review disabled, passing sensors can lead directly to Seal. Build convergence leads to Seal; the phase is complete only after Yokai verifies the board, commit, gate, and clean tree.
 
 ## Use fresh sessions by default
 

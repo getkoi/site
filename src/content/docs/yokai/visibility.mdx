@@ -1,0 +1,56 @@
+---
+title: Jira visibility
+navLabel: Jira visibility
+description: "Publish the local execution board to an existing Jira board through MCP."
+section: guide
+kind: how-to
+order: 90
+---
+
+The local execution board is mandatory. Connecting Jira is optional, and network failures never
+change engineering results or stop local work.
+
+```bash
+yokai visibility setup
+yokai visibility sync
+yokai visibility status
+```
+
+Setup opens browser OAuth, lets you select a site and existing Jira board/project, discovers issue
+types and required fields, and reviews the hierarchy and actual workflow mapping. Choose one issue
+with subtasks, or one epic with tasks. The local effort becomes the parent and its executable cards
+become the children. No pre-existing Jira issues are required.
+
+After reviewing the initial board following refine, sync creates the parent and all children.
+Later discovered cards are published automatically under the same parent. Publishing work never
+authorizes implementing it or bypassing a human gate.
+
+## Progress and conflicts
+
+Each local state has one reviewed remote target; several remote statuses can be equivalent.
+Active and done transitions respect available transitions and reviewed source statuses. Unexpected
+human workflow edits are preserved and shown for review. Blocking and halt conditions are comments.
+Done is published only with a matching local verification receipt.
+
+Issue creation and comments carry stable markers. Restarted publication reconciles uncertain
+responses before retrying, and preserves partial hierarchies. Run sync to retry pending operations;
+unresolved ambiguous creation remains pending for review rather than creating duplicate issues.
+Explicit imports use visibility import --input selection.json with selected issue_keys. Imports do
+not authorize execution, and remote edits never silently replace local scope.
+
+## Credentials and sandbox runs
+
+Profiles live in `.koi/adapters/jira.json`; bindings and receipts live under `.koi/visibility/`.
+OAuth credentials remain in macOS Keychain or Linux Secret Service (secret-tool). Headless runs reuse
+existing credentials and never open sign-in. Some organizations require a registered OAuth client;
+use visibility login --client-id ID and, when required, --redirect-port PORT matching the registered loopback callback.
+
+Yokai keeps the publisher on the host during sandbox execution. Credentials are not passed into
+the sandbox. Pending state survives consolidation. The cockpit shows sync state; publisher.log holds
+actionable failures. Advanced tools include visibility discover and visibility review --input FILE.
+
+Standalone Junji uses `junji-board visibility` and the same Rust library without requiring Yokai. During a Yokai run, agent turns leave publishing to the supervisor and host worker.
+
+Uncertain creation can be reviewed with visibility resolve --input FILE, either binding an existing
+issue or authorizing retry after checking Jira. It never repeats uncertain creation automatically.
+Connection setup accepts additional field defaults needed by the selected board's filter.

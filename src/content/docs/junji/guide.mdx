@@ -7,6 +7,10 @@ kind: how-to
 order: 20
 ---
 
+Execution state lives in the mandatory [local board](/koi/docs/board). All changes use validated
+board operations; heading/tag examples below illustrate the generated summary. Never edit or parse
+BACKLOG.md to drive execution. Detailed phase plans remain linked Markdown specifications.
+
 ## Prerequisites
 
 - **junji skill** installed: `npx skills add getkoi/junji`
@@ -20,7 +24,7 @@ A git-committed `.koi/run/` working folder with:
 
 - Stable **PLAN.md** (strategy) and **CONTEXT.md** (execution contract)
 - Optional **DESIGN.md** (visual / experiential contract) when the run ships human-facing surfaces
-- An ordered **phase list** in **BACKLOG.md**
+- An ordered collection of executable cards in **.koi/board.json**
 - Runnable verification commands documented in CONTEXT; optional existing sensors can supply them
 - Phases executed one at a time via `next` (or `yokai`). After every phase is `[done]`, **iterate** can grill more work onto the backlog, or **consolidate** collapses `run/` into a repo-native deliverable
 
@@ -59,7 +63,7 @@ flowchart TD
 **Steps:**
 
 1. In the agent: `/junji begin`
-2. Skill copies `METHOD.md` and `BACKLOG.md` from templates (byte-identical; Next action already `/junji plan`). Copies the CONTEXT skeleton if missing or still the init stub. Empty `phases/`.
+2. Skill checks the standalone `junji-board` binary, copies `METHOD.md`, then initializes the active board effort (Next action `/junji plan`). Validated operations generate `BACKLOG.md`. Copies the CONTEXT skeleton if missing or still the init stub. Empty `phases/`.
 3. Surveys the repo for observable facts only: file map, toolchain commands, spec conventions, **Skill scout** (`CONTEXT.md › Skills`: Must from `AGENTS.md` / `DESIGN.md` / siblings, catalog of in-repo `SKILL.md`, by-role index). **No load-bearing decisions.** The agent authors CONTEXT only.
 4. Leaves optional Yokai configuration and existing sensor scripts untouched
 
@@ -159,7 +163,7 @@ Useful after some phases have landed. If nothing is `[done]`, it stops. Distinct
 2. Each phase is one **independently-verifiable** unit, ordered by dependency.
 3. Irreversible steps → prefix `[gated]`.
 4. Use ordinary status headings such as `### [todo] P0 - Title`, with dependencies and human gates. Runtime strategy and tier choices are optional Yokai settings.
-5. Write the phase list to `BACKLOG.md` only. No code or phase plans yet.
+5. Write cards through validated board operations; the summary is generated. No code or phase plans yet.
 
 **Verification:** Ordered, independently verifiable phases; `Next action: /junji next`.
 
