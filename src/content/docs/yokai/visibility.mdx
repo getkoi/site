@@ -25,6 +25,30 @@ After reviewing the initial board following refine, sync creates the parent and 
 Later discovered cards are published automatically under the same parent. Publishing work never
 authorizes implementing it or bypassing a human gate.
 
+## Personal API-token login
+
+If browser OAuth is unavailable, an organization admin can enable **Allow API token authentication**
+in the Rovo MCP server's Authentication settings. Create a scoped personal API token with
+`read:jira:agent-interface`, `write:jira:agent-interface` and `search:jira:agent-interface`.
+
+```bash
+yokai visibility login --auth-method api-token \
+  --site https://example.atlassian.net --cloud-id YOUR_CLOUD_UUID
+yokai visibility setup
+yokai visibility sync
+```
+
+These commands also work with `junji-board visibility`. Login asks for your account email and the
+token with input hidden, verifies read access, then saves credentials in the OS credential store.
+Keep the token out of chat, command arguments and repository files. API tokens require an explicit
+cloud UUID; setup and discovery use the selected site, and tool calls stay within that cloud.
+Repeat login to replace an expired or revoked token. OAuth remains the default; use
+`visibility login --auth-method oauth` to switch back. Selecting an authentication method on setup
+starts a fresh login; setup otherwise reuses existing credentials.
+
+See [Atlassian's API-token guide](https://developer.atlassian.com/cloud/rovo-mcp/guides/configuring-authentication-via-api-token/)
+for token creation and organization settings.
+
 ## Progress and conflicts
 
 Each local state has one reviewed remote target; several remote statuses can be equivalent.
@@ -41,7 +65,7 @@ not authorize execution, and remote edits never silently replace local scope.
 ## Credentials and sandbox runs
 
 Profiles live in `.koi/adapters/jira.json`; bindings and receipts live under `.koi/visibility/`.
-OAuth credentials remain in macOS Keychain or Linux Secret Service (secret-tool). Headless runs reuse
+OAuth credentials and API tokens remain in macOS Keychain or Linux Secret Service (secret-tool). Headless runs reuse
 existing credentials and never open sign-in. Some organizations require a registered OAuth client;
 use visibility login --client-id ID and, when required, --redirect-port PORT matching the registered loopback callback.
 
