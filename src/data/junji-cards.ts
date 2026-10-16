@@ -51,6 +51,8 @@ export interface JunjiCard {
   writesCode: boolean;
   mythName: string;
   artLabel: string;
+  /** Reuse an existing scene when a verb has no dedicated artwork. */
+  artId?: JunjiCardId;
   relations: readonly JunjiCardRelation[];
 }
 
@@ -62,6 +64,7 @@ export type JunjiCardId =
   | "grill"
   | "brief"
   | "refine"
+  | "connect"
   | "next"
   | "iterate"
   | "consolidate";
@@ -258,6 +261,25 @@ export const JUNJI_CARDS: readonly JunjiCard[] = [
         label: "reads existing research notes when relevant",
       },
     ],
+  },
+  {
+    id: "connect",
+    command: "/junji connect",
+    family: "arrange",
+    number: 11,
+    title: "Connect the accepted work",
+    purpose:
+      "Review optional Jira publication with a dedicated host agent, without changing local execution authority.",
+    playCondition: "Accepted cards exist and the user wants Jira visibility.",
+    diskEffect:
+      "Saves the exact approved connection; the host publisher preserves bindings and records delivery evidence. No product code.",
+    pointerEffect: "Next action stays exactly where it was.",
+    timing: "Optional after backlog acceptance",
+    writesCode: false,
+    mythName: "yatagarasu · 八咫烏",
+    artLabel: "Yatagarasu carries a tied field report toward a waiting standard.",
+    artId: "brief",
+    relations: [],
   },
   {
     id: "next",

@@ -86,4 +86,8 @@ An external editor temporarily owns the terminal; other preparation stays in the
 If the repository lacks a required check, Yokai reports the gap. Add that real project check as
 separate work, then return to Sensors. It never invents a passing script to finish the wizard.
 
-Optional Jira setup and Sync Jira are available under **Review and start → Details**. They preserve local readiness and do not start engineering execution. [Jira visibility](/yokai/docs/visibility) covers authentication and publication.
+Optional Jira connection is a separate agent conversation: `/junji connect BOARD_URL`. Give the
+agent your board link and approve its exact readable summary; it handles host discovery and
+publication without requiring configuration JSON or technical IDs. This does not start engineering
+execution or change local readiness. Saved setup is distinct from verified publication.
+[Jira visibility](/yokai/docs/visibility) explains host-only credentials and publication safeguards.

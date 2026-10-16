@@ -1,7 +1,7 @@
 ---
 title: junji guide
 navLabel: Guide
-description: "Walk the ten verbs — begin through consolidate, including iterate and brief — with prerequisites, steps, and verification."
+description: "Walk the eleven verbs — including optional Jira connect, iterate and brief — with prerequisites, steps, and verification."
 section: guide
 kind: how-to
 order: 20
@@ -14,7 +14,8 @@ BACKLOG.md to drive execution. Detailed phase plans remain linked Markdown speci
 ## Prerequisites
 
 - **junji skill** installed: `npx skills add getkoi/junji`
-- No CLI, runtime configuration, or sensor scripts are required for Junji.
+- The standalone `junji-board` binary for validated board operations (`./install.sh --board-only`
+  from a Koi checkout). No Yokai executable, runtime configuration or sensor scripts are required.
 - A **source doc** or rough idea for `plan` (RFC, ADR, PRD, ticket prose)
 - Repo root as the anchor: paths are always repo-root-relative; never create `phases/` or `BACKLOG.md` at the repo root or `.koi/` root
 
@@ -52,6 +53,7 @@ flowchart TD
   next -.-> brief["brief — optional report after some phases are done"]
 ```
 
+The eleven verbs include optional `connect` after backlog acceptance; it does not advance Next action.
 `begin` gathers facts only. Optional `research` and `design` gather cited notes and a visual contract.
 `plan` and `grill` think. Optional `brief` reports in chat what `[done]` phases shipped. `refine` proposes a split and waits for acceptance. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`.
 
@@ -117,6 +119,8 @@ Use before `plan`/`grill` when facts must be pinned to sources. Distinct from **
 4. Write `.koi/run/PLAN.md`: problem, approach, decisions, **with rationale**, success criteria
 5. Move binding facts into `.koi/run/CONTEXT.md`: locked decisions, verification bar, deliverable spec model, standing overrides
 6. Document the project’s runnable verification commands and expected exit codes. Existing sensors may be referenced. Yokai can later propose atomic scripts for review.
+7. Ask whether Jira publication is wanted (default off). Record the intent and known board URL, but
+   defer `/junji connect` until the refined backlog is accepted. Planning creates no remote issues.
 
 **Verification:** CONTEXT contains runnable commands for the verification bar. `Next action: /junji refine`.
 
@@ -175,9 +179,37 @@ Once every phase is `[done]`, `refine` does not add work: use `iterate`.
 
 ---
 
+## `connect`: optional Jira connection
+
+**Prerequisites:** An active effort with accepted cards, an existing Jira board URL, and an available
+host ACP agent. Reuse saved authentication; complete secure host login only if needed.
+
+1. `/junji connect BOARD_URL` (omit the URL when the destination is already known).
+2. The dedicated host connection agent discovers Jira through MCP: project, Reporter, supported
+   hierarchy, fields, board filter and workflow. It resolves technical IDs rather than asking you to
+   author configuration. Only unresolved business choices come back to you.
+3. Review one exact readable summary, including accepted cards, existing bindings, status mapping
+   and publication of later accepted additions. Explicitly approve it. Backlog acceptance alone is
+   not connection approval; stale board/profile or discovery evidence requires renewed review.
+4. The runtime saves the approved Profile, then the dedicated host publisher applies accepted work
+   within that authorization. Existing issues and bindings are preserved; uncertain creation is
+   reconciled before retrying. The runtime still requires matching local proof before publishing Done.
+5. The agent reports **setup saved** separately from **publication verified**, with confirmed issue
+   links or pending/conflicting work supported by evidence. Without a live check, it says publication
+   has not been verified. Local work can continue regardless.
+
+**Verification:** Exact approval is recorded; reported delivery matches durable bindings/receipts.
+Next action, accepted scope and execution gates are unchanged. No product code is written.
+
+Coding phase agents never call Jira tools. Credentials remain in the host OS store behind a local MCP
+transport, never in chat, repository files or the coding sandbox. `prepare`, `review` and `sync` remain
+internal agent tooling, not an engineer workflow. See [Jira visibility](/yokai/docs/visibility).
+
+---
+
 ## `next`: one phase end-to-end
 
-**Prerequisites:** Phase list in `BACKLOG.md`; runnable verification bar in CONTEXT.
+**Prerequisites:** Accepted cards in `.koi/board.json`; runnable verification bar in CONTEXT.
 
 A backlog heading looks like `### [todo] P0 - Title`.
 - `[todo]` is the status. Work moves through `[planning]`, `[building]`, `[sealing]`, and `[done]`.
@@ -188,7 +220,7 @@ Interactive `next` preserves user text and any legacy runtime annotations. It do
 **Steps (same every run):**
 
 ```
-1 load       read CONTEXT + BACKLOG; pick first_runnable (in-flight tag else `[todo]`; halt on `[gated]` unless pre-authorized)
+1 load       read CONTEXT + the accepted board; pick first_runnable (in-flight tag else `[todo]`; halt on `[gated]` unless pre-authorized)
 2 research   read files the phase will touch; study idioms for this slice
 3 plan       write .koi/run/phases/phase-NN-<slug>.md unless that file already exists
 4 implement  scoped to this phase only
@@ -200,6 +232,10 @@ Interactive `next` preserves user text and any legacy runtime annotations. It do
 Invoke: `/junji next` or "do the next task". The **yokai driver** splits this into Plan → Build → Seal. See [Build](/yokai/docs/build).
 
 **Verification:** Phase `[done]`, gate green, one new commit, clean tree (driver contract).
+For enabled publication, standalone `next` records local proof after these checks and requests sync
+through the dedicated host publisher. During Yokai execution, the supervisor owns proof and sync;
+coding phase agents do neither. No coding phase calls Jira tools, and failed delivery does not change
+the engineering result.
 
 **Failure:**
 
@@ -293,10 +329,11 @@ Yokai checks the results against your sensors and git history. Define a verifica
 | Where do I start? | [Quickstart](/koi/docs/quickstart): install Junji, then `/junji begin` |
 | What are we doing? | `/junji plan` |
 | Turn plan into tasks? | `/junji refine` |
+| Publish accepted work to Jira? | `/junji connect BOARD_URL` |
 | Do one slice? | `/junji next` or `yokai` |
 | What shipped / how to run? | `/junji brief` |
 | Want another slice after everything is `[done]`? | `/junji iterate` |
-| Which step am I on? | `BACKLOG.md` › Next action |
+| Which step am I on? | Active effort `next_action` in `.koi/board.json` |
 | Done? | `/junji consolidate` |
 
 ## Next

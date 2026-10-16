@@ -14,7 +14,8 @@ convention. Use Junji directly for method work and Yokai for runtime setup and d
 
 - `koi setup` and `koi init` become `yokai setup`. Bare `yokai` also prepares missing inputs before execution.
 - `koi doctor` becomes `yokai doctor` (`--probe` remains optional).
-- `/junji begin` works without installing an executable.
+- `/junji begin` requires the standalone `junji-board` binary, but no Yokai executable. Install it
+  from a Koi checkout with `./install.sh --board-only`.
 
 There is no compatibility wrapper, shared installer or generic Koi configuration file.
 The normal workflow is Junji preparation followed by either `/junji next` or `yokai`.

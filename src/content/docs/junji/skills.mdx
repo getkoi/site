@@ -18,9 +18,15 @@ Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/junji/blob/main/skills
 ## Dispatch
 
 - No active effort in `.koi/board.json` → `begin` (legacy backlogs require explicit migration).
+- Explicit `/junji connect` → optional Jira connection review after backlog acceptance; Next action stays unchanged.
 - “Do the next task” → `next`.
 - Otherwise, consult the active board effort’s `next_action`.
 
-The skill loads its per-verb instructions only as needed. It owns the method files and documents runnable verification commands during `plan`. It requires no CLI, sensor scripts, model tiers or sandbox configuration. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/junji/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
+The skill loads its per-verb instructions only as needed. It owns the method files and documents runnable verification commands during `plan`. It requires the standalone `junji-board` binary, but no Yokai executable, sensor scripts, model tiers or sandbox configuration. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/junji/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
+
+`connect` delegates Jira discovery and publication to dedicated host agents through MCP over ACP.
+You supply a board URL and approve an exact readable summary, not configuration JSON. The runtime
+retains authorization, proofs and bindings; coding phase agents never call Jira tools.
+[Jira visibility](/yokai/docs/visibility) separates saved setup from verified delivery.
 
 For later sensor changes and sandbox image recipes, use the [yokai helper skill](/yokai/docs/skill). To run prepared phases unattended, use the [yokai driver](/yokai/docs/run).

@@ -14,7 +14,7 @@ Junji creates its own folders and copies its own templates. Yokai is optional.
 .koi/
   board.json              # mandatory execution state and effort history
   adapters/jira.json?      # optional reviewed Jira profile, no credentials
-  visibility/?            # delivery bindings and verification receipts
+  visibility/?            # durable bindings, verification proofs and delivery receipts
   yokai.yml?              # reusable settings, sandbox and gate fingerprints
   sensors/*.sh            # optional for Junji, reviewed executable gate for Yokai
   Dockerfile.sandbox?     # separate image recipe
@@ -38,4 +38,6 @@ handoff. [Settings](/yokai/docs/configuration) · [Migration](/koi/docs/cli)
 The [local board](/koi/docs/board) is mandatory; external integration is optional. It owns execution
 order, descriptions, dependencies, human gates and resume stages. BACKLOG.md is generated and never
 execution input. Existing efforts require explicit migration. [Jira publication](/yokai/docs/visibility)
-works through a host-side MCP adapter and never changes engineering verification results.
+uses `/junji connect` and dedicated host agents over MCP. The runtime retains reviewed authorization,
+verification proofs and stable bindings; publication never changes engineering verification results.
+Credentials stay in the host OS store behind a local MCP transport, never the coding sandbox.

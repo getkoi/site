@@ -1,4 +1,7 @@
 import { test } from "bun:test";
+import fs from "node:fs";
+import path from "node:path";
+import { JUNJI_CARDS, junjiCardById } from "./junji-cards";
 import {
   JUNJI_TUTORIAL_STATE_BY_ID,
   JUNJI_TUTORIAL_STATES,
@@ -85,4 +88,23 @@ test("refinement cannot execute until the proposed split is accepted", () => {
   assert(!draft.choices.find((c) => c.card === "next")?.valid, "next cannot execute a draft");
   const accepted = tutorialStateById(draft.choices.find((c) => c.id === "proposed-accept")!.next!);
   assert(accepted.table.phases.length === 3, "acceptance materializes the reviewed cards");
+});
+
+
+test("the full deck includes optional pointer-neutral connect and existing artwork", () => {
+  assert(JUNJI_CARDS.length === 11, "the deck must expose all eleven verbs");
+  assert(new Set(JUNJI_CARDS.map((card) => card.id)).size === 11, "verb IDs must be unique");
+  const connect = junjiCardById("connect");
+  assert(connect.command === "/junji connect", "connect must expose the skill entry point");
+  assert(!connect.writesCode, "connection does not write product code");
+  assert(connect.playCondition.includes("Accepted cards"), "connect requires accepted work");
+  assert(connect.pointerEffect === "Next action stays exactly where it was.", "connect must not move the pointer");
+  assert(connect.diskEffect.includes("approved connection"), "connection needs exact approval");
+  for (const card of JUNJI_CARDS) {
+    const artwork = path.join(process.cwd(), "public/junji-cards", `junji-${card.artId ?? card.id}.webp`);
+    assert(fs.existsSync(artwork), `${card.id} points to missing artwork`);
+    for (const relation of card.relations) {
+      assert(JUNJI_CARDS.some((target) => target.id === relation.target), `${card.id} has an unknown relation`);
+    }
+  }
 });

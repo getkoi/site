@@ -19,7 +19,7 @@ export default function VerbDeck() {
             Every card has one job.
           </h2>
           <p className="sec-p">
-            The tutorial showed the required path, but Junji is not a ten-step checklist.
+            The tutorial showed the required path, but Junji is not a fixed checklist.
             Some cards form the project spine and others help when a condition calls for
             them. Select a card to see when it is legal, what it changes on disk, and
             where its relationships lead. Card chains distinguish what Junji
@@ -35,7 +35,7 @@ export default function VerbDeck() {
 
         <div className="deck-layout">
           <div className="deck-layout__bar">
-            <span>FULL DECK / TEN VERBS</span>
+            <span>FULL DECK / {JUNJI_CARDS.length} VERBS</span>
             <p>
               <i></i>select a card to inspect its rule
             </p>
@@ -76,7 +76,7 @@ export default function VerbDeck() {
                             <span>{family.label}</span>
                           </span>
                           <span className="verb-card__art">
-                            <VerbCardArt id={card.id} />
+                            <VerbCardArt id={card.artId ?? card.id} />
                             <span className="verb-card__myth mono">{card.mythName}</span>
                           </span>
                           <span className="verb-card__command mono">{card.command}</span>
@@ -128,7 +128,7 @@ export default function VerbDeck() {
                 </header>
 
                 <div className="rule-card__scene">
-                  <VerbCardArt id={card.id} />
+                  <VerbCardArt id={card.artId ?? card.id} />
                   <p className="rule-card__myth mono">{card.mythName}</p>
                   <span className="visually-hidden">{card.artLabel}</span>
                 </div>

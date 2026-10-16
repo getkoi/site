@@ -49,3 +49,43 @@ test("junji has a single reading sequence without reference pages", () => {
   expect(docNeighbors(docs, junji.find((entry) => entry.id === "junji/index")!).next?.id).toBe("junji/guide");
   expect(docNeighbors(docs, junji.find((entry) => entry.id === "junji/guide")!).next?.id).toBe("junji/skills");
 });
+
+
+test("Jira setup is an agent conversation with retained runtime safeguards", () => {
+  for (const id of ["junji/guide", "junji/index", "junji/skills", "yokai/visibility", "yokai/preparation", "yokai/cli"]) {
+    const entry = docs.find((entry) => entry.id === id);
+    expect(entry).toBeDefined();
+    expect(entry!.body).toContain("/junji connect");
+  }
+  const visibility = docs.find((entry) => entry.id === "yokai/visibility")!.body.replace(/\s+/g, " ");
+  for (const term of [
+    "dedicated host connection agent", "MCP", "ACP", "exact configuration and scope",
+    "Existing remote issues and bindings are preserved", "actual discovery evidence",
+    "Setup saved", "publication verified", "live publication was checked",
+    "Coding phase agents never call Jira tools", "supervisor owns verified state",
+    "matching local verification proof", "reconciled before retrying",
+    "host OS store", "coding sandbox", ".koi/adapters/jira.json", ".koi/visibility/",
+    "`prepare`, `review` and `sync` remain compatible", "Advanced authentication support",
+  ]) {
+    expect(visibility).toContain(term);
+  }
+  const guide = docs.find((entry) => entry.id === "junji/guide")!.body.replace(/\s+/g, " ");
+  expect(guide).toContain("## `connect`");
+  expect(guide).toContain("Next action, accepted scope and execution gates are unchanged");
+  expect(guide).toContain("standalone `next` records local proof");
+  expect(guide).toContain("supervisor owns proof and sync");
+});
+
+test("public setup examples do not turn internal visibility tooling into the engineer workflow", () => {
+  for (const entry of docs) {
+    for (const [, command] of entry.body.matchAll(/```(?:bash|sh|shell)\n([\s\S]*?)```/g)) {
+      expect(command).not.toMatch(/(?:junji-board|yokai) visibility (?:setup|prepare|review|sync)\b/);
+    }
+    expect(entry.body).not.toMatch(/\bten verbs\b/i);
+  }
+  const visibility = docs.find((entry) => entry.id === "yokai/visibility")!.body;
+  expect(visibility).toContain("visibility login --auth-method api-token");
+  expect(visibility).toContain("visibility login --auth-method oauth");
+  const preparation = docs.find((entry) => entry.id === "yokai/preparation")!.body;
+  expect(preparation).not.toContain("Jira setup and Sync Jira");
+});

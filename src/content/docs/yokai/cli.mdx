@@ -121,9 +121,16 @@ gemini and fine-grained policy files are not supported.
 ## Board and optional Jira publication
 
 The mandatory local board is execution input; BACKLOG.md is generated read-only. Use explicit
-migration for legacy efforts. Optional commands are visibility setup, login, discover, review,
-import, sync, status and resolve. Setup and reconciliation are interactive on the host; status is
-read-only. [Board](/koi/docs/board) · [Jira visibility](/yokai/docs/visibility)
+migration for legacy efforts. Use `/junji connect BOARD_URL` for optional Jira publication: the
+dedicated host agent discovers the connection through MCP, you approve one exact readable summary,
+and the host publisher applies accepted work within that scope. Saved setup is not verified delivery.
+
+`visibility prepare`, `review` and `sync` remain internal agent tooling, not an engineer setup
+checklist. Optional `--agent` / `--model` select an existing host ACP agent. Retained `visibility login`
+commands are advanced authentication support; credentials stay in the host store behind the local
+MCP transport. Status is read-only; import and resolve preserve explicit selection/reconciliation.
+During driven execution the supervisor owns verified state and sync; coding phase agents never call
+Jira tools. Existing profiles, bindings and receipts remain compatible. [Board](/koi/docs/board) · [Jira visibility](/yokai/docs/visibility)
 
 Shared board commands include propose, show-proposal, accept-proposal and discard-proposal through
 `yokai board` or standalone `junji-board`. Propose saves candidate work; acceptance names the exact
