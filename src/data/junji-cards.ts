@@ -269,10 +269,10 @@ export const JUNJI_CARDS: readonly JunjiCard[] = [
     number: 11,
     title: "Connect the accepted work",
     purpose:
-      "Review optional Jira publication with a dedicated host agent, without changing local execution authority.",
+      "Review optional Jira publication through your host's official MCP and OAuth, without changing local execution authority.",
     playCondition: "Accepted cards exist and the user wants Jira visibility.",
     diskEffect:
-      "Saves the exact approved connection; the host publisher preserves bindings and records delivery evidence. No product code.",
+      "Saves the exact approved connection, publishing host and named server; delivery needs agent-reported remote readbacks. Missing evidence stays pending. No product code.",
     pointerEffect: "Next action stays exactly where it was.",
     timing: "Optional after backlog acceptance",
     writesCode: false,

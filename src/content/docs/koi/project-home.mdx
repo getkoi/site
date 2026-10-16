@@ -38,6 +38,11 @@ handoff. [Settings](/yokai/docs/configuration) · [Migration](/koi/docs/cli)
 The [local board](/koi/docs/board) is mandatory; external integration is optional. It owns execution
 order, descriptions, dependencies, human gates and resume stages. BACKLOG.md is generated and never
 execution input. Existing efforts require explicit migration. [Jira publication](/yokai/docs/visibility)
-uses `/junji connect` and dedicated host agents over MCP. The runtime retains reviewed authorization,
-verification proofs and stable bindings; publication never changes engineering verification results.
-Credentials stay in the host OS store behind a local MCP transport, never the coding sandbox.
+uses `/junji connect` and the publishing host's official Atlassian Jira MCP with host-managed OAuth.
+The reviewed publishing host and named server stay pinned independently of coding candidates and
+model tiers. The runtime retains local authorization, verification proofs, requests and stable
+bindings; publication never changes engineering verification results. Direct MCP trusts the host/agent:
+remote readbacks are agent-reported evidence, not an independent runtime transport audit.
+Koi owns no Jira login, token storage, refresh or proxy and has no API-token fallback. Preserve
+profiles, bindings, remote issues and existing OS credentials. Headless auth stays pending while
+local execution continues.

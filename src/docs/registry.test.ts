@@ -60,12 +60,24 @@ test("Jira setup is an agent conversation with retained runtime safeguards", () 
   const visibility = docs.find((entry) => entry.id === "yokai/visibility")!.body.replace(/\s+/g, " ");
   for (const term of [
     "dedicated host connection agent", "MCP", "ACP", "exact configuration and scope",
-    "Existing remote issues and bindings are preserved", "actual discovery evidence",
+    "Existing remote issues and bindings are preserved", "actual remote readbacks",
     "Setup saved", "publication verified", "live publication was checked",
     "Coding phase agents never call Jira tools", "supervisor owns verified state",
     "matching local verification proof", "reconciled before retrying",
-    "host OS store", "coding sandbox", ".koi/adapters/jira.json", ".koi/visibility/",
-    "`prepare`, `review` and `sync` remain compatible", "Advanced authentication support",
+    "host-managed OAuth", "official Atlassian Jira MCP", "coding sandbox",
+    ".koi/adapters/jira.json", ".koi/visibility/",
+    "`prepare`, `review` and `sync` remain compatible", "Authentication belongs to the agent host",
+    "cannot intercept every remote write", "independent transport audit",
+    "agent-reported actual remote readbacks", "Narrative success", "Missing evidence stays pending/review",
+    "ACP", "does not guarantee OAuth reuse or host-config inheritance",
+    "unavailable rather than copying credentials or automatically switching provider",
+    "Headless authentication failures stay pending without opening a browser",
+    "Local execution continues", "Existing OS credentials are not deleted",
+    "OAuth-only", "no API-token fallback", "Koi owns no Jira login, token storage, refresh or credential proxy",
+    "pinned independently of coding candidates and model tiers", "--mcp-server",
+    "known requesting host agent", "`claude`", "`atlassian`",
+    "Sync cannot override agent, server or model", "changes require prepare/review",
+    "missing `mcp_server` need explicit reconnect",
   ]) {
     expect(visibility).toContain(term);
   }
@@ -83,9 +95,31 @@ test("public setup examples do not turn internal visibility tooling into the eng
     }
     expect(entry.body).not.toMatch(/\bten verbs\b/i);
   }
-  const visibility = docs.find((entry) => entry.id === "yokai/visibility")!.body;
-  expect(visibility).toContain("visibility login --auth-method api-token");
-  expect(visibility).toContain("visibility login --auth-method oauth");
+  for (const entry of docs) {
+    const body = entry.body.replace(/\s+/g, " ");
+    expect(body).not.toMatch(/(?:junji-board|yokai) visibility login\b/);
+    expect(body).not.toMatch(/--(?:auth-method|client-id|redirect-port)\b/);
+    expect(body).not.toMatch(/hidden (?:credential|API-token|token) (?:prompt|entry)/i);
+    expect(body).not.toMatch(/local MCP transport|host OS (?:credential )?store/i);
+    expect(body).not.toContain("Freshness checks replay the actual discovery evidence");
+  }
   const preparation = docs.find((entry) => entry.id === "yokai/preparation")!.body;
   expect(preparation).not.toContain("Jira setup and Sync Jira");
+});
+
+
+test("connect guide retains host identity and separates reported delivery from local verification", () => {
+  const guide = docs.find((entry) => entry.id === "junji/guide")!.body.replace(/\s+/g, " ");
+  for (const term of [
+    "official Atlassian Jira MCP", "host-managed OAuth", "MCP connection/OAuth UI",
+    "publishing host and named MCP server", "independent of coding candidates and model tiers",
+    "ACP does not guarantee OAuth reuse or host-config inheritance",
+    "unavailable named servers fail explicitly", "without credential copying or automatic provider switching",
+    "Headless auth stays pending without opening a browser", "local execution continues",
+    "no API-token fallback", "OS credentials are preserved", "agent-reported actual remote readbacks",
+    "missing evidence stays pending/review", "cannot intercept every remote write",
+    "independent transport audit", "reconciled before retrying",
+  ]) {
+    expect(guide).toContain(term);
+  }
 });

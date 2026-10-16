@@ -99,7 +99,11 @@ test("the full deck includes optional pointer-neutral connect and existing artwo
   assert(!connect.writesCode, "connection does not write product code");
   assert(connect.playCondition.includes("Accepted cards"), "connect requires accepted work");
   assert(connect.pointerEffect === "Next action stays exactly where it was.", "connect must not move the pointer");
-  assert(connect.diskEffect.includes("approved connection"), "connection needs exact approval");
+  assert(connect.diskEffect.includes("exact approved connection"), "connection needs exact approval");
+  assert(connect.purpose.includes("host's official MCP and OAuth"), "authentication belongs to the agent host");
+  assert(connect.diskEffect.includes("publishing host and named server"), "publication must retain host identity");
+  assert(connect.diskEffect.includes("agent-reported remote readbacks"), "delivery requires actual reported observations");
+  assert(connect.diskEffect.includes("Missing evidence stays pending"), "narrative success does not verify delivery");
   for (const card of JUNJI_CARDS) {
     const artwork = path.join(process.cwd(), "public/junji-cards", `junji-${card.artId ?? card.id}.webp`);
     assert(fs.existsSync(artwork), `${card.id} points to missing artwork`);

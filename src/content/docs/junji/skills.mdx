@@ -24,9 +24,15 @@ Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/junji/blob/main/skills
 
 The skill loads its per-verb instructions only as needed. It owns the method files and documents runnable verification commands during `plan`. It requires the standalone `junji-board` binary, but no Yokai executable, sensor scripts, model tiers or sandbox configuration. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/junji/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
 
-`connect` delegates Jira discovery and publication to dedicated host agents through MCP over ACP.
-You supply a board URL and approve an exact readable summary, not configuration JSON. The runtime
-retains authorization, proofs and bindings; coding phase agents never call Jira tools.
+`connect` delegates Jira discovery and publication through the host's official Atlassian Jira MCP
+with host-managed OAuth. Supply a board URL and approve an exact readable summary, including the
+publishing host and named server, not configuration JSON. That identity stays pinned independently
+of coding candidates and model tiers. ACP does not guarantee OAuth reuse or host-config inheritance;
+an unavailable named server fails explicitly rather than copying credentials or switching providers.
+Koi owns no Jira login or credentials. Use the host's MCP/OAuth UI for interactive sign-in; headless
+auth stays pending while local execution continues. The runtime retains local authorization, proofs,
+requests and bindings; coding phase agents never call Jira tools. Direct MCP trusts the host/agent.
+Require agent-reported actual remote readbacks, not narrative success or an independent runtime audit.
 [Jira visibility](/yokai/docs/visibility) separates saved setup from verified delivery.
 
 For later sensor changes and sandbox image recipes, use the [yokai helper skill](/yokai/docs/skill). To run prepared phases unattended, use the [yokai driver](/yokai/docs/run).

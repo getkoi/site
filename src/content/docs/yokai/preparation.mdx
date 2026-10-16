@@ -90,4 +90,8 @@ Optional Jira connection is a separate agent conversation: `/junji connect BOARD
 agent your board link and approve its exact readable summary; it handles host discovery and
 publication without requiring configuration JSON or technical IDs. This does not start engineering
 execution or change local readiness. Saved setup is distinct from verified publication.
-[Jira visibility](/yokai/docs/visibility) explains host-only credentials and publication safeguards.
+Use the host's official Atlassian Jira MCP with host-managed OAuth; sign in through its MCP/OAuth UI
+when needed interactively. Koi owns no Jira login or credentials. Headless auth stays pending while
+local execution continues. The saved publishing host and named server are independent of coding
+candidates and model tiers. [Jira visibility](/yokai/docs/visibility) explains the trusted host/agent
+boundary and required agent-reported remote readbacks, not an independent runtime transport audit.

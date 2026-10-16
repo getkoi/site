@@ -182,28 +182,41 @@ Once every phase is `[done]`, `refine` does not add work: use `iterate`.
 ## `connect`: optional Jira connection
 
 **Prerequisites:** An active effort with accepted cards, an existing Jira board URL, and an available
-host ACP agent. Reuse saved authentication; complete secure host login only if needed.
+host agent with its official Atlassian Jira MCP connection. Authentication is host-managed OAuth;
+use that host's MCP connection/OAuth UI if interactive sign-in is needed. Koi has no Jira login.
 
 1. `/junji connect BOARD_URL` (omit the URL when the destination is already known).
-2. The dedicated host connection agent discovers Jira through MCP: project, Reporter, supported
-   hierarchy, fields, board filter and workflow. It resolves technical IDs rather than asking you to
+2. The dedicated host connection agent uses the named official MCP server to discover project,
+   Reporter, supported hierarchy, fields, board filter and workflow. It resolves technical IDs rather
+   than asking you to
    author configuration. Only unresolved business choices come back to you.
-3. Review one exact readable summary, including accepted cards, existing bindings, status mapping
-   and publication of later accepted additions. Explicitly approve it. Backlog acceptance alone is
+3. Review one exact readable summary, including publishing host and named MCP server, accepted cards,
+   existing bindings, status mapping and publication of later accepted additions. Explicitly approve
+   it. Backlog acceptance alone is
    not connection approval; stale board/profile or discovery evidence requires renewed review.
 4. The runtime saves the approved Profile, then the dedicated host publisher applies accepted work
    within that authorization. Existing issues and bindings are preserved; uncertain creation is
    reconciled before retrying. The runtime still requires matching local proof before publishing Done.
-5. The agent reports **setup saved** separately from **publication verified**, with confirmed issue
-   links or pending/conflicting work supported by evidence. Without a live check, it says publication
-   has not been verified. Local work can continue regardless.
+5. The agent reports **setup saved** separately from **publication verified**. Require agent-reported
+   actual remote readbacks of issues, relationships, board-filter inclusion and requested statuses,
+   matched to requests and durable bindings/receipts. Narrative success is insufficient; missing
+   evidence stays pending/review. Without a live check, it says publication has not been verified.
+   Local work can continue regardless.
 
-**Verification:** Exact approval is recorded; reported delivery matches durable bindings/receipts.
+**Verification:** Exact approval is recorded; reported remote readbacks match durable bindings/receipts.
 Next action, accepted scope and execution gates are unchanged. No product code is written.
 
-Coding phase agents never call Jira tools. Credentials remain in the host OS store behind a local MCP
-transport, never in chat, repository files or the coding sandbox. `prepare`, `review` and `sync` remain
-internal agent tooling, not an engineer workflow. See [Jira visibility](/yokai/docs/visibility).
+Coding phase agents never call Jira tools. The publishing host and named server stay pinned,
+independent of coding candidates and model tiers. ACP does not guarantee OAuth reuse or host-config
+inheritance: unavailable named servers fail explicitly, without credential copying or automatic
+provider switching. Headless auth stays pending without opening a browser; local execution continues.
+Koi owns no Jira credentials, refresh or proxy, and offers no API-token fallback. Existing profiles,
+bindings, remote issues and OS credentials are preserved.
+
+Direct MCP trusts the host/agent. The runtime controls local authorization, proofs, requests and
+bindings but cannot intercept every remote write or claim an independent transport audit.
+`prepare`, `review` and `sync` remain internal agent tooling, not an engineer workflow. See
+[Jira visibility](/yokai/docs/visibility).
 
 ---
 
