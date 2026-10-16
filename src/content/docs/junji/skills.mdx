@@ -17,9 +17,9 @@ Path: [`skills/junji/SKILL.md`](https://github.com/getkoi/junji/blob/main/skills
 
 ## Dispatch
 
-- No `.koi/run/BACKLOG.md` → `begin`.
+- No active effort in `.koi/board.json` → `begin` (legacy backlogs require explicit migration).
 - “Do the next task” → `next`.
-- Otherwise, consult `BACKLOG.md` › Next action.
+- Otherwise, consult the active board effort’s `next_action`.
 
 The skill loads its per-verb instructions only as needed. It owns the method files and documents runnable verification commands during `plan`. It requires no CLI, sensor scripts, model tiers or sandbox configuration. It does not manage driver config, ledger, or recovery artifacts. The [method's source vocabulary](https://github.com/getkoi/junji/blob/main/skills/junji/CONTEXT.md) defines the on-disk contract.
 

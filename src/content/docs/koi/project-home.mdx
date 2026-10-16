@@ -12,6 +12,9 @@ Junji creates its own folders and copies its own templates. Yokai is optional.
 
 ```text
 .koi/
+  board.json              # mandatory execution state and effort history
+  adapters/jira.json?      # optional reviewed Jira profile, no credentials
+  visibility/?            # delivery bindings and verification receipts
   yokai.yml?              # reusable settings, sandbox and gate fingerprints
   sensors/*.sh            # optional for Junji, reviewed executable gate for Yokai
   Dockerfile.sandbox?     # separate image recipe
@@ -20,7 +23,8 @@ Junji creates its own folders and copies its own templates. Yokai is optional.
     CONTEXT.md            # facts, verification commands, standing directives
     METHOD.md             # copied execution protocol
     PLAN.md               # rationale
-    BACKLOG.md            # ordered phases, progress, human gates
+    BACKLOG.proposed.json? # candidate split awaiting acceptance
+    BACKLOG.md            # generated read-only summary of the active board effort
     phases/               # phase plans and outcomes
     yokai.yml?            # reviewed phase assessments and effort differences
     ledger.jsonl          # runtime accounting, with sessions/recovery alongside
@@ -30,3 +34,8 @@ Junji creates its own folders and copies its own templates. Yokai is optional.
 under `.koi/` survives. The next effort inherits reusable settings, needs fresh phase assessments and starts fresh accounting.
 These are versioned project files. Neither path needs private Yokai source to understand the method
 handoff. [Settings](/yokai/docs/configuration) · [Migration](/koi/docs/cli)
+
+The [local board](/koi/docs/board) is mandatory; external integration is optional. It owns execution
+order, descriptions, dependencies, human gates and resume stages. BACKLOG.md is generated and never
+execution input. Existing efforts require explicit migration. [Jira publication](/yokai/docs/visibility)
+works through a host-side MCP adapter and never changes engineering verification results.

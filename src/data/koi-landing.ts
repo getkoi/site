@@ -85,7 +85,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     label: "write the position",
     title: "junji moves the plot into the repository.",
     body:
-      "The goal becomes a plan, an ordered backlog, and executable sensors under .koi/. A future session can read the same position without reconstructing it from chat.",
+      "The goal becomes a plan, a candidate backlog, and executable sensors under .koi/. Review the split before acceptance creates executable cards. A future session can read the saved position.",
     tone: "accent",
     window: "window 01 · 18%",
     position: ".koi/run/ prepared",
@@ -93,7 +93,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     commit: "planning files changed",
     nextAction: "/junji refine",
     phaseStatuses: ["todo", "todo", "todo", "gated"],
-    files: ["PLAN.md", "BACKLOG.md", "phases/", "sensors/*.sh"],
+    files: ["PLAN.md", "board.json", "phases/", "sensors/*.sh"],
     actors: ["junji"],
   },
   {
@@ -102,7 +102,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     label: "make it finite",
     title: "One risky port becomes four provable phases.",
     body:
-      "Each stone has a narrow job and its own sensor. The cutover is gated because traffic changes need a human decision. The next move is explicit.",
+      "The accepted split gives each stone a narrow job and its own sensor. The cutover is gated because traffic changes need a human decision. The next move is explicit.",
     tone: "amber",
     window: "window 01 · 31%",
     position: "phase 01 selected",
@@ -110,7 +110,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     commit: "HEAD unchanged",
     nextAction: "/junji next",
     phaseStatuses: ["active", "todo", "todo", "gated"],
-    files: ["BACKLOG.md", "phases/01-behavior.md", "10-contract-fixtures.sh"],
+    files: ["board.json", "phases/01-behavior.md", "10-contract-fixtures.sh"],
     actors: ["junji", "agent"],
   },
   {
@@ -127,7 +127,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     commit: "4f71d0a · behavior locked",
     nextAction: "resume from disk",
     phaseStatuses: ["done", "active", "todo", "gated"],
-    files: ["BACKLOG.md", "phases/02-read-routes.md", "CONTEXT.md"],
+    files: ["board.json", "phases/02-read-routes.md", "CONTEXT.md"],
     actors: ["junji", "agent"],
   },
   {
@@ -163,7 +163,7 @@ export const KOI_CAMPAIGN_STATES: readonly KoiCampaignState[] = [
     nextAction: "phase 03 · writes + data",
     phaseStatuses: ["done", "done", "todo", "gated"],
     files: [
-      "BACKLOG.md · [done]",
+      "board.json · done",
       "git · a81c2e7",
       "gate · green",
       "tree · clean",

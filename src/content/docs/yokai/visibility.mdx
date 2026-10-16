@@ -1,0 +1,104 @@
+---
+title: Jira visibility
+navLabel: Jira visibility
+description: "Publish the local execution board to an existing Jira board through MCP."
+section: guide
+kind: how-to
+order: 90
+---
+
+The local execution board is mandatory. Connecting Jira is optional, and network failures never
+change engineering results or stop local work.
+
+## Give the agent your board link
+
+After accepting the refined backlog, ask your coding agent to connect it to Jira and provide the
+board URL. The agent discovers the project, Reporter, required fields and workflow. It recommends
+an epic with tasks for a multi-card effort, or an issue with subtasks for a single card when Jira
+supports it. Existing reviewed settings are reused. The effort becomes the parent and its accepted
+cards become the children; no pre-existing Jira issues are needed.
+
+Review one summary showing the destination, hierarchy, Reporter, field defaults and status mapping.
+The agent handles project keys, account IDs and configuration files. It asks you only about business
+choices it cannot resolve from the available context. Sign-in, credential entry and OS access
+prompts still happen locally with you.
+
+The agent prepares the configuration without writing to Jira, then saves the exact version you
+approved in chat. Changes during review require a refreshed proposal and renewed approval. Saving
+creates no issues; sync creates the accepted hierarchy. Later accepted cards publish automatically
+under the same parent. Publication never authorizes implementing a card or bypassing a human gate.
+
+The interactive alternative uses the same discovery and one summary approval:
+
+```bash
+yokai visibility setup --board-url https://example.atlassian.net/jira/software/projects/APP/boards/2
+yokai visibility sync
+yokai visibility status
+```
+
+For agents, `visibility prepare --board-url URL` returns the summary, named unresolved questions
+and a proposed profile as JSON. Resolve questions with `prepare --input REQUEST_FILE`, containing
+`board_url` and an `answers` object. After the user approves a complete summary, save it with
+`visibility review --input PREPARED_FILE --approve APPROVAL_HASH`, using its exact `approval_hash`.
+There is no second terminal approval. The reviewed board revision, previous configuration and fresh
+Jira discovery must still match. Custom board filters require checking the field defaults before
+approval. Draft backlog proposals are never setup or publication inputs.
+
+## Personal API-token login
+
+If browser OAuth is unavailable, an organization admin can enable **Allow API token authentication**
+in the Rovo MCP server's Authentication settings. Choose **Create API token with scopes** for **MCP v2**, with
+`read:jira:agent-interface`, `write:jira:agent-interface` and `search:jira:agent-interface`.
+
+```bash
+yokai visibility login --auth-method api-token \
+  --site https://example.atlassian.net --cloud-id YOUR_CLOUD_UUID
+yokai visibility setup
+yokai visibility sync
+```
+
+These commands also work with `junji-board visibility`. Login asks for your account email and the
+token with input hidden, verifies read access, then saves credentials in the OS credential store.
+Keep the token out of chat, command arguments and repository files. API tokens require an explicit
+cloud UUID; setup and discovery use the selected site, and tool calls stay within that cloud.
+Repeat login to replace an expired or revoked token. OAuth remains the default; use
+`visibility login --auth-method oauth` to switch back. Selecting an authentication method on setup
+starts a fresh login; setup otherwise reuses existing credentials.
+
+See [Atlassian's API-token guide](https://developer.atlassian.com/cloud/rovo-mcp/guides/configuring-authentication-via-api-token/)
+for token creation and organization settings.
+
+## Progress and conflicts
+
+Each local state has one reviewed remote target; several remote statuses can be equivalent.
+Active and done transitions respect available transitions and reviewed source statuses. Unexpected
+human workflow edits are preserved and shown for review. Blocking and halt conditions are comments.
+Done is published only with a matching local verification receipt.
+
+Issue creation and comments carry stable markers. Restarted publication reconciles uncertain
+responses before retrying, and preserves partial hierarchies. Run sync to retry pending operations;
+unresolved ambiguous creation remains pending for review rather than creating duplicate issues.
+Explicit imports use visibility import --input selection.json with selected issue_keys. Imports do
+not authorize execution, and remote edits never silently replace local scope.
+
+## Credentials and sandbox runs
+
+Profiles live in `.koi/adapters/jira.json`; bindings and receipts live under `.koi/visibility/`.
+OAuth credentials and API tokens remain in macOS Keychain or Linux Secret Service (secret-tool). Headless runs reuse
+existing credentials and never open sign-in. Each process reuses its approved credential read across
+syncs. macOS may ask again for a rebuilt binary or when access was approved only once. Some organizations require a registered OAuth client;
+use visibility login --client-id ID and, when required, --redirect-port PORT matching the registered loopback callback.
+
+Yokai keeps the publisher on the host during sandbox execution. Credentials are not passed into
+the sandbox. Pending state survives consolidation. The cockpit shows sync state; publisher.log holds
+actionable failures. Advanced tools include visibility discover and visibility review --input FILE.
+
+Standalone Junji uses `junji-board visibility` and the same Rust library without requiring Yokai. During a Yokai run, agent turns leave publishing to the supervisor and host worker.
+
+Uncertain creation can be reviewed with visibility resolve --input FILE, either binding an existing
+issue or authorizing retry after checking Jira. It never repeats uncertain creation automatically.
+Connection setup accepts additional field defaults needed by the selected board's filter.
+
+Backlog proposals never publish. Once the user accepts a split, existing adapter authorization
+publishes new accepted cards automatically. Previously accepted cards can continue reporting
+progress while a replacement proposal is under review.

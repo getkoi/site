@@ -30,7 +30,7 @@ export const YOKAI_MAP_NODES: readonly YokaiMapNode[] = [
     title: "A prepared run",
     body:
       "The project already has an ordered backlog, a phase plan, driver preferences, and executable sensors. junji is the usual way to prepare these files.",
-    facts: [".koi/run/BACKLOG.md", ".koi/yokai.yml", ".koi/sensors/*.sh"],
+    facts: [".koi/board.json", ".koi/yokai.yml", ".koi/sensors/*.sh"],
   },
   {
     id: "supervisor",
@@ -143,7 +143,7 @@ export const YOKAI_RUN_STATES: readonly YokaiRunState[] = [
     gate: "idle",
     commit: "HEAD unchanged",
     stream: [
-      "read .koi/run/BACKLOG.md",
+      "read .koi/board.json",
       "selected phase 01 [todo]",
       "resolved agent profile: claude",
     ],
@@ -216,7 +216,7 @@ export const YOKAI_RUN_STATES: readonly YokaiRunState[] = [
     chapter: "Seal",
     title: "Record what landed",
     body:
-      "Seal writes the phase outcome, marks the phase [done], compacts the backlog, and creates one commit. Its claim is still provisional until the supervisor checks disk.",
+      "Seal writes the phase outcome, marks the phase [done], records the board outcome, and creates one commit. Its claim is still provisional until the supervisor checks disk.",
     rail: "seal",
     tone: "accent",
     turn: "seal · session 04",
@@ -226,7 +226,7 @@ export const YOKAI_RUN_STATES: readonly YokaiRunState[] = [
     commit: "8d2f4ab feat: add invitation token rules",
     stream: [
       "recorded phase Outcome",
-      "BACKLOG.md phase 01 → [done]",
+      "board.json phase 01 → [done]",
       "created commit 8d2f4ab",
     ],
   },
