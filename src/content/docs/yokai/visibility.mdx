@@ -10,20 +10,39 @@ order: 90
 The local execution board is mandatory. Connecting Jira is optional, and network failures never
 change engineering results or stop local work.
 
+## Give the agent your board link
+
+After accepting the refined backlog, ask your coding agent to connect it to Jira and provide the
+board URL. The agent discovers the project, Reporter, required fields and workflow. It recommends
+an epic with tasks for a multi-card effort, or an issue with subtasks for a single card when Jira
+supports it. Existing reviewed settings are reused. The effort becomes the parent and its accepted
+cards become the children; no pre-existing Jira issues are needed.
+
+Review one summary showing the destination, hierarchy, Reporter, field defaults and status mapping.
+The agent handles project keys, account IDs and configuration files. It asks you only about business
+choices it cannot resolve from the available context. Sign-in, credential entry and OS access
+prompts still happen locally with you.
+
+The agent prepares the configuration without writing to Jira, then saves the exact version you
+approved in chat. Changes during review require a refreshed proposal and renewed approval. Saving
+creates no issues; sync creates the accepted hierarchy. Later accepted cards publish automatically
+under the same parent. Publication never authorizes implementing a card or bypassing a human gate.
+
+The interactive alternative uses the same discovery and one summary approval:
+
 ```bash
-yokai visibility setup
+yokai visibility setup --board-url https://example.atlassian.net/jira/software/projects/APP/boards/2
 yokai visibility sync
 yokai visibility status
 ```
 
-Setup opens browser OAuth, lets you select a site and existing Jira board/project, discovers issue
-types and required fields, and reviews the hierarchy and actual workflow mapping. Choose one issue
-with subtasks, or one epic with tasks. The local effort becomes the parent and its executable cards
-become the children. No pre-existing Jira issues are required.
-
-After reviewing the initial board following refine, sync creates the parent and all children.
-Later discovered cards are published automatically under the same parent. Publishing work never
-authorizes implementing it or bypassing a human gate.
+For agents, `visibility prepare --board-url URL` returns the summary, named unresolved questions
+and a proposed profile as JSON. Resolve questions with `prepare --input REQUEST_FILE`, containing
+`board_url` and an `answers` object. After the user approves a complete summary, save it with
+`visibility review --input PREPARED_FILE --approve APPROVAL_HASH`, using its exact `approval_hash`.
+There is no second terminal approval. The reviewed board revision, previous configuration and fresh
+Jira discovery must still match. Custom board filters require checking the field defaults before
+approval. Draft backlog proposals are never setup or publication inputs.
 
 ## Personal API-token login
 
