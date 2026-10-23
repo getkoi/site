@@ -28,11 +28,10 @@ candidate lists remain authoritative for execution.
 | `agent_timeout_secs` | wall-clock seconds per agent turn | `1800` (30m) |
 | `sensor_timeout_secs` | wall-clock seconds per sensor script | `900` (15m) |
 | `permission` | `approve-all` \| `approve-reads` \| `deny-all` | `approve-all` |
-| `token_savings` | `true` \| `false` | `false`; reuse two conversations per phase, require review, disable swarms |
+| `token_savings` | `true` \| `false` | `false`; reuse two conversations per phase, require review |
 | `recovery` | `true` \| `false` | `true` (repair + Diagnose cycle + saves) |
 | `build` | block (below) | omitted `max_iters` = unlimited; `judge: true`; `guides: []` |
 | `roles` | per-slot `tier` lift (below) | omit a slot → resolved phase tier (plan/coder/judge/seal) or **ultra** (repair/fix/triage) |
-| `swarm` | block (below) | omitted = off (kill-switch; per-phase swarm strategy still required) |
 
 Top-level `agent` / `model` / `effort` supply default candidates when a tier band is omitted.
 
@@ -51,8 +50,7 @@ coder. Separate plan, seal and recovery profiles are ignored in this mode;
 `recovery: false` still disables recovery. Each conversation keeps its selected
 candidate until unavailable or overridden by an explicit launch pin.
 
-Review is required even with `build.judge: false`. Swarms are disabled even with
-`swarm.enabled: true` and swarm assessments. Every role is instructed to avoid subagents
+Review is required even with `build.judge: false`. Every role is instructed to avoid subagents
 and delegation; current ACP adapters have no dedicated delegation switch.
 
 Continuation prompts reuse conversation context and reference the current phase spec
@@ -127,8 +125,8 @@ sequenceDiagram
 
 Further corrections repeat the same pattern. In token savings, recovery Fix and
 Repair also return to A; Diagnose returns to B. Without it, each recovery turn
-starts a fresh session. Normal mode can skip review or use configured swarms;
-token savings requires review and prohibits swarms and delegation. An existing
+starts a fresh session. Normal mode can skip review;
+token savings requires review and prohibits delegation. An existing
 phase plan skips the Plan turn in either mode.
 
 These windows are separate: reviewing does not append the judge's conversation
@@ -186,9 +184,6 @@ build:
   judge: true
 #   guides:
 #     - docs/style.md
-# swarm:                    # omit = off; swarm assessments still need enabled
-#   enabled: true
-#   max_workers: 8          # item cap and concurrency
 ```
 
 A **candidate** is `(agent, model, effort, speed)`. Model, effort, and speed may be omitted (that agent's defaults). Speed is an opaque per-candidate session option, not a koi enum. List order is preference: yokai walks at **turn open**; a skip (`unreachable` / `limited` / `unstable`) records a ledger skip row and tries the next. The next turn starts at the preferred again after `retry_after_secs`. All candidates skipped → Halt. Missing effort/speed is a notice, not a skip.
@@ -206,8 +201,6 @@ Optional `tier` lift per slot. Drop role-level `agent` / `model` / `effort`.
 | `plan`, `coder`, `judge`, `seal` | the reviewed phase tier |
 | `repair`, `fix`, `triage` | **ultra** |
 
-Swarm adds no slot: split walks plan's band; workers and merge walk coder's; judge fan-out walks judge's.
-
 | Rule | Behavior |
 |------|----------|
 | `roles.<slot>.tier` | must be `low` \| `medium` \| `high` \| `ultra` |
@@ -216,18 +209,6 @@ Swarm adds no slot: split walks plan's band; workers and merge walk coder's; jud
 
 Per-role tier lifts are opt-in under **Details → More settings**. The cockpit shows the active Agent · Model and a notice when the chosen candidate is not first in the list.
 
-### `swarm:` (ADR-0045, ADR-0047, ADR-0048)
-
-Optional fan-out inside Build (each iteration of a phase assessed as `swarm`). **Omit the block to leave it off.** `yokai` asks whether
-this run may honor swarm assessments, plus the worker cap. Reconfiguration preserves fields the wizard does not expose.
-
-| Field | Default when omitted |
-|-------|----------------------|
-| `enabled` | `false` (kill-switch; does not fan out `[plain]` phases) |
-| `max_workers` | `8` (item cap **and** concurrency) |
-
-Fan-out runs only when `enabled` is true **and** the reviewed phase assessment selects `swarm`. `plain`
-(or a missing tag) stays a single coder. One work item skips the fan-out. There is no `--swarm` flag.
 ## `.koi/yokai.yml` `build:`
 
 Plan → Build → Seal tuning for every phase. Written by `yokai`; overridable per run with `yokai --max-iters`.
@@ -291,9 +272,6 @@ build:
   judge: true
   max_iters: 8
   guides: [docs/style.md]
-swarm:
-  enabled: false
-  max_workers: 8
 sandbox:
   enabled: false
 ```
@@ -307,7 +285,6 @@ build:
 phases:
   P2:
     tier: high
-    strategy: plain
     reason: Cross-module state migration with recovery invariants.
 ```
 
@@ -372,13 +349,11 @@ after smoke and human approval; never fabricate approval or refresh fingerprints
 
 ## Phase assessment
 
-`/yokai assess` and the wizard’s Phase assessment screen propose a model-capability tier and Build strategy for
+`/yokai assess` and the wizard’s Phase assessment screen propose a model-capability tier and a short reason for
 each unfinished BACKLOG phase. Low fits mechanical edits; medium fits bounded implementation;
 high fits substantial cross-module reasoning; ultra is for unusually difficult, tightly coupled work.
-Use plain by default. Swarm needs independently mergeable work with clear ownership and integration
-checks; a long task alone is not enough. `swarm.enabled: false` or token savings still forces plain.
 
-Review `phases.<ID>.tier`, `strategy` and a short `reason` before saving `.koi/run/yokai.yml`.
+Review `phases.<ID>.tier` and a short `reason` before saving `.koi/run/yokai.yml`.
 Approval through the helper skill is sufficient: complete saved choices are authoritative. Startup
 does not request a second approval, agent proposal or assessment fingerprint. Junji alone does not
 require the mapping. YAML choices override optional legacy heading tags and stay out of plan Markdown.

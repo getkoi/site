@@ -1,5 +1,4 @@
 import { YOKAI_CONTRACT } from "../../data/yokai-landing";
-import { AppLink } from "../AppLink";
 
 export default function SafetyBoard() {
   return (
@@ -87,12 +86,6 @@ export default function SafetyBoard() {
           <code>recovery: true</code>
         </article>
       </div>
-
-      <p className="safety-board__docs reveal">
-        Running many independent phases?{" "}
-        <AppLink href="/yokai/docs/build#swarm-optional">Swarm mode is in the docs</AppLink>,
-        after the single-run model is clear.
-      </p>
     </section>
   );
 }

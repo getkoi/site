@@ -29,7 +29,7 @@ Sensors are shell scripts. They do not open agent sessions. When enabled, review
 
 A completed turn normally ends its session. The next turn reads the tree, phase plan, guides, and feedback from disk. A failed sensor or blocking review finding goes into `FEEDBACK.md`, which guides the next correction.
 
-This is the default for plain phases. You do not need to enable it.
+This is the default. You do not need to enable it.
 
 ## Reuse context with token savings
 
@@ -47,17 +47,13 @@ flowchart TD
   reviews --> next
 ```
 
-Review is required in this mode. Swarms are disabled, and prompts prohibit delegation. Two conversations per phase is the normal pattern, not a hard limit: failed reattachment or explicit context exhaustion can require a replacement session.
-
-Use [swarms](/yokai/docs/swarms) when you want parallel workers. Use token savings when you want to retain context between turns instead.
+Review is required in this mode. Prompts prohibit delegation. Two conversations per phase is the normal pattern, not a hard limit: failed reattachment or explicit context exhaustion can require a replacement session.
 
 ## Continue after an interruption
 
 Relaunch Yokai against the same working folder. A phase marked `[building]` resumes Build; `[sealing]` resumes Seal. An existing unique phase plan lets Yokai skip Plan.
 
 An interrupted turn may reattach to its live session even when token savings is off. Reattaching an unfinished turn and reusing a conversation across completed turns are separate behaviors.
-
-Swarm continuation also checks saved work items and worker records. See [continue a swarm](/yokai/docs/swarms#continue-an-interrupted-swarm).
 
 ## Inspect what happened
 

@@ -1335,18 +1335,6 @@
   font-size: 0.68rem;
 }
 
-.safety-board__docs {
-  margin: 24px 0 0;
-  color: var(--muted);
-  font-size: 0.82rem;
-  text-align: right;
-}
-
-.safety-board__docs a {
-  color: var(--paper);
-  text-underline-offset: 4px;
-}
-
 /* First run */
 .first-run {
   width: min(100%, 1260px) !important;

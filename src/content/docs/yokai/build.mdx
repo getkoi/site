@@ -115,12 +115,6 @@ build:
 
 CLI: `yokai --max-iters 3`.
 
-## Swarm (optional)
-
-Use [swarms](/yokai/docs/swarms) to split work among parallel workers and merge their output. Both the run setting and a `[swarm]` phase tag must enable them. Plain phases use one coder.
-
-The swarm guide covers setup, worker limits, review, failures, and interrupted work. For fresh and reused conversations, read [Sessions](/yokai/docs/sessions).
-
 ## Vocabulary
 
 | Term | One line |
@@ -135,7 +129,6 @@ The swarm guide covers setup, worker limits, review, failures, and interrupted w
 | **FEEDBACK.md** | Append-only correction thread; yokai sole writer |
 | **Budget** | `max_iters` (or unbounded) |
 | **Verdict** | `converged` or `not-converged` |
-| **Swarm** | Fan-out each iteration when `swarm.enabled` and the phase is `[swarm]` |
 
 ## Four rules
 

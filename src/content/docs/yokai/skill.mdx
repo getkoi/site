@@ -1,7 +1,7 @@
 ---
 title: yokai helper skill
 navLabel: Helper skill
-description: "Prepare real sensor checks, assess phase weights and modes, and build sandbox recipes."
+description: "Prepare real sensor checks, assess phase tiers, and build sandbox recipes."
 section: sensors
 kind: how-to
 order: 15
@@ -37,11 +37,10 @@ See [wire your bar](/yokai/docs/sensors/wire-your-bar).
 
 ## Assess
 
-Propose each unfinished BACKLOG phase's tier (`low`, `medium`, `high`, `ultra`), strategy (`plain`,
-`swarm`) and short reason in `.koi/run/yokai.yml`. Use plain by default; swarm requires independently
-mergeable work. Keep runtime choices out of plan Markdown. Show existing choices for review.
+Propose each unfinished BACKLOG phase's tier (`low`, `medium`, `high`, `ultra`) and a short reason
+in `.koi/run/yokai.yml`. Keep runtime choices out of plan Markdown. Show existing choices for review.
 
-After you approve the helper's mapping, it saves tier, strategy and reason directly. Yokai accepts
+After you approve the helper's mapping, it saves tier and reason directly. Yokai accepts
 that YAML without fingerprints, another approval prompt or an extra agent turn. Reconsider choices
 when scope changes warrant it. Missing or incomplete phase entries still stop headless execution.
 The wizard’s Phase assessment screen is an alternative for proposing or editing the mapping.
