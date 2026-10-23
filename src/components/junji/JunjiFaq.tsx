@@ -51,7 +51,7 @@ const questions = [
     label: "junji and yokai",
     question: "What is the difference between junji and yokai?",
     answer: [
-      "junji is the method. Its ten verbs decide, record, divide, execute, and close the work. You can use it directly with a coding agent.",
+      "junji is the method. Its eleven verbs decide, record, divide, execute, and close the work. You can use it directly with a coding agent.",
       "yokai is an optional driver for the repetitive execution loop. After begin, plan, and refine have prepared the working folder, yokai opens fresh agent windows for phases and checks the result on disk. It stops when the contract fails or a human decision is needed.",
     ],
   },

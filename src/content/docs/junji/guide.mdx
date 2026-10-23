@@ -1,7 +1,7 @@
 ---
 title: junji guide
 navLabel: Guide
-description: "Walk the ten verbs — begin through consolidate, including iterate and brief — with prerequisites, steps, and verification."
+description: "Walk the eleven verbs — begin through consolidate, including iterate, brief, and goal — with prerequisites, steps, and verification."
 section: guide
 kind: how-to
 order: 20
@@ -29,7 +29,7 @@ A git-committed `.koi/run/` working folder with:
 ```mermaid
 flowchart TD
   accTitle: Junji verb pipeline
-  accDescr: Begin leads to Plan, Refine and repeated Next calls. Grill sharpens Plan. After all phases are done, consolidate or use Iterate to add more phases. Research and Design are optional; Brief reports completed work.
+  accDescr: Begin leads to Plan, Refine and repeated Next calls. Grill sharpens Plan. After all phases are done, consolidate or use Iterate to add more phases. Research, Design, Brief, and Goal are optional. Goal repeats next one phase at a time. Brief reports completed work.
   begin[begin] --> plan[plan]
   plan --> refine[refine]
   plan -->|Stress-test| grill[grill]
@@ -45,10 +45,11 @@ flowchart TD
   begin -.-> design["design — optional UI contract"]
   design -.-> plan
   next -.-> brief["brief — optional report after some phases are done"]
+  next -.-> goal["goal — optional loop of next --subagent"]
 ```
 
 `begin` gathers facts only. Optional `research` and `design` gather cited notes and a visual contract.
-`plan` and `grill` think. Optional `brief` reports in chat what `[done]` phases shipped. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`.
+`plan` and `grill` think. Optional `brief` reports in chat what `[done]` phases shipped. `refine` shapes markdown. `next` executes **one** phase. Optional `goal` asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase. `iterate` is optional after every phase is `[done]`.
 
 ---
 
@@ -191,7 +192,7 @@ Interactive `next` preserves user text and any legacy runtime annotations. It do
 
 Invoke: `/junji next` or "do the next task". The **yokai driver** splits this into Plan → Build → Seal. See [Build](/yokai/docs/build).
 
-**Option:** `/junji next --subagent` asks this window for one isolated subagent. The child re-reads `.koi/run/` and runs plain `/junji next`. This window posts the Report when the child finishes. If the harness cannot start a subagent, the phase stays untouched. Yokai does not take this flag.
+**Option:** `/junji next --subagent` asks this window for one isolated subagent. The child re-reads `.koi/run/` and runs plain `/junji next`. This window posts the Report when the child finishes. If the harness cannot start a subagent, the phase stays untouched. If the invoking prompt already says this run pre-authorized gated phases, the child task includes that sentence. Bare `--subagent` does not invent it. Yokai does not take this flag.
 
 **Verification:** Phase `[done]`, gate green, one new commit, clean tree (driver contract).
 
@@ -202,6 +203,23 @@ Invoke: `/junji next` or "do the next task". The **yokai driver** splits this in
 - Started two phases in one run → violation; only one phase per `next`
 
 **Next action:** `/junji next` while `[todo]` or in-flight remain; else `/junji consolidate` (or `/junji iterate <request>` to add more work).
+
+---
+
+## `goal`: one harness goal over runnable phases
+
+**Prerequisites:** Phase list in `BACKLOG.md`.
+
+This window does not run phases. It asks the harness for its long-running goal tool and passes one objective: complete runnable phases one by one. For each phase, run `/junji next --subagent` and wait for that child's Report, then read the backlog again. One phase per `next`. On a halt (red gate, gated stop, missing subagent, child failure), the goal stops. It does not retry. It does not run `consolidate` or `iterate`. When nothing runnable remains, it surfaces `/junji consolidate`.
+
+If the harness has no such tool, stop. `.koi/run/` and the tree stay untouched.
+
+**Options.** Both may be set, in either order. An unknown token, a second `--until`, a second `--allow-gated`, or `--until` with no phase stops the verb and names the token.
+
+- `/junji goal --until P4` runs through heading id `P4`, inclusive, then stops. `4` and `p4` are the same id. It is the backlog id from refine (`### [todo] P4 - Title`), not the 4th heading and not `phase-04`. `--until=p4` is an unknown option. If that id is missing, or the first runnable id is already greater, the verb stops before creating the goal.
+- `/junji goal --allow-gated` pre-authorizes every gated phase in this goal, subject to standing directives, same scope as `yokai --allow-gated`. The objective includes "This run pre-authorized gated phases." and tells the goal to pass that sentence into every `/junji next --subagent`. Without it, a `[gated]` phase still halts inside the child.
+
+**Verification:** **Next action unchanged**. This verb writes nothing. Yokai does not take a `goal` flag. No fresh process per phase, no recovery, no cost ceiling.
 
 ---
 
@@ -288,6 +306,7 @@ Yokai checks the results against your sensors and git history. Define a verifica
 | What are we doing? | `/junji plan` |
 | Turn plan into tasks? | `/junji refine` |
 | Do one slice? | `/junji next` or `yokai` |
+| Keep going in this harness? | `/junji goal`, optional `--until P4` and `--allow-gated` |
 | What shipped / how to run? | `/junji brief` |
 | Want another slice after everything is `[done]`? | `/junji iterate` |
 | Which step am I on? | `BACKLOG.md` › Next action |
