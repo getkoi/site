@@ -23,13 +23,13 @@ cannot load fonts.
 | Gauge strip | live context-window occupancy (green → amber → red) |
 | Body | current **view** (below) |
 | Footer | Setup, stop/resume, View, theme, and Quit; shared across views |
-| Right (Cockpit) | **agent stream**: prose, tools, act banners (`Plan` / `Build` / `Seal`, iteration). During swarm fan-out this pane splits: **swarm roster** (each work item) \| focused worker stream |
+| Right (Cockpit) | **agent stream**: prose, tools, act banners (`Plan` / `Build` / `Seal`, iteration) |
 
 **Agent stream** is ephemeral and bounded per phase. Durable per-turn history is
 `sessions.jsonl` and the **Sessions** view.
 
 Spacious terminals show connected Plan, Build, and Seal cards above live activity. Build shows the
-iteration or worker count; recovery gets a dedicated status panel. Narrow terminals stack the phase
+iteration count; recovery gets a dedicated status panel. Narrow terminals stack the phase
 summary above the stream. Activity labels distinguish received output, reasoning, tool calls, and file
 edits. A tool label means the latest observed call, not proof that the tool is still running.
 Unreported cost and token totals show a dash.
@@ -51,24 +51,12 @@ Header `Σ` and ledger remain authoritative for cost.
 
 ### Phase rail
 
-The phase list shows tiers and strategies from the resolved effort YAML, falling back to legacy
+The phase list shows tiers from the resolved effort YAML, falling back to legacy
 heading values only where no override exists. These are the same phase choices used by execution.
 Progress refreshes preserve them; changing launch settings requires restarting Yokai.
 
-Under the gauge, a thin strip of stations: `plan → coder → sensors → judge → seal → gate`. When the
-live phase actually fans out (`swarm.enabled` and the resolved phase strategy is `swarm`), the rail adds
-`split → workers → merge` (and `judge-split → judge-workers → judge-merge`). Later iterations replay
-those swarm stations. Recovery mutes the strip.
-While `workers` (or `judge-workers`) is the current station, the label is `workers 3/5` (still
-running / work-item total).
-
-During fan-out the agent pane morphs: a **swarm roster** lists each work item (id, title, status,
-last event; a running row that has gone silent shows `quiet 2m`) beside one **focused** stream.
-The first work item is focused until you click another row; sibling activity does not switch the
-stream. Both panes scroll horizontally and vertically (wheel over the pane; Shift+wheel or `←`/`→`
-for the stream). The context gauge tracks the focused worker. Split, merge, and a one-item skip
-stay the normal single stream. This is Cockpit chrome, not a fourth `w` view. Quiet age is
-visibility only; the 30-minute turn timeout is still the only adapter kill.
+Under the gauge, a thin strip of stations: `plan → coder → sensors → judge → seal → gate`.
+Recovery mutes the strip.
 
 ## Views (`w` / View chip)
 
@@ -77,7 +65,7 @@ visibility only; the 30-minute turn timeout is still the only adapter kill.
 | View | Shows |
 |------|-------|
 | **Cockpit** | phases + attributed agent stream (default) |
-| **Sessions** | every session a phase spawned (Plan, each Build coder/worker/merge/judge turn, Seal), with per-session context bar. Worker rows include the work-item id; during fan-out each in-flight worker has a live row |
+| **Sessions** | every session a phase spawned (Plan, each Build coder and judge turn, Seal), with per-session context bar |
 | **Deliverable** | proving commit range for a ledger row: file tree + highlighted patch |
 
 **Deliverable view keys** (when focused): `↑`/`↓` tree or patch scroll, `Tab` toggle tree/patch,
@@ -118,7 +106,7 @@ flag.
 | `↑` / `↓` | scroll agent stream (Cockpit) or deliverable tree/patch |
 | `←` / `→` | scroll agent stream horizontally (Cockpit) or deliverable patch |
 | `PgUp` / `PgDn` | page scroll |
-| Shift+wheel | horizontal scroll (Cockpit stream or roster under the cursor; deliverable patch) |
+| Shift+wheel | horizontal scroll (Cockpit stream or deliverable patch) |
 
 Quit kills the in-flight agent run.
 

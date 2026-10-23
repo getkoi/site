@@ -44,11 +44,9 @@ Relaunch `yokai` from the same repo to continue interrupted work. Yokai reads th
 
 To reuse context within each phase, enable `token_savings: true` in `yokai.yml`
 or launch with `yokai --token-savings`. Planning, implementation and Seal share a
-session; reviews share another. Review is required and swarms are disabled.
+session; reviews share another. Review is required.
 See [token savings configuration](/yokai/docs/configuration#token-savings) for
 recovery, replacement sessions, and delegation restrictions.
-
-For parallel workers, follow [Swarms](/yokai/docs/swarms).
 
 ### Agent, model, effort (pin)
 
@@ -187,7 +185,7 @@ Per-turn detail: `.koi/run/sessions.jsonl` (see [TUI](/yokai/docs/tui)).
 | Symptom | Fix |
 |---------|-----|
 | preflight ✗ on launch | run `yokai doctor --probe` |
-| missing or incomplete phase assessment | save approved tier, strategy and reason through the helper or wizard; no fingerprint is required |
+| missing or incomplete phase assessment | save approved tier and reason through the helper or wizard; no fingerprint is required |
 | every phase gate red | fix the underlying failing check; review intentional sensor changes interactively |
 | halt at [gated] | expected by default; review the phase and explicitly use `--allow-gated` if authorized |
 | `cost ceiling reached` | raise or omit `--max-cost` / `--max-tokens` |

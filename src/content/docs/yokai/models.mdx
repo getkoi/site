@@ -34,8 +34,7 @@ All four tiers may use the same model while you learn the workflow.
   would be costly. Try **Claude Fable 5.1** when your agent offers it, or **GPT-6 Astra** with a higher
   supported reasoning effort. Opus remains a useful choice when Fable is unavailable.
 
-Yokai's `ultra` tier is a candidate band. It does not enable an agent's similarly named Ultra mode
-or turn on swarms. Choose `plain` unless a phase has independently mergeable work and suitable checks.
+Yokai's `ultra` tier is a candidate band. It does not enable an agent's similarly named Ultra mode.
 
 ## A balanced Claude configuration
 
@@ -159,7 +158,6 @@ Reusable model candidates belong in `.koi/yokai.yml`. An effort's assessed phase
 phases:
   P2:
     tier: high
-    strategy: plain
     reason: Storage recovery touches shared state and reload behavior.
 ```
 
