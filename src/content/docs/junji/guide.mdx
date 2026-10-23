@@ -191,6 +191,8 @@ Interactive `next` preserves user text and any legacy runtime annotations. It do
 
 Invoke: `/junji next` or "do the next task". The **yokai driver** splits this into Plan → Build → Seal. See [Build](/yokai/docs/build).
 
+**Option:** `/junji next --subagent` asks this window for one isolated subagent. The child re-reads `.koi/run/` and runs plain `/junji next`. This window posts the Report when the child finishes. If the harness cannot start a subagent, the phase stays untouched. Yokai does not take this flag.
+
 **Verification:** Phase `[done]`, gate green, one new commit, clean tree (driver contract).
 
 **Failure:**
