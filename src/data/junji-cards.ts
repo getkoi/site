@@ -64,6 +64,7 @@ export type JunjiCardId =
   | "refine"
   | "next"
   | "iterate"
+  | "goal"
   | "consolidate";
 
 export const JUNJI_CARDS: readonly JunjiCard[] = [
@@ -281,6 +282,32 @@ export const JUNJI_CARDS: readonly JunjiCard[] = [
         target: "design",
         kind: "reads",
         label: "obeys the existing design contract for human-facing work",
+      },
+    ],
+  },
+  {
+    id: "goal",
+    command: "/junji goal",
+    family: "execute",
+    number: 11,
+    title: "Walk the open stones",
+    purpose:
+      "This window asks the harness for its long-running goal tool and passes one objective. The goal runs runnable phases one by one with /junji next --subagent, then stops on a halt. It does not run consolidate or iterate.",
+    playCondition:
+      "A runnable phase exists. --until takes the next token (4, p4, or P4) and includes that backlog phase id. --allow-gated pre-authorizes gated phases for that run. Without it, a gated phase still halts inside the child.",
+    diskEffect:
+      "Writes nothing in this window. The goal plays /junji next --subagent once per phase and stops on a halt, without running consolidate or iterate.",
+    pointerEffect: "Next action stays exactly where it was. Goal never occupies the pointer.",
+    timing: "On demand",
+    writesCode: false,
+    mythName: "sarutahiko · 猿田彦",
+    artLabel:
+      "Lantern-lit Sarutahiko holds the first wet stone; the stone path stops short of a closed torii.",
+    relations: [
+      {
+        target: "next",
+        kind: "activates",
+        label: "plays /junji next --subagent once per phase",
       },
     ],
   },

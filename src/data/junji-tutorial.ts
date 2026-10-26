@@ -8,6 +8,7 @@ export type TutorialStateId =
   | "gate-red"
   | "phase-one"
   | "phase-one-briefed"
+  | "phase-one-goal"
   | "phase-two"
   | "all-done"
   | "closed";
@@ -372,11 +373,11 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     chapter: "One move sealed",
     title: "The table is ready for a fresh hand",
     prompt:
-      "Phase one is done and committed. You can inspect what shipped before continuing, or play the next execution turn.",
+      "Phase one is done and committed. You can inspect what shipped, hand the remaining phases to a harness goal, or play the next execution turn.",
     result:
       "The phase outcome, compacted backlog, and commit are on disk. A new context window can continue without a chat handoff.",
     rule:
-      "Brief reads completed outcomes and returns a report in chat. It writes nothing and does not move Next action.",
+      "Brief and goal are optional. Neither occupies Next action. Only next writes product code.",
     choices: [
       {
         id: "phase-one-brief",
@@ -388,6 +389,17 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
         next: "phase-one-briefed",
         feedback:
           "Brief reports that token and membership rules shipped. Next action remains /junji next.",
+      },
+      {
+        id: "phase-one-goal",
+        kind: "verb",
+        card: "goal",
+        label: "/junji goal",
+        hint: "Walk the open stones",
+        valid: true,
+        next: "phase-one-goal",
+        feedback:
+          "Goal asks the harness to run each runnable phase with /junji next --subagent, then stops on a halt. Next action remains /junji next.",
       },
       {
         id: "phase-one-next",
@@ -438,7 +450,7 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
     result:
       "The user got a plain product briefing in chat. BACKLOG.md and the phase list did not move.",
     rule:
-      "Research, design, grill, and brief are pointer-neutral side cards. They support the spine without becoming the next required verb.",
+      "Research, design, grill, brief, and goal are pointer-neutral side cards. They support the spine without becoming the next required verb.",
     choices: [
       {
         id: "briefed-next",
@@ -477,6 +489,73 @@ export const JUNJI_TUTORIAL_STATES: readonly TutorialState[] = [
         card: "brief",
         relation: "reads",
         note: "Reads the completed Outcome and writes nothing",
+      },
+    ],
+    table: {
+      runExists: true,
+      files: [
+        "CONTEXT.md",
+        "BACKLOG.md",
+        "METHOD.md",
+        "PLAN.md",
+        "DESIGN.md",
+        "phases/phase-01-token-rules.md",
+      ],
+      nextAction: "/junji next",
+      phases: phases("done", "todo", "todo"),
+      gate: "green",
+      gateNote: "The last execution turn passed",
+      commits: 1,
+    },
+  },
+  {
+    id: "phase-one-goal",
+    chapter: "Side card played",
+    title: "The long watch leaves the marker",
+    prompt:
+      "Goal handed the harness one objective. The turn marker still names the next execution phase.",
+    result:
+      "This window did not run a phase. Next action is still /junji next.",
+    rule:
+      "Research, design, grill, brief, and goal are pointer-neutral side cards. They support the spine without becoming the next required verb.",
+    choices: [
+      {
+        id: "goal-next",
+        kind: "verb",
+        card: "next",
+        label: "/junji next",
+        hint: "Play phase two",
+        valid: true,
+        next: "phase-two",
+        feedback:
+          "The next fresh window completes the invite and accept flow, verifies it, and seals one commit.",
+      },
+      {
+        id: "goal-plan",
+        kind: "verb",
+        card: "plan",
+        label: "/junji plan",
+        hint: "Plan again",
+        valid: false,
+        feedback:
+          "The plan is already locked and the phase list is active. Continue the sequence that is on disk.",
+      },
+      {
+        id: "goal-consolidate",
+        kind: "verb",
+        card: "consolidate",
+        label: "/junji consolidate",
+        hint: "Close early",
+        valid: false,
+        feedback:
+          "Goal does not run consolidate. Two phases remain, so the table stays open.",
+      },
+    ],
+    triggered: [
+      {
+        card: "next",
+        relation: "activates",
+        note: "Plays /junji next --subagent once per phase, then stops on a halt",
       },
     ],
     table: {

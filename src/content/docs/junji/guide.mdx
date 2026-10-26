@@ -1,7 +1,7 @@
 ---
 title: junji guide
 navLabel: Guide
-description: "Walk the eleven verbs — begin through consolidate, including iterate, brief, and goal — with prerequisites, steps, and verification."
+description: "Walk the eleven verbs — the spine from begin through consolidate, plus optional research, design, grill, brief, and goal — with prerequisites, steps, and verification."
 section: guide
 kind: how-to
 order: 20
@@ -48,8 +48,7 @@ flowchart TD
   next -.-> goal["goal — optional loop of next --subagent"]
 ```
 
-`begin` gathers facts only. Optional `research` and `design` gather cited notes and a visual contract.
-`plan` and `grill` think. Optional `brief` reports in chat what `[done]` phases shipped. `refine` shapes markdown. `next` executes **one** phase. Optional `goal` asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase. `iterate` is optional after every phase is `[done]`.
+`begin` gathers facts only. `plan` and `grill` think. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`. Research, design, grill, brief, and goal are optional and never occupy Next action. Goal asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase.
 
 ---
 

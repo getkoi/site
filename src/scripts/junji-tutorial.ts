@@ -19,6 +19,7 @@ const activeSpineByState: Record<TutorialStateId, (typeof spineOrder)[number]> =
   "gate-red": "next",
   "phase-one": "next",
   "phase-one-briefed": "next",
+  "phase-one-goal": "next",
   "phase-two": "next",
   "all-done": "consolidate",
   closed: "consolidate",

@@ -25,7 +25,7 @@ const questions = [
     question: "When does junji write product code?",
     answer: [
       "Only next writes product code. One invocation loads the saved position, researches one phase, writes or reuses its phase plan, implements that phase, verifies it, records the outcome, commits, and stops.",
-      "Begin, research, design, plan, grill, brief, refine, and iterate do not write product code. Plan may create sensor scripts, and iterate may append phase contracts, but the application stays untouched.",
+      "Begin, research, design, plan, grill, brief, goal, refine, and iterate do not write product code. Plan may create sensor scripts, and iterate may append phase contracts, but the application stays untouched.",
     ],
   },
   {

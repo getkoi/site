@@ -52,6 +52,24 @@ test("the main sample hand reaches a closed run", () => {
   assert(closed.table.commits === 3, "the sample should leave three phase commits");
 });
 
+test("goal is pointer-neutral and optional", () => {
+  const before = tutorialStateById("phase-one");
+  const goal = before.choices.find((choice) => choice.card === "goal");
+  assert(goal?.next === "phase-one-goal", "goal should open its side-card state");
+
+  const after = tutorialStateById("phase-one-goal");
+  assert(after.table.nextAction === before.table.nextAction, "goal moved Next action");
+  assert(after.table.commits === before.table.commits, "goal created a commit");
+  assert(
+    JSON.stringify(after.table.phases) === JSON.stringify(before.table.phases),
+    "goal changed the phase list",
+  );
+  assert(
+    !after.choices.some((choice) => choice.card === "consolidate" && choice.valid),
+    "goal should not offer a valid consolidate",
+  );
+});
+
 test("brief is pointer-neutral and optional", () => {
   const before = tutorialStateById("phase-one");
   const brief = before.choices.find((choice) => choice.card === "brief");
