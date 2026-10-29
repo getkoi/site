@@ -179,7 +179,7 @@
 
   .tutorial-hand {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 10px;
     margin-top: 22px;
   }
@@ -679,7 +679,9 @@
 
   @media (max-width: 640px) {
     .tutorial-hand {
-      grid-template-columns: repeat(3, minmax(210px, 76vw));
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(210px, 70vw);
       overflow-x: auto;
       padding: 3px 3px 10px;
       scroll-snap-type: x mandatory;
