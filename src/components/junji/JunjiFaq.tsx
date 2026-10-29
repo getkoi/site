@@ -25,7 +25,7 @@ const questions = [
     question: "When does junji write product code?",
     answer: [
       "Only next writes product code. One invocation loads the saved position, researches one phase, writes or reuses its phase plan, implements that phase, verifies it, records the outcome, commits, and stops.",
-      "Begin, research, design, plan, grill, brief, goal, refine, and iterate do not write product code. Plan may create sensor scripts, and iterate may append phase contracts, but the application stays untouched.",
+      "Begin, research, design, plan, grill, brief, goal, review, refine, and iterate do not write product code. Plan may create sensor scripts, and iterate and review may append phase contracts, but the application stays untouched.",
     ],
   },
   {
@@ -51,7 +51,7 @@ const questions = [
     label: "junji and yokai",
     question: "What is the difference between junji and yokai?",
     answer: [
-      "junji is the method. Its eleven verbs decide, record, divide, execute, and close the work. You can use it directly with a coding agent.",
+      "junji is the method. Its twelve verbs decide, record, divide, execute, review, and close the work. You can use it directly with a coding agent.",
       "yokai is an optional driver for the repetitive execution loop. After begin, plan, and refine have prepared the working folder, yokai opens fresh agent windows for phases and checks the result on disk. It stops when the contract fails or a human decision is needed.",
     ],
   },

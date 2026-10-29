@@ -1,7 +1,7 @@
 ---
 title: junji guide
 navLabel: Guide
-description: "Walk the eleven verbs — the spine from begin through consolidate, plus optional research, design, grill, brief, and goal — with prerequisites, steps, and verification."
+description: "Walk the twelve verbs — the spine from begin through consolidate, plus optional research, design, grill, brief, goal, and review — with prerequisites, steps, and verification."
 section: guide
 kind: how-to
 order: 20
@@ -22,14 +22,14 @@ A git-committed `.koi/run/` working folder with:
 - Optional **DESIGN.md** (visual / experiential contract) when the run ships human-facing surfaces
 - An ordered **phase list** in **BACKLOG.md**
 - Runnable verification commands documented in CONTEXT; optional existing sensors can supply them
-- Phases executed one at a time via `next` (or `yokai`). After every phase is `[done]`, **iterate** can grill more work onto the backlog, or **consolidate** collapses `run/` into a repo-native deliverable
+- Phases executed one at a time via `next` (or `yokai`). **review** can read the PR diff and schedule fixes as phases. After every phase is `[done]`, **iterate** can grill more work onto the backlog, or **consolidate** collapses `run/` into a repo-native deliverable
 
 ## The verb pipeline
 
 ```mermaid
 flowchart TD
   accTitle: Junji verb pipeline
-  accDescr: Begin leads to Plan, Refine and repeated Next calls. Grill sharpens Plan. After all phases are done, consolidate or use Iterate to add more phases. Research, Design, Brief, and Goal are optional. Goal repeats next one phase at a time. Brief reports completed work.
+  accDescr: Begin leads to Plan, Refine and repeated Next calls. Grill sharpens Plan. After all phases are done, consolidate or use Iterate to add more phases. Research, Design, Brief, Goal, and Review are optional. Goal repeats next one phase at a time. Brief reports completed work. Review reads the PR diff and can append fix phases that Next then runs.
   begin[begin] --> plan[plan]
   plan --> refine[refine]
   plan -->|Stress-test| grill[grill]
@@ -46,9 +46,11 @@ flowchart TD
   design -.-> plan
   next -.-> brief["brief — optional report after some phases are done"]
   next -.-> goal["goal — optional loop of next --subagent"]
+  next -.-> review["review — optional PR review"]
+  review -.->|Fix phases| next
 ```
 
-`begin` gathers facts only. `plan` and `grill` think. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`. Research, design, grill, brief, and goal are optional and never occupy Next action. Goal asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase.
+`begin` gathers facts only. `plan` and `grill` think. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`. Research, design, grill, brief, goal, and review are optional and never occupy Next action. Goal asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase. Review reads the PR diff and, like iterate, can append phases: its blocking findings become fix phases for `next`.
 
 ---
 
@@ -209,16 +211,46 @@ Invoke: `/junji next` or "do the next task". The **yokai driver** splits this in
 
 **Prerequisites:** Phase list in `BACKLOG.md`.
 
-This window does not run phases. It asks the harness for its long-running goal tool and passes one objective: complete runnable phases one by one. For each phase, run `/junji next --subagent` and wait for that child's Report, then read the backlog again. One phase per `next`. On a halt (red gate, gated stop, missing subagent, child failure), the goal stops. It does not retry. It does not run `consolidate` or `iterate`. When nothing runnable remains, it surfaces `/junji consolidate`.
+This window does not run phases. It asks the harness for its long-running goal tool and passes one objective: complete runnable phases one by one. For each phase, run `/junji next --subagent` and wait for that child's Report, then read the backlog again. One phase per `next`. On a halt (red gate, gated stop, missing subagent, child failure), the goal stops. It does not retry. It does not run `consolidate` or `iterate`, and it runs `review` only under `--review`. When nothing runnable remains, it surfaces `/junji consolidate`.
 
 If the harness has no such tool, stop. `.koi/run/` and the tree stay untouched.
 
-**Options.** Both may be set, in either order. An unknown token, a second `--until`, a second `--allow-gated`, or `--until` with no phase stops the verb and names the token.
+**Options.** Any of the three may be set, in any order. An unknown token, a repeated option, or `--until` with no phase stops the verb and names the token.
 
 - `/junji goal --until P4` runs through heading id `P4`, inclusive, then stops. `4` and `p4` are the same id. It is the backlog id from refine (`### [todo] P4 - Title`), not the 4th heading and not `phase-04`. `--until=p4` is an unknown option. If that id is missing, or the first runnable id is already greater, the verb stops before creating the goal.
 - `/junji goal --allow-gated` pre-authorizes every gated phase in this goal, subject to standing directives, same scope as `yokai --allow-gated`. The objective includes "This run pre-authorized gated phases." and tells the goal to pass that sentence into every `/junji next --subagent`. Without it, a `[gated]` phase still halts inside the child.
+- `/junji goal --review` alternates draining and reviewing. The goal drains runnable phases, runs `/junji review --subagent`, then drains again. It stops on **Approve**, on a halt, or after **three review rounds**. Each Request changes appends fix phases, and the next drain runs them as ordinary phases. The option takes no value and combines with `--until` and `--allow-gated`.
 
-**Verification:** **Next action unchanged**. This verb writes nothing. Yokai does not take a `goal` flag. No fresh process per phase, no recovery, no cost ceiling.
+**Verification:** **Next action unchanged** by this window, which writes nothing. Under `--review`, the review child writes the review note and any fix phases, and sets Next action to `/junji next` when it appends. Yokai does not take a `goal` flag. No fresh process per phase, no recovery, no cost ceiling.
+
+---
+
+## `review`: PR review that schedules fixes
+
+**Prerequisites:** A clean tree. No phase in flight (`[planning]`, `[building]`, `[sealing]`). Commits on this branch past its base. Remaining `[todo]` phases only warn.
+
+The unit of review is the **PR diff against its base**, computed with git, not one phase.
+
+**Steps:**
+
+1. `/junji review`, optionally `--base <ref>`. Base resolution: `--base` → `gh pr view --json baseRefName` → `origin/HEAD` → stop and ask. The first chat line names the base used.
+2. Spec conformance first: `PLAN.md`, `CONTEXT.md` locks and verification bar, `DESIGN.md` when present, each phase's Outcome and Explicitly out.
+3. Tests next, with one mutation probe. Then five axes: correctness, readability and simplicity, architecture, security, performance. The reviewer never runs the verification bar.
+4. Write `.koi/run/reviews/review-NN.md`: base used, diff range, verdict, findings grouped by severity (Critical, Required, Nit, Optional, FYI) with file:line and axis.
+5. Critical and Required findings become ordinary `[todo]` phases appended to `BACKLOG.md`, each with a full `phases/phase-NN-<slug>.md`. Cluster by subsystem or root cause, Critical first. A fix phase copies the tier tag of the phase it mostly touches. Nit, Optional and FYI stay under "Not scheduled" in the note; promote them with `refine`.
+6. One conventional commit of the working-folder artifacts (note, backlog, phase files) per round, honoring standing overrides. Nothing is posted to GitHub.
+
+**Verification:** Review note on disk, one new commit. **Approve**: zero Critical or Required findings, nothing appended, **Next action unchanged**. **Request changes**: fix phases with matching phase files, `Next action: /junji next`.
+
+**Failure:**
+
+- Dirty tree or in-flight phase → the verb stops; commit or finish the phase first
+- No resolvable base → the verb stops and asks for `--base <ref>`
+- Findings written to `FEEDBACK.md` → violation; yokai is the sole writer of that file
+
+**Option:** `/junji review --subagent` asks this window for one isolated child. The child re-reads `.koi/run/` and runs plain `/junji review`; this window posts the Report. `goal --review` uses this form.
+
+Review is not `grill` (which sharpens decisions before code exists) and not yokai's Judge (which scores one Build phase). Review reads the whole PR, writes phases, and is human-triggered. Repeat as needed: review → next ↺ → review …
 
 ---
 
@@ -306,6 +338,7 @@ Yokai checks the results against your sensors and git history. Define a verifica
 | Turn plan into tasks? | `/junji refine` |
 | Do one slice? | `/junji next` or `yokai` |
 | Keep going in this harness? | `/junji goal`, optional `--until P4` and `--allow-gated` |
+| Review the PR before merging? | `/junji review`, optional `--base <ref>`; `/junji goal --review` drains, reviews and fixes for up to three rounds |
 | What shipped / how to run? | `/junji brief` |
 | Want another slice after everything is `[done]`? | `/junji iterate` |
 | Which step am I on? | `BACKLOG.md` › Next action |
