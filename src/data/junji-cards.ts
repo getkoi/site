@@ -64,6 +64,7 @@ export type JunjiCardId =
   | "refine"
   | "next"
   | "iterate"
+  | "review"
   | "goal"
   | "consolidate";
 
@@ -261,6 +262,38 @@ export const JUNJI_CARDS: readonly JunjiCard[] = [
     ],
   },
   {
+    id: "review",
+    command: "/junji review",
+    family: "arrange",
+    number: 12,
+    title: "Call the played hand",
+    purpose:
+      "Review the PR diff against its base and the on-disk spec, record every finding, and schedule the ones that block the merge as ordinary fix phases.",
+    playCondition:
+      "Clean tree and no phase in flight. --base takes the next token; otherwise the base comes from the PR, then origin/HEAD. Remaining todo phases only warn.",
+    diskEffect:
+      "Writes .koi/run/reviews/review-NN.md. Critical and Required findings append todo headings and phase files to BACKLOG.md, committed once per round. Never FEEDBACK.md. No product code.",
+    pointerEffect:
+      "Approve leaves Next action where it was. Request changes sets it to /junji next. Review never occupies the pointer.",
+    timing: "On demand",
+    writesCode: false,
+    mythName: "tengu · 天狗",
+    artLabel:
+      "A long-nosed tengu perched above a mountain shrine reads an unrolled scroll by lantern light and marks it with a red brush.",
+    relations: [
+      {
+        target: "next",
+        kind: "reads",
+        label: "reads each phase Outcome and Explicitly out against the diff",
+      },
+      {
+        target: "design",
+        kind: "reads",
+        label: "reads the design contract when one exists",
+      },
+    ],
+  },
+  {
     id: "next",
     command: "/junji next",
     family: "execute",
@@ -294,9 +327,9 @@ export const JUNJI_CARDS: readonly JunjiCard[] = [
     purpose:
       "This window asks the harness for its long-running goal tool and passes one objective. The goal runs runnable phases one by one with /junji next --subagent, then stops on a halt. It does not run consolidate or iterate.",
     playCondition:
-      "A runnable phase exists. --until takes the next token (4, p4, or P4) and includes that backlog phase id. --allow-gated pre-authorizes gated phases for that run. Without it, a gated phase still halts inside the child.",
+      "A runnable phase exists. --until takes the next token (4, p4, or P4) and includes that backlog phase id. --allow-gated pre-authorizes gated phases for that run. Without it, a gated phase still halts inside the child. --review alternates draining and /junji review --subagent, stopping on Approve, a halt, or after three review rounds.",
     diskEffect:
-      "Writes nothing in this window. The goal plays /junji next --subagent once per phase and stops on a halt, without running consolidate or iterate.",
+      "Writes nothing in this window. The goal plays /junji next --subagent once per phase and stops on a halt, without running consolidate or iterate. Under --review, the review child writes the review note and any fix phases.",
     pointerEffect: "Next action stays exactly where it was. Goal never occupies the pointer.",
     timing: "On demand",
     writesCode: false,
@@ -308,6 +341,11 @@ export const JUNJI_CARDS: readonly JunjiCard[] = [
         target: "next",
         kind: "activates",
         label: "plays /junji next --subagent once per phase",
+      },
+      {
+        target: "review",
+        kind: "activates",
+        label: "under --review, plays /junji review --subagent between drains",
       },
     ],
   },
