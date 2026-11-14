@@ -50,7 +50,7 @@ flowchart TD
   review -.->|Fix phases| next
 ```
 
-`begin` gathers facts only. `plan` and `grill` think. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`. Research, design, grill, brief, goal, and review are optional and never occupy Next action. Goal asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase. Review reads the PR diff and, like iterate, can append phases: its blocking findings become fix phases for `next`.
+`begin` gathers facts only. `plan` and `grill` think. `refine` shapes markdown. `next` executes **one** phase. `iterate` is optional after every phase is `[done]`. Research, design, grill, brief, goal, and review are optional and never occupy Next action. Goal asks the harness to repeat `/junji next --subagent` until a halt or the last requested phase. Review reads the PR diff and, like iterate, can append phases and set Next action to `next`: its blocking findings become fix phases.
 
 ---
 
@@ -234,7 +234,7 @@ The unit of review is the **PR diff against its base**, computed with git, not o
 **Steps:**
 
 1. `/junji review`, optionally `--base <ref>`. Base resolution: `--base` → `gh pr view --json baseRefName` → `origin/HEAD` → stop and ask. The first chat line names the base used.
-2. Spec conformance first: `PLAN.md`, `CONTEXT.md` locks and verification bar, `DESIGN.md` when present, each phase's Outcome and Explicitly out.
+2. Spec conformance first: `PLAN.md`, `CONTEXT.md` locks and verification bar, `DESIGN.md` when present, and each `[done]` phase's In scope, Explicitly out, and Outcome.
 3. Tests next, with one mutation probe. Then five axes: correctness, readability and simplicity, architecture, security, performance. The reviewer never runs the verification bar.
 4. Write `.koi/run/reviews/review-NN.md`: base used, diff range, verdict, findings grouped by severity (Critical, Required, Nit, Optional, FYI) with file:line and axis.
 5. Critical and Required findings become ordinary `[todo]` phases appended to `BACKLOG.md`, each with a full `phases/phase-NN-<slug>.md`. Cluster by subsystem or root cause, Critical first. A fix phase copies the tier tag of the phase it mostly touches. Nit, Optional and FYI stay under "Not scheduled" in the note; promote them with `refine`.
@@ -246,11 +246,10 @@ The unit of review is the **PR diff against its base**, computed with git, not o
 
 - Dirty tree or in-flight phase → the verb stops; commit or finish the phase first
 - No resolvable base → the verb stops and asks for `--base <ref>`
-- Findings written to `FEEDBACK.md` → violation; yokai is the sole writer of that file
 
 **Option:** `/junji review --subagent` asks this window for one isolated child. The child re-reads `.koi/run/` and runs plain `/junji review`; this window posts the Report. `goal --review` uses this form.
 
-Review is not `grill` (which sharpens decisions before code exists) and not yokai's Judge (which scores one Build phase). Review reads the whole PR, writes phases, and is human-triggered. Repeat as needed: review → next ↺ → review …
+Review is not `grill` (which sharpens decisions before code exists) and not yokai's Judge (which reviews one Build iteration inside a phase and writes `FEEDBACK.md`). Review reads the whole PR and writes phases, never `FEEDBACK.md`, whose sole writer is yokai. A human triggers it, or `goal --review` does. Repeat as needed: review → next ↺ → review …
 
 ---
 
